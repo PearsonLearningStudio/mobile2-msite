@@ -3,18 +3,80 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>Happenings</title>
-		<link rel="stylesheet" href="css/reset.css" />
 		<link rel="stylesheet" href="css/jquery.mobile-1.0a3.css" />
 		<link rel="stylesheet" href="css/msite.css" />
 		<link rel="stylesheet" href="css/branding.css" />
+<style>
+
+h2 {
+	text-align: center;
+}
+
+#page-login div.container-footer p {
+	text-align: left;
+	margin-left: 1em;
+	font-size: 80%;
+}
+#page-login div.container-footer p a {
+	text-decoration: none;
+}
+
+</style>
 		<script type="text/javascript" src="scripts/ThirdParty/jquery-1.5.1.min.js"></script>
 		<script type="text/javascript" src="scripts/ThirdParty/jquery.mobile-1.0a3.js"></script>
 		
 	</head>
 	<body>
-		<div data-role="page" id="page1">
+		<div data-role="page" id="page-login">
 			<div data-role="header">
-				<h1>MSITE</h1>
+				<h1>Pearson</h1>
+			</div>
+			<div data-role="content">
+				<h2>eCollege Mobile</h2>
+				<form action="#" method="post">
+					<ul data-role="listview" data-inset="true" data-theme="d" data-dividertheme="b">
+						<li>
+							<label for="input-username">Username</label>
+							<input type="text" name="input-username" id="input-username" value="" />
+						</li>
+						<li>
+							<label for="input-password">Password</label>
+							<input type="password" name="input-password" id="input-password" value="" />
+						</li>
+						<li>
+							<input type="checkbox" name="checkbox-rememberme" id="checkbox-rememberme" />
+							<label for="checkbox-rememberme">Remember Me</label>
+						</li>
+					</ul>
+					<button type="submit">Sign In</button>
+				</form>
+			</div>
+			<div data-role="footer" class="container-footer">
+				<p><a href="#page-passwordRecovery" data-transition="flip">Don't know your user name and password?<br />Tap here to get an access link emailed to you.</a></p>
+			</div>
+		</div>
+		
+		
+		<div data-role="page" id="page-passwordRecovery">
+			<div data-role="header">
+				<h1>Pearson</h1>
+			</div>
+			<div data-role="content">
+				<h3>Get a Mobile Access Link</h3>
+				<p>Enter your information and we will register you:</p>
+				<form action="#" method="post">
+					<ul data-role="listview" data-inset="true" data-theme="d" data-dividertheme="b">
+						<li>
+							<label for="input-lastName">Last Name</label>
+							<input type="text" name="input-lastName" id="input-lastName" value="" />
+						</li>
+						<li>
+							<label for="input-emailAddress">Email Address</label>
+							<input type="text" name="input-emailAddress" id="input-emailAddress" value="" />
+						</li>
+					</ul>
+					<button type="submit">Email My Access Link</button>
+				</form>
 			</div>
 		</div>
 		
