@@ -39,6 +39,134 @@ h2 {
 		<script type="text/javascript" src="scripts/ecollege/ConfigSettings.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/ClientStringManager.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/preloadUtils.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery.msiteConnect.js"></script>
+		<script>
+// Check to see if there is already an access grant of some sort.  If there is, we should forward on to home page.
+var accessCookie = readCookie("access_grant");
+if (accessCookie.length >0 ) {
+	$(location).attr("href", "home.html");
+}
+
+var signInClickHandler = function() {
+	if ($("#userId").val == "" || $("#password").val() == "") {
+		$("#dialogError .errorMessage").html("Username and password are required.");
+		$("#show-error-message").click();
+		return;
+	}
+	
+	$.mobile.pageLoading();
+	clientStringManager.setClientString(cs);	// just in case the user clears their cookies after page loads
+	// get only the client string part of the entire client sort string (the text before the first ".")
+	var epClientString = cs.split(".", 1)[0];
+	sessionManager.logIn(epClientString, $("#userId").val(), $("#password").val(), $("#rememberMe")[0].checked, signInHandler);
+};
+
+/**
+	Handler for a response to authorize a user. If a user was authorized successfully, 
+	redirect them to the main page. Otherwise show them an error.
+	@param		{Boolean}	p_isLoggedIn	true if the user was authorized successfully, false otherwise
+	@param		{String}	p_errorCode		the HTTP error code on the response
+*/
+var signInHandler = function(p_isLoggedIn, p_errorCode) {
+	if (p_isLoggedIn) {
+		eraseCookie("currentPage");
+		$.mobile.changePage("home.html");
+		return;
+	}
+	//not logged in, what went wrong?
+	switch(p_errorCode) {
+		case "400":
+			// if the response was a "bad request", show message that login credentials were incorrect.
+			$("#dialogError div.errorMessage").html("Your username and/or password were incorrect.");
+			break;
+		case "500":
+			// if the response was a 500 "internal server error", show a message of the likely cause.
+			$("#dialogError div.errorMessage").html("An unexpected error occurred while attempting to validate your credentials. Please check your link and login information and try again.");
+			break;
+		default:
+			// otherwise show a general message that the communication was unsuccessful.
+			$("#dialogError div.errorMessage").html("Unable to contact the server. Please try again in a few minutes.");
+	}
+	$.mobile.pageLoading(true);
+	$("#show-error-message").click();
+};
+
+/**
+	When the user clicks the register button, attempt to register them
+*/
+var registerClickHandler = function() {
+	if ($("#lastName").val == "" || $("#systemEmail").val() == "") {
+		$("#dialogError div.errorMessage").html("Last Name and Email Address are required.");
+		$("#show-error-message").click();
+		return;
+	}
+	$.mobile.pageLoading();
+	sessionManager.register(clientStringManager.getClientString(), $("#lastName").val(), $("#systemEmail").val(), registerHandler);
+};
+
+/**
+	Handler for a response to authorize a user. If a user was authorized successfully, 
+	redirect them to the main page. Otherwise show them an error.
+	@param		{Boolean}	p_success	true if the user was authorized successfully, false otherwise
+	@param		{String}	p_errorCode		the HTTP error code on the response
+*/
+var registerHandler = function(p_success, p_errorCode)
+{
+	$("#registerButton").show();
+	$("#loadingImage").hide();
+	if (p_success) 	{
+		eraseCookie("currentPage");
+		$("#emailSentTo").html($("#systemEmail").val());
+		$.mobile.changePage("#dialogSuccess", "flip");
+		return;
+	}
+	//not logged in, what went wrong?
+	switch(p_errorCode) {
+		case "400":
+			// if the response was a "bad request", show message that login credentials were incorrect.
+			$("#dialogError div.errorMessage").html("We were unable to verify you. Is your information correct or do you have another email address? If you continue to have problems, please contact the helpdesk.");
+			break;
+		case "500":
+			// if the response was a 500 "internal server error", show a message of the likely cause.
+			$("#dialogError div.errorMessage").html("An unexpected error occurred while attempting to validate your credentials. Please check Last Name and Email Address and try again.");
+			break;
+		default:
+			// otherwise show a general message that the communication was unsuccessful.
+			$("#dialogError div.errorMessage").html("Unable to contact the server. Please try again in a few minutes.");
+	}
+	$.mobile.pageLoading(true);
+	$("#show-error-message").click();
+	
+};
+$(document).ready(function() {
+	$().msiteConnect({
+		crossDomainErrorHandler : function() {
+			$("#dialogError div.errorMessage").html("Application content is not available at this time. Please try again later and if the problem persists, contact the helpdesk.");
+			$("#show-error-message").click();
+		}
+	});
+	
+	// assign actions to the sign in button
+	$("#signInBtn").bind("click", signInClickHandler);
+	
+	// listen for form submit events, and forward them to the sign in click handler
+	$("#loginForm").bind("submit", function(p_event) {
+		p_event.preventDefault();
+		signInClickHandler();
+	});
+	
+	// assign actions to the register button
+	$("#registerButton").bind("click", registerClickHandler);
+	
+	// listen for form submit events, and forward them to the sign in click handler
+	$("#registerFormContainer").bind("submit", function(p_event) {
+		p_event.preventDefault();
+		registerClickHandler();
+	});
+	
+	
+})
+		</script>
 		
 	</head>
 	<body>
@@ -46,7 +174,7 @@ h2 {
 		<!-- Begin login page -->
 		<div data-role="page" id="loginPage">
 			<div class="section_header" data-role="header">
-				<div class="brandTop"><span class="brandtextT">University</span></div>
+				<h1>Pearson</h1>
 			</div>
 			<div id="loginFormSection" class="section_content" data-role="content">
 				
@@ -70,7 +198,8 @@ h2 {
 							</ul>
 						</div>
 					</form>
-					<button type="submit" id="signInBtn">Sign In</button>				</div>
+					<button type="submit" id="signInBtn">Sign In</button>
+				</div>
 			</div>
 				
 			<div data-role="footer" class="container-footer">
@@ -83,7 +212,7 @@ h2 {
 		<!-- Begin Registration Page -->
 		<div id="registerPage" data-role="page">
 			<div class="section_header" data-role="header">
-				<div class="brandTop"><span class="brandtextT">University</span></div>
+				<h1>Pearson</h1>
 			</div>
 			<div id="registerFormSection" class="section_content" data-role="content">
 				
@@ -130,21 +259,21 @@ h2 {
 				</div>
 				
 			</div>
+				
+			<div data-role="footer">
+				<a data-icon="arrow-l" data-rel="back" href="#loginPage">Back</a>
+			</div>
 
 		</div>
 		<!-- End Registration Page -->
 		
-		<!-- Begin Login Error Dialog -->
+		<!-- Begin Error Dialog -->
 		<div id="dialogError" data-role="page">
 			<div class="section_header" data-role="header">
 				<h2>Error</h2>
 			</div>
 			<div data-role="content">
 				<div class="errorMessage"></div>
-			</div>
-
-			<div id="registerPageFooter" class="section_footer">
-				<div class="brandBottom"><span class="brandtextB">University</span></div>
 			</div>
 		</div>
 		<!-- End Login Error Dialog -->
@@ -171,182 +300,11 @@ h2 {
 		</div>
 		<!-- End Success Dialog -->
 		
-		
+		<!-- Cross-site iframe -->
 		<iframe id="crossDomainCommunicationFrame" src="" style="display:none"></iframe>
 
+		<!-- Show error message link -->
 		<p><a id="show-error-message" href="#dialogError" data-rel="dialog" data-transition="slidedown" style="display: none;" >Show Error Message</a></p>
-
- 				<script type="text/javascript">
-		
-			
-			var crossDomainInitializer;
-			var sessionManager;
-			var clientStringManager;
-			var cs;
-			
-			$(document).ready(function() {
-				crossDomainInitializer = CrossDomainInitializer.getInstance();
-			
-				sessionManager = SessionManager.getInstance();
-				sessionManager.serviceLocation = configSettings[SERVICE_DOMAIN_PROXY];
-				
-				clientStringManager = ClientStringManager.getInstance();
-				cs = getQueryStringValue("cs");
-				if (cs == null || cs == undefined || cs == "") {
-				    cs = configSettings.clientstring;
-				}
-				alert(cs);
-			
-				if (cs == null || cs == undefined || cs == "") {
-					$("#dialogError div.errorMessage").html("The page cannot be found!");
-					$("#show-error-message").click();
-				} else {
-					crossDomainInitializer.originUrl = window.location.protocol + "//" + document.domain;
-					crossDomainInitializer.eventDispatcher.addEventListener(DomainStatusEvent.DOMAIN_READY, crossDomainReadyHandler, true);
-					crossDomainInitializer.eventDispatcher.addEventListener(DomainStatusEvent.DOMAIN_ERROR, crossDomainErrorHandler, true);
-					crossDomainInitializer.initializeDomain("crossDomainCommunicationFrame", configSettings[SERVICE_DOMAIN_PROXY]);
-					
-					
-
-					// assign actions to the sign in button
-					$("#signInBtn").bind("click", signInClickHandler);
-					// listen for form submit events, and forward them to the sign in click handler
-					$("#loginForm").bind("submit", function(p_event) {
-						p_event.preventDefault();
-						signInClickHandler();
-					});
-					// assign actions to the register button
-					$("#registerButton").bind("click", registerClickHandler);
-					// listen for form submit events, and forward them to the sign in click handler
-					$("#registerFormContainer").bind("submit", function(p_event)
-					{
-						p_event.preventDefault();
-						registerClickHandler();
-					});
-				}
-			});
-			var crossDomainReadyHandler = function() {
-			};
-			
-			/**
-				If the cross domain file never loaded, show an error message.
-			*/
-			var crossDomainErrorHandler = function()
-			{
-				//$("#loadingMessageContainer").hide();
-				$("#dialogError div.errorMessage").html("Application content is not available at this time. Please try again later and if the problem persists, contact the helpdesk.");
-				$("#errorContainer").show();
-				$("#show-error-message").click();
-			};
-			
-			/**
-				When the user clicks the login button, attempt to log them in
-			*/
-			var signInClickHandler = function()
-			{
-				if ($("#userId").val == "" || $("#password").val() == "") {
-					$("#dialogError .errorMessage").html("Username and password are required.");
-					//$("#errorContainer").show();
-					//$.mobile.changePage("#dialogError", "pop", false, false);
-					$("#show-error-message").click();
-					return;
-				}
-				$.mobile.pageLoading();
-				
-				clientStringManager.setClientString(cs);	// just in case the user clears their cookies after page loads
-				// get only the client string part of the entire client sort string (the text before the first ".")
-				var epClientString = cs.split(".", 1)[0];
-				sessionManager.logIn(epClientString, $("#userId").val(), $("#password").val(), $("#rememberMe")[0].checked, signInHandler);
-			};
-			
-			/**
-				Handler for a response to authorize a user. If a user was authorized successfully, 
-				redirect them to the main page. Otherwise show them an error.
-				@param		{Boolean}	p_isLoggedIn	true if the user was authorized successfully, false otherwise
-				@param		{String}	p_errorCode		the HTTP error code on the response
-			*/
-			var signInHandler = function(p_isLoggedIn, p_errorCode)
-			{
-				if (p_isLoggedIn) {
-					eraseCookie("currentPage");
-					$("#registerMessage").hide();
-					$("#loginFormContainer").hide();
-					$("#loadingMessageContainer span.ajaxLoading").html("Logging in...");
-					$("#loadingMessageContainer").show();
-					window.location.href = window.location.protocol + "//" + document.domain + "/index.html";
-					return;
-				}
-				//not logged in, what went wrong?
-				switch(p_errorCode) {
-					case "400":
-						// if the response was a "bad request", show message that login credentials were incorrect.
-						$("#dialogError div.errorMessage").html("Your username and/or password were incorrect.");
-						break;
-					case "500":
-						// if the response was a 500 "internal server error", show a message of the likely cause.
-						$("#dialogError div.errorMessage").html("An unexpected error occurred while attempting to validate your credentials. Please check your link and login information and try again.");
-						break;
-					default:
-						// otherwise show a general message that the communication was unsuccessful.
-						$("#dialogError div.errorMessage").html("Unable to contact the server. Please try again in a few minutes.");
-				}
-				$.mobile.pageLoading(true);
-				$("#show-error-message").click();
-				
-			};
-			
-			/**
-				When the user clicks the register button, attempt to register them
-			*/
-			var registerClickHandler = function() {
-				if ($("#lastName").val == "" || $("#systemEmail").val() == "") {
-					$("#dialogError div.errorMessage").html("Last Name and Email Address are required.");
-					$("#show-error-message").click();
-					return;
-				}
-				$.mobile.pageLoading();
-				sessionManager.register(clientStringManager.getClientString(), $("#lastName").val(), $("#systemEmail").val(), registerHandler);
-			};
-			
-			/**
-				Handler for a response to authorize a user. If a user was authorized successfully, 
-				redirect them to the main page. Otherwise show them an error.
-				@param		{Boolean}	p_success	true if the user was authorized successfully, false otherwise
-				@param		{String}	p_errorCode		the HTTP error code on the response
-			*/
-			var registerHandler = function(p_success, p_errorCode)
-			{
-				$("#registerButton").show();
-				$("#loadingImage").hide();
-				if (p_success) 	{
-					eraseCookie("currentPage");
-					$("#emailSentTo").html($("#systemEmail").val());
-					$.mobile.changePage("#dialogSuccess", "flip");
-					return;
-				}
-				//not logged in, what went wrong?
-				switch(p_errorCode) {
-					case "400":
-						// if the response was a "bad request", show message that login credentials were incorrect.
-						$("#dialogError div.errorMessage").html("We were unable to verify you. Is your information correct or do you have another email address? If you continue to have problems, please contact the helpdesk.");
-						break;
-					case "500":
-						// if the response was a 500 "internal server error", show a message of the likely cause.
-						$("#dialogError div.errorMessage").html("An unexpected error occurred while attempting to validate your credentials. Please check Last Name and Email Address and try again.");
-						break;
-					default:
-						// otherwise show a general message that the communication was unsuccessful.
-						$("#dialogError div.errorMessage").html("Unable to contact the server. Please try again in a few minutes.");
-				}
-				$.mobile.pageLoading(true);
-				$("#show-error-message").click();
-				
-			};
-			
-		</script>
-
-
-
 		
 	</body>
 
