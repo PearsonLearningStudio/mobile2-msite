@@ -43,7 +43,7 @@ h2 {
 		<script>
 // Check to see if there is already an access grant of some sort.  If there is, we should forward on to home page.
 var accessCookie = readCookie("access_grant");
-if (accessCookie.length >0 ) {
+if (accessCookie && (accessCookie.length >0) ) {
 	$(location).attr("href", "home.html");
 }
 
@@ -70,7 +70,8 @@ var signInClickHandler = function() {
 var signInHandler = function(p_isLoggedIn, p_errorCode) {
 	if (p_isLoggedIn) {
 		eraseCookie("currentPage");
-		$.mobile.changePage("home.html");
+		//$.mobile.changePage("home.html");
+	$(location).attr("href", "home.html");
 		return;
 	}
 	//not logged in, what went wrong?

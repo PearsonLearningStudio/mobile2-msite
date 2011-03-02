@@ -41,9 +41,57 @@ div.layout-header a.menu-active {
 	background-color: #fff;
 	color: #666;
 }
+
+/* Mobile List View */
+.mobi-listview li {
+	border-radius: 0px;
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+}
+.mobi-listview li.ui-li-staticc {
+	background-image: url(css/images/icons-18-black.png);
+	background-repeat: no-repeat;
+	background-position: right 20px;
+}
+.mobi-listview .mobi-listview-active {
+	background-color: #ccc;
+}
+.mobi-listview p {
+	line-height: 1.1em;
+	margin-left: 40px;
+}
+.mobi-listview .mobi-activity-title {
+	font-weight: bold;
+	font-size: 105%;
+	margin-top: 0.2em;
+}
+.mobi-listview .mobi-course-title {
+	font-style: italic;
+}
+.mobi-listview .mobi-course-date {
+	position: absolute;
+	top: 15px;
+	right: 10px;
+}
+
+
+
 .clear {
 	clear: both;
 }
+
+.ui-fluid, .min-width-480px .ui-fluid .ui-controlgroup-controls{ display: table; width: 100%; }
+.ui-table-row { display: table-row; }
+.ui-fluid .ui-btn { display: table-cell; text-align: center; }
+.ui-even-2 .ui-btn {
+	width: 50%;
+}
+.ui-fluid .ui-btn .ui-btn-inner { width: 100%; padding: 0.6em 0px; }
+
+.ui-fluid .ui-controlgroup-controls { width: 100%; display: table; }
+.ui-fluid .ui-checkbox, .ui-fluid .ui-radio { display: table-cell; }
+.ui-fluid .ui-checkbox label, .ui-fluid .ui-radio label { width: 100%;display: block; text-align: center; }
+
 		</style>
 		<script type="text/javascript" src="scripts/jquery/jquery-1.5.1.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.mobile-1.0a3.js"></script>
@@ -64,15 +112,17 @@ div.layout-header a.menu-active {
 		<script type="text/javascript" src="scripts/ecollege/preloadUtils.js"></script>
 		<script>
 // Check to see if there is already an access grant of some sort.  If there is, we should forward on to home page.
-$().msiteConnect("checkAuth");
+//$().msiteConnect("checkAuth");
 
 $(document).ready(function() {
 	$(".menu-logout").click(function() {
 		sessionManager.logOut();
 		$(location).attr("href", "/")
 	})
-	$().msiteConnect();
 	
+	
+	$().msiteConnect();
+
 	$(".layout-header a.button-menu").toggle(
 		function() {
 			$(".layout-header ul").show();
@@ -83,6 +133,13 @@ $(document).ready(function() {
 			$(this).toggleClass("menu-active");
 		}
 	)
+	
+	// Initialize mobi-listviev elements
+	$(".mobi-listview li").click(function() {
+		var strUrl = $(this).attr("id") + ".html";
+		$.mobile.changePage(strUrl);
+	})
+
 })
 		
 		</script>
@@ -103,7 +160,55 @@ $(document).ready(function() {
 				<div class="clear"></div>
 			</div>
 			<div data-role="content">
-				<h2>eCollege Mobile</h2>
+				<div data-role="navbar" class="container-navbar">
+					<ul>
+						<li><a href="#">Home</a></li>
+						<li><a href="#">Discuss</a></li>
+						<li><a href="#">Classes</a></li>
+						<li><a href="#">People</a></li>
+						<li><a href="#">Profile</a></li>
+					</ul>
+				</div>
+				<div data-role="controlgroup" data-type="horizontal" class="ui-fluid ui-even-2 subnav">
+					<a href="#" data-role="button">What's Due</a>
+					<a href="#" data-role="button">Activity</a>
+				</div>
+				<ul data-role="listview" data-inset="true" data-theme="d" data-dividertheme="b" class="mobi-listview">
+					<li data-role="list-divider">Today</li>
+					<li id="activity1">
+						<a href="#">
+							<p class="mobi-activity-title">Ends Today</p>
+							<p>Accounting and the Business Environment so here's a title that's really long</p>
+							<p class="mobi-course-title">Accounting 1001</p>
+							<p class="mobi-course-date">Today</p>
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							<p class="mobi-activity-title">Ends Today</p>
+							<p>Accounting and the Business Environment so here's a title that's really long</p>
+							<p class="mobi-course-title">Accounting 1001</p>
+							<p class="mobi-course-date">Today</p>
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							<p class="mobi-activity-title">Ends Today</p>
+							<p>Accounting and the Business Environment so here's a title that's really long</p>
+							<p class="mobi-course-title">Accounting 1001</p>
+							<p class="mobi-course-date">Today</p>
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							<p class="mobi-activity-title">Ends Today</p>
+							<p>Accounting and the Business Environment so here's a title that's really long</p>
+							<p class="mobi-course-title">Accounting 1001</p>
+							<p class="mobi-course-date">Today</p>
+						</a>
+					</li>
+
+				</ul>
 			</div>
 			<div data-role="footer">
 				<h2>footer</h2>
