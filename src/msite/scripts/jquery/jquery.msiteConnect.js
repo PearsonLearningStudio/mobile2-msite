@@ -7,6 +7,7 @@ var cs;
 
 	var methods = {
 		init : function(options) {
+			// Initialize the cross domain communicator and session manager.
 			var settings = {
 				crossDomainReadyHandler : function() {},
 				crossDomainErrorHandler : function() {},
@@ -26,9 +27,8 @@ var cs;
 			    cs = configSettings.clientstring;
 			}
 			
-		
 			if (cs == null || cs == undefined || cs == "") {
-				$("#dialogError div.errorMessage").html("The page cannot be found!");
+				$("#dialogError div.errorMessage").html(msite.localization.msiteConnect["page-not-found"]);
 				$("#show-error-message").click();
 			} else {
 				crossDomainInitializer.originUrl = window.location.protocol + "//" + document.domain;
@@ -39,6 +39,9 @@ var cs;
 
 		},
 		checkAuth : function(options) {
+			// checkAuth checks for an existing authorization cookie.
+			// This method does not require that the init method be called first, 
+			// because it is just checking a cookie.
 			var settings = {
 				redirectUrl : "/"
 			}

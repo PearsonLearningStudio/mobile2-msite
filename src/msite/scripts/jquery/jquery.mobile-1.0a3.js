@@ -4433,11 +4433,12 @@ $.widget( "mobile.navbar", $.mobile.widget, {
 				shadow:		false, 
 				iconpos:	iconpos
 			});
-		
+		/*
 		$navbar.delegate("a", "click",function(event){
 			$navbtns.removeClass( "ui-btn-active" );
 			$( this ).addClass( "ui-btn-active" );
 		});	
+		*/
 	}
 });
 })( jQuery );/*

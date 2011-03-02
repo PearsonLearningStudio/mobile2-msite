@@ -28,7 +28,7 @@ div.layout-header ul {
 	display: none;
 	width: 100%;
 }
-div.layout-header a.button-menu {
+div.layout-header .button-menu {
 	float: right;
 	color: #ccc;
 	text-shadow: none;
@@ -37,11 +37,15 @@ div.layout-header a.button-menu {
 	padding-left: 8px;
 	padding-right: 8px;
 }
-div.layout-header a.menu-active {
+div.layout-header .menu-active {
 	background-color: #fff;
 	color: #666;
 }
-
+.layout-header li {
+	border-radius: 0px;
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+}
 /* Mobile List View */
 .mobi-listview li {
 	border-radius: 0px;
@@ -110,48 +114,65 @@ div.layout-header a.menu-active {
 		<script type="text/javascript" src="scripts/ecollege/ConfigSettings.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/ClientStringManager.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/preloadUtils.js"></script>
+		<script type="text/javascript" src="scripts/i8ln/en-us/strings.js"></script>
 		<script>
+			
 // Check to see if there is already an access grant of some sort.  If there is, we should forward on to home page.
-//$().msiteConnect("checkAuth");
+$().msiteConnect("checkAuth");
 
 $(document).ready(function() {
-	$(".menu-logout").click(function() {
+	$(".menu-logout").bind("click", function() {
+		$("html").addClass( "ui-loading" );
 		sessionManager.logOut();
-		$(location).attr("href", "/")
-	})
+		$(location).attr("href", "/");
+		return false;
+	});
 	
-	
+	// Initialize cross site connector and session manager
 	$().msiteConnect();
 
-	$(".layout-header a.button-menu").toggle(
-		function() {
-			$(".layout-header ul").show();
-			$(this).toggleClass("menu-active");
-		},
-		function() {
-			$(".layout-header ul").hide();
-			$(this).toggleClass("menu-active");
-		}
-	)
-	
+	$(".layout-header .button-menu").bind("click", function() {
+		$(this).siblings("ul").slideToggle(0);
+		$(this).toggleClass("menu-active");
+		return false;
+	});
+
 	// Initialize mobi-listviev elements
 	$(".mobi-listview li").click(function() {
 		var strUrl = $(this).attr("id") + ".html";
 		$.mobile.changePage(strUrl);
-	})
+	});
+	
+	// Initialize click listener for what's due/activity buttons
+	$(".btn-whatsdue").click(function() {
+		$("div.subnav a").removeClass("ui-btn-active");
+		$(this).addClass("ui-btn-active");
+		$(".view-activity").hide();
+		$(".view-whatsdue").show();
+	}).click(); // default view for page
+	$(".btn-activity").click(function() {
+		$(".btn-whatsdue").removeClass("ui-btn-active");
+		$(this).addClass("ui-btn-active");
+		$(".view-whatsdue").hide();
+		$(".view-activity").show();
+	});
+	//$(".navbar-home").click();
 
+	$(".container-navbar a").click(function(event){
+		event.preventDefault();
+	})
 })
 		
 		</script>
 		
 	</head>
 	<body>
-		<div data-role="page" id="page1">
+		<div data-role="page" id="pageHome">
 			<div class="layout-header">
 				<h1>Pearson</h1>
-				<a href="#" class="button-menu">Menu</a>
+				<a class="button-menu">Menu</a>
 				<div class="clear"></div>
-				<ul data-role="listview" data-inset="true" data-theme="d" data-dividertheme="b">
+				<ul data-role="listview" data-inset="true">
 					<li><a href="#">Home</a></li>
 					<li><a href="#">My Profile</a></li>
 					<li><a href="#">Settings</a></li>
@@ -162,58 +183,213 @@ $(document).ready(function() {
 			<div data-role="content">
 				<div data-role="navbar" class="container-navbar">
 					<ul>
-						<li><a href="#">Home</a></li>
-						<li><a href="#">Discuss</a></li>
-						<li><a href="#">Classes</a></li>
-						<li><a href="#">People</a></li>
-						<li><a href="#">Profile</a></li>
+						<li><a href="#" data-transition="flip" class="ui-btn-active">Home</a></li>
+						<li><a href="#pageDiscuss" data-transition="flip">Discuss</a></li>
+						<li><a href="#pageClasses" data-transition="flip">Classes</a></li>
+						<li><a href="#pagePeople" data-transition="flip">People</a></li>
+						<li><a href="#pageProfile" data-transition="flip">Profile</a></li>
 					</ul>
 				</div>
 				<div data-role="controlgroup" data-type="horizontal" class="ui-fluid ui-even-2 subnav">
-					<a href="#" data-role="button">What's Due</a>
-					<a href="#" data-role="button">Activity</a>
+					<a href="#" data-role="button" class="btn-whatsdue">What's Due</a>
+					<a href="#" data-role="button" class="btn-activity">Activity</a>
 				</div>
-				<ul data-role="listview" data-inset="true" data-theme="d" data-dividertheme="b" class="mobi-listview">
-					<li data-role="list-divider">Today</li>
-					<li id="activity1">
-						<a href="#">
-							<p class="mobi-activity-title">Ends Today</p>
-							<p>Accounting and the Business Environment so here's a title that's really long</p>
-							<p class="mobi-course-title">Accounting 1001</p>
-							<p class="mobi-course-date">Today</p>
-						</a>
-					</li>
-					<li>
-						<a href="#">
-							<p class="mobi-activity-title">Ends Today</p>
-							<p>Accounting and the Business Environment so here's a title that's really long</p>
-							<p class="mobi-course-title">Accounting 1001</p>
-							<p class="mobi-course-date">Today</p>
-						</a>
-					</li>
-					<li>
-						<a href="#">
-							<p class="mobi-activity-title">Ends Today</p>
-							<p>Accounting and the Business Environment so here's a title that's really long</p>
-							<p class="mobi-course-title">Accounting 1001</p>
-							<p class="mobi-course-date">Today</p>
-						</a>
-					</li>
-					<li>
-						<a href="#">
-							<p class="mobi-activity-title">Ends Today</p>
-							<p>Accounting and the Business Environment so here's a title that's really long</p>
-							<p class="mobi-course-title">Accounting 1001</p>
-							<p class="mobi-course-date">Today</p>
-						</a>
-					</li>
-
-				</ul>
+				<div class="view-activity">
+					<ul data-role="listview" data-inset="true" data-theme="d" data-dividertheme="b" class="mobi-listview">
+						<li data-role="list-divider">Today</li>
+						<li id="activity1">
+							<a href="#">
+								<p class="mobi-activity-title">Ends Today</p>
+								<p>Accounting and the Business Environment so here's a title that's really long</p>
+								<p class="mobi-course-title">Accounting 1001</p>
+								<p class="mobi-course-date">Today</p>
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<p class="mobi-activity-title">Ends Today</p>
+								<p>Accounting and the Business Environment so here's a title that's really long</p>
+								<p class="mobi-course-title">Accounting 1001</p>
+								<p class="mobi-course-date">Today</p>
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<p class="mobi-activity-title">Ends Today</p>
+								<p>Accounting and the Business Environment so here's a title that's really long</p>
+								<p class="mobi-course-title">Accounting 1001</p>
+								<p class="mobi-course-date">Today</p>
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<p class="mobi-activity-title">Ends Today</p>
+								<p>Accounting and the Business Environment so here's a title that's really long</p>
+								<p class="mobi-course-title">Accounting 1001</p>
+								<p class="mobi-course-date">Today</p>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div class="view-whatsdue">
+					<h3>There is nothing due today.</h3>
+				</div>
 			</div>
 			<div data-role="footer">
 				<h2>footer</h2>
 			</div>
 		</div>
+		
+		
+		
+		<div data-role="page" id="pageDiscuss">
+			<div class="layout-header">
+				<h1>Pearson</h1>
+				<a class="button-menu">Menu</a>
+				<div class="clear"></div>
+				<ul data-role="listview" data-inset="true">
+					<li><a href="#">Home</a></li>
+					<li><a href="#">My Profile</a></li>
+					<li><a href="#">Settings</a></li>
+					<li><a href="#" class="menu-logout">Logout</a></li>
+				</ul>
+				<div class="clear"></div>
+			</div>
+			<div data-role="content">
+				<div data-role="navbar" class="container-navbar">
+					<ul>
+						<li><a href="#pageHome" data-transition="flip">Home</a></li>
+						<li><a href="#pageDiscuss" class="ui-btn-active" data-transition="flip">Discuss</a></li>
+						<li><a href="#pageClasses" data-transition="flip">Classes</a></li>
+						<li><a href="#pagePeople" data-transition="flip">People</a></li>
+						<li><a href="#pageProfile" data-transition="flip">Profile</a></li>
+					</ul>
+				</div>
+				<h3>Discussions</h3>
+
+			</div>
+			<div data-role="footer">
+				<h2>footer</h2>
+			</div>
+		</div>
+		
+		<div data-role="page" id="pageClasses">
+			<div class="layout-header">
+				<h1>Pearson</h1>
+				<a class="button-menu">Menu</a>
+				<div class="clear"></div>
+				<ul data-role="listview" data-inset="true">
+					<li><a href="#">Home</a></li>
+					<li><a href="#">My Profile</a></li>
+					<li><a href="#">Settings</a></li>
+					<li><a href="#" class="menu-logout">Logout</a></li>
+				</ul>
+				<div class="clear"></div>
+			</div>
+			<div data-role="content">
+				<div data-role="navbar" class="container-navbar">
+					<ul>
+						<li><a href="#pageHome" data-transition="flip">Home</a></li>
+						<li><a href="#pageDiscuss" data-transition="flip">Discuss</a></li>
+						<li><a href="#pageClasses" data-transition="flip" class="ui-btn-active">Classes</a></li>
+						<li><a href="#pagePeople" data-transition="flip">People</a></li>
+						<li><a href="#pageProfile" data-transition="flip">Profile</a></li>
+					</ul>
+				</div>
+				<h3>Classes</h3>
+
+			</div>
+			<div data-role="footer">
+				<h2>footer</h2>
+			</div>
+		</div>
+
+		<div data-role="page" id="pagePeople">
+			<div class="layout-header">
+				<h1>Pearson</h1>
+				<a class="button-menu">Menu</a>
+				<div class="clear"></div>
+				<ul data-role="listview" data-inset="true">
+					<li><a href="#">Home</a></li>
+					<li><a href="#">My Profile</a></li>
+					<li><a href="#">Settings</a></li>
+					<li><a href="#" class="menu-logout">Logout</a></li>
+				</ul>
+				<div class="clear"></div>
+			</div>
+			<div data-role="content">
+				<div data-role="navbar" class="container-navbar">
+					<ul>
+						<li><a href="#pageHome" data-transition="flip">Home</a></li>
+						<li><a href="#pageDiscuss" data-transition="flip">Discuss</a></li>
+						<li><a href="#pageClasses" data-transition="flip">Classes</a></li>
+						<li><a href="#pagePeople" class="ui-btn-active" data-transition="flip">People</a></li>
+						<li><a href="#pageProfile" data-transition="flip">Profile</a></li>
+					</ul>
+				</div>
+				<h3>People</h3>
+
+			</div>
+			<div data-role="footer">
+				<h2>footer</h2>
+			</div>
+		</div>
+
+		<div data-role="page" id="pageProfile">
+			<div class="layout-header">
+				<h1>Pearson</h1>
+				<a class="button-menu">Menu</a>
+				<div class="clear"></div>
+				<ul data-role="listview" data-inset="true">
+					<li><a href="#">Home</a></li>
+					<li><a href="#">My Profile</a></li>
+					<li><a href="#">Settings</a></li>
+					<li><a href="#" class="menu-logout">Logout</a></li>
+				</ul>
+				<div class="clear"></div>
+			</div>
+			<div data-role="content">
+				<div data-role="navbar" class="container-navbar">
+					<ul>
+						<li><a href="#pageHome" data-transition="flip">Home</a></li>
+						<li><a href="#pageDiscuss" data-transition="flip">Discuss</a></li>
+						<li><a href="#pageClasses" data-transition="flip">Classes</a></li>
+						<li><a href="#pagePeople" data-transition="flip">People</a></li>
+						<li><a href="#pageProfile" class="ui-btn-active" data-transition="flip">Profile</a></li>
+					</ul>
+				</div>
+				<h3>Profile</h3>
+
+			</div>
+			<div data-role="footer">
+				<h2>footer</h2>
+			</div>
+		</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		
 		
 		<iframe id="crossDomainCommunicationFrame" src="" style="display:none"></iframe>

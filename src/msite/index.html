@@ -40,6 +40,7 @@ h2 {
 		<script type="text/javascript" src="scripts/ecollege/ClientStringManager.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/preloadUtils.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.msiteConnect.js"></script>
+		<script type="text/javascript" src="scripts/i8ln/en-us/strings.js"></script>
 		<script>
 // Check to see if there is already an access grant of some sort.  If there is, we should forward on to home page.
 var accessCookie = readCookie("access_grant");
@@ -49,7 +50,7 @@ if (accessCookie && (accessCookie.length >0) ) {
 
 var signInClickHandler = function() {
 	if ($("#userId").val == "" || $("#password").val() == "") {
-		$("#dialogError .errorMessage").html("Username and password are required.");
+		$("#dialogError .errorMessage").html(msite.localization.index["username-password-required"]);
 		$("#show-error-message").click();
 		return;
 	}
@@ -71,22 +72,23 @@ var signInHandler = function(p_isLoggedIn, p_errorCode) {
 	if (p_isLoggedIn) {
 		eraseCookie("currentPage");
 		//$.mobile.changePage("home.html");
-	$(location).attr("href", "home.html");
+		$(location).attr("href", "home.html");
+		//window.location="home.html";
 		return;
 	}
 	//not logged in, what went wrong?
 	switch(p_errorCode) {
 		case "400":
 			// if the response was a "bad request", show message that login credentials were incorrect.
-			$("#dialogError div.errorMessage").html("Your username and/or password were incorrect.");
+			$("#dialogError div.errorMessage").html(msite.localization.index["username-password-incorrect"]);
 			break;
 		case "500":
 			// if the response was a 500 "internal server error", show a message of the likely cause.
-			$("#dialogError div.errorMessage").html("An unexpected error occurred while attempting to validate your credentials. Please check your link and login information and try again.");
+			$("#dialogError div.errorMessage").html(msite.localization.index["generic-server-error"]);
 			break;
 		default:
 			// otherwise show a general message that the communication was unsuccessful.
-			$("#dialogError div.errorMessage").html("Unable to contact the server. Please try again in a few minutes.");
+			$("#dialogError div.errorMessage").html(msite.localization.index["generic-server-error"]);
 	}
 	$.mobile.pageLoading(true);
 	$("#show-error-message").click();
@@ -97,7 +99,7 @@ var signInHandler = function(p_isLoggedIn, p_errorCode) {
 */
 var registerClickHandler = function() {
 	if ($("#lastName").val == "" || $("#systemEmail").val() == "") {
-		$("#dialogError div.errorMessage").html("Last Name and Email Address are required.");
+		$("#dialogError div.errorMessage").html(msite.localization.index["lastname-email-required"]);
 		$("#show-error-message").click();
 		return;
 	}
@@ -125,15 +127,15 @@ var registerHandler = function(p_success, p_errorCode)
 	switch(p_errorCode) {
 		case "400":
 			// if the response was a "bad request", show message that login credentials were incorrect.
-			$("#dialogError div.errorMessage").html("We were unable to verify you. Is your information correct or do you have another email address? If you continue to have problems, please contact the helpdesk.");
+			$("#dialogError div.errorMessage").html(msite.localization.index['unable-to-verify']);
 			break;
 		case "500":
 			// if the response was a 500 "internal server error", show a message of the likely cause.
-			$("#dialogError div.errorMessage").html("An unexpected error occurred while attempting to validate your credentials. Please check Last Name and Email Address and try again.");
+			$("#dialogError div.errorMessage").html(msite.localization.index["generic-server-error"]);
 			break;
 		default:
 			// otherwise show a general message that the communication was unsuccessful.
-			$("#dialogError div.errorMessage").html("Unable to contact the server. Please try again in a few minutes.");
+			$("#dialogError div.errorMessage").html(msite.localization.index["timeout"]);
 	}
 	$.mobile.pageLoading(true);
 	$("#show-error-message").click();
@@ -142,7 +144,7 @@ var registerHandler = function(p_success, p_errorCode)
 $(document).ready(function() {
 	$().msiteConnect({
 		crossDomainErrorHandler : function() {
-			$("#dialogError div.errorMessage").html("Application content is not available at this time. Please try again later and if the problem persists, contact the helpdesk.");
+			$("#dialogError div.errorMessage").html(msite.localization.index["generic-server-error"]);
 			$("#show-error-message").click();
 		}
 	});
