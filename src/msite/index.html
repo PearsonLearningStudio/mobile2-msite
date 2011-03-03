@@ -48,6 +48,8 @@ if (accessCookie && (accessCookie.length >0) ) {
 	$(location).attr("href", "home.html");
 }
 
+
+
 var signInClickHandler = function() {
 	if ($("#userId").val == "" || $("#password").val() == "") {
 		$("#dialogError .errorMessage").html(msite.localization.index["username-password-required"]);
@@ -149,6 +151,9 @@ $(document).ready(function() {
 		}
 	});
 	
+	
+
+	
 	// assign actions to the sign in button
 	$("#signInBtn").bind("click", signInClickHandler);
 	
@@ -166,7 +171,24 @@ $(document).ready(function() {
 		p_event.preventDefault();
 		registerClickHandler();
 	});
-	
+
+	// Check to see if there is a valid authorization grant in the url
+	var accessGrant = getQueryStringValue("access_grant");
+	if (accessGrant.length > 0) {
+		$.mobile.pageLoading();
+		var timeout = setTimeout(function() {
+				sessionManager.loginWithEmailGrant(accessGrant, function(boolSuccessful, strErrorCode) {
+					if(boolSuccessful) {
+						$(location).attr("href", "home.html");
+					} else {
+						$("#dialogError div.errorMessage").html(msite.localization.index['invalid-email-access']);
+						$.mobile.pageLoading(false);
+						$("#show-error-message").click();
+					};
+				});
+		}, 500);
+	};
+
 	
 })
 		</script>

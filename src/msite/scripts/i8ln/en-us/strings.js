@@ -18,7 +18,7 @@ msite.localization.index["username-password-incorrect"] = "<h2>Incorrect Informa
 msite.localization.index["generic-server-error"] = "<h2>System Error</h2><p>The system was unable to process your request. Please try again.</p>";
 msite.localization.index["lastname-email-required"] = "<h2>Missing Required Fields</h2><p>You must enter your Last Name and your email address.</p>";
 msite.localization.index['unable-to-verify'] = "<h2>Unable to Verify</h2><p>The system was unable to determine your login credentials.  Did you enter the correct last name and email address?</p><p>If you continue to have problems, please contact the help desk.</p>";
-
+msite.localization.index['invalid-email-access'] = '<h2>Invalid Email Authorization</h2><p>The email link you tapped is invalid or has expired.  Please try another email authorization.</p>';
 
 
 

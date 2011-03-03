@@ -143,13 +143,15 @@ $(document).ready(function() {
 		$.mobile.changePage(strUrl);
 	});
 	
-	// Initialize click listener for what's due/activity buttons
+	// Initialize click listener for what's due button
 	$(".btn-whatsdue").click(function() {
 		$("div.subnav a").removeClass("ui-btn-active");
 		$(this).addClass("ui-btn-active");
 		$(".view-activity").hide();
 		$(".view-whatsdue").show();
-	}).click();; // default view for page
+	}).click(); // default view for page
+	
+	// Initialize click listener for Activity button
 	$(".btn-activity").click(function() {
 		$(".btn-whatsdue").removeClass("ui-btn-active");
 		$(this).addClass("ui-btn-active");
@@ -162,55 +164,54 @@ $(document).ready(function() {
 		$().QueryApi("get", {
 			strUrl : queryUrl,
 			successHandler : function(jsonResponse, intTransactionId){
-				
-				var dateNow = Date.today();
-				var dateToday = Date.today().add({days: -1});
-				var dateYesterday = Date.today().add({days: -2});
 				var strHtml = "";
-				strHtml += '<ul data-role="listview" data-inset="true" class="mobi-listview">';
-				strHtml += '<li data-role="list-divider">All Activity in the last 14 days</li>';
-				for (var i = 0; i < jsonResponse.activityStream.items.length; i++){
-					strHtml += '<li><a href="#">';
-					strHtml += '<span class="mobi-activity-title">';
-					if (jsonResponse.activityStream.items[i].object.objectType === "grade") {
-						strHtml += "Grade Posted";
-					} else if (jsonResponse.activityStream.items[i].object.objectType === "dropbox-submission") {
-						strHtml += "Dropbox Submission";
-					} else if (jsonResponse.activityStream.items[i].object.objectType === "remark") {
-						strHtml += "Student Remark";
-					} else if (jsonResponse.activityStream.items[i].object.objectType === "thread-topic") {
-						strHtml += "New Discussion Topic";
-					} else if (jsonResponse.activityStream.items[i].object.objectType === "exam-submission") {
-						strHtml += "Exam";
-					} else if (jsonResponse.activityStream.items[i].object.objectType === "thread-post") {
-						strHtml += "Thread Post";
-					}
-					strHtml += "</span><span class='mobi-course-title'>";
-					strHtml += jsonResponse.activityStream.items[i].target.title;
-					strHtml += "</span>";
-					var strTotalDate = jsonResponse.activityStream.items[i].postedTime;
-					var strDate = strTotalDate.split("T")[0];
-					var strTime = strTotalDate.split("T")[1];
-					var dateActivity = Date.parse(strDate);
-
-					//dateActivity = Date.parse(jsonResponse.activityStream.items[i].postedTime);
+				if (jsonResponse.activityStream.items.length === 0) {
+					strHtml += "<h3>No activities in the last 14 days.</h3>";
+				} else {
+					var dateNow = Date.today();
+					var dateToday = Date.today().add({days: -1});
+					var dateYesterday = Date.today().add({days: -2});
 					
-					//dateActivity = Date.parse(jsonResponse.activityStream.items[i].postedTime);
-
-					strHtml += '<span class="mobi-course-date">';
-					if (dateActivity.between(dateToday, dateNow)){
-						strHtml += "Today";
-					} else if (dateActivity.between(dateYesterday, dateNow)){
-						strHtml += "Yesterday";
-					} else {
-						strHtml += dateActivity.toString("MMM d");
+					strHtml += '<ul data-role="listview" data-inset="true" class="mobi-listview">';
+					strHtml += '<li data-role="list-divider">All Activity in the last 14 days</li>';
+					for (var i = 0; i < jsonResponse.activityStream.items.length; i++){
+						strHtml += '<li><a href="#">';
+						strHtml += '<span class="mobi-activity-title">';
+						if (jsonResponse.activityStream.items[i].object.objectType === "grade") {
+							strHtml += "Grade Posted";
+						} else if (jsonResponse.activityStream.items[i].object.objectType === "dropbox-submission") {
+							strHtml += "Dropbox Submission";
+						} else if (jsonResponse.activityStream.items[i].object.objectType === "remark") {
+							strHtml += "Student Remark";
+						} else if (jsonResponse.activityStream.items[i].object.objectType === "thread-topic") {
+							strHtml += "New Discussion Topic";
+						} else if (jsonResponse.activityStream.items[i].object.objectType === "exam-submission") {
+							strHtml += "Exam";
+						} else if (jsonResponse.activityStream.items[i].object.objectType === "thread-post") {
+							strHtml += "Thread Post";
+						}
+						strHtml += "</span><span class='mobi-course-title'>";
+						strHtml += jsonResponse.activityStream.items[i].target.title;
+						strHtml += "</span>";
+						var strTotalDate = jsonResponse.activityStream.items[i].postedTime;
+						var strDate = strTotalDate.split("T")[0];
+						var strTime = strTotalDate.split("T")[1];
+						var dateActivity = Date.parse(strDate);
+	
+						strHtml += '<span class="mobi-course-date">';
+						if (dateActivity.between(dateToday, dateNow)){
+							strHtml += "Today";
+						} else if (dateActivity.between(dateYesterday, dateNow)){
+							strHtml += "Yesterday";
+						} else {
+							strHtml += dateActivity.toString("MMM d");
+						}
+						
+						strHtml += '</span>';
+						strHtml += "</a></li>";
 					}
-					//strHtml += jsonResponse.activityStream.items[i].postedTime;
-					
-					strHtml += '</span>';
-					strHtml += "</a></li>";
+					strHtml += "</ul>";
 				}
-				strHtml += "</ul>";
 				$("#pageHome .view-activity").html(strHtml);
 				$("#pageHome .view-activity .mobi-listview").listview();
 				$(".view-activity").show();
