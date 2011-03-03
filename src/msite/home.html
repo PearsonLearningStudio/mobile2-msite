@@ -156,15 +156,19 @@ $(document).ready(function() {
 		$(".view-whatsdue").hide();
 		$.mobile.pageLoading();
 		// Call API to get information
-		var queryUrl = configSettings.apiproxy + "/me/whatshappeningfeed"
+		var past = Date.today().add(-14).days();
+		var strDate = past.toString("M/d/yyyy"); 
+		var queryUrl = configSettings.apiproxy + "/me/whatshappeningfeed?since=" + strDate;
 		$().QueryApi("get", {
 			strUrl : queryUrl,
 			successHandler : function(jsonResponse, intTransactionId){
+				
 				var dateNow = Date.today();
 				var dateToday = Date.today().add({days: -1});
 				var dateYesterday = Date.today().add({days: -2});
 				var strHtml = "";
 				strHtml += '<ul data-role="listview" data-inset="true" class="mobi-listview">';
+				strHtml += '<li data-role="list-divider">All Activity in the last 14 days</li>';
 				for (var i = 0; i < jsonResponse.activityStream.items.length; i++){
 					strHtml += '<li><a href="#">';
 					strHtml += '<span class="mobi-activity-title">';
