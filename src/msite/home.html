@@ -2,8 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>Happenings</title>
-		<link rel="stylesheet" href="css/reset.css" />
+		<title>eCollege</title>
 		<link rel="stylesheet" href="css/jquery.mobile-1.0a3.css" />
 		<link rel="stylesheet" href="css/msite.css" />
 		<link rel="stylesheet" href="css/branding.css" />
@@ -13,10 +12,10 @@ div.layout-header {
 	min-height: 40px;
 	background-color: #333;
 }
-div.layout-header h1 {
+div.layout-header .branding-header-logo {
 	position: absolute;
 	top: 0px;
-	left: 0px;
+	left: 5px;
 	margin: 0px;
 	padding: 0px;
 	height: 40px;
@@ -47,22 +46,20 @@ div.layout-header .menu-active {
 	-webkit-border-radius: 0px;
 }
 /* Mobile List View */
-.mobi-listview li {
+.mobi-listvieww li {
 	border-radius: 0px;
 	-moz-border-radius: 0px;
 	-webkit-border-radius: 0px;
 }
-.mobi-listview li.ui-li-staticc {
-	background-image: url(css/images/icons-18-black.png);
-	background-repeat: no-repeat;
-	background-position: right 20px;
+.mobi-listview li a {
+	display: block;
+	width: 100%;
+	height: 100%;
+	font-weight: normal;
 }
-.mobi-listview .mobi-listview-active {
-	background-color: #ccc;
-}
-.mobi-listview p {
-	line-height: 1.1em;
-	margin-left: 40px;
+.mobi-listview span {
+	display: block;
+	line-height: 1.2em;
 }
 .mobi-listview .mobi-activity-title {
 	font-weight: bold;
@@ -74,8 +71,9 @@ div.layout-header .menu-active {
 }
 .mobi-listview .mobi-course-date {
 	position: absolute;
-	top: 15px;
+	top: 2px;
 	right: 10px;
+	font-size: 90%;
 }
 
 
@@ -100,6 +98,8 @@ div.layout-header .menu-active {
 		<script type="text/javascript" src="scripts/jquery/jquery-1.5.1.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.mobile-1.0a3.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.msiteConnect.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery.queryApi.js"></script>
+		<script type="text/javascript" src="scripts/date.js"></script>
 		<script type="text/javascript" src="scripts/json2.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/AjaxManager.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/VariableValidator.js"></script>
@@ -149,38 +149,102 @@ $(document).ready(function() {
 		$(this).addClass("ui-btn-active");
 		$(".view-activity").hide();
 		$(".view-whatsdue").show();
-	}).click(); // default view for page
+	}).click();; // default view for page
 	$(".btn-activity").click(function() {
 		$(".btn-whatsdue").removeClass("ui-btn-active");
 		$(this).addClass("ui-btn-active");
 		$(".view-whatsdue").hide();
-		$(".view-activity").show();
-	});
+		$.mobile.pageLoading();
+		// Call API to get information
+		var queryUrl = configSettings.apiproxy + "/me/whatshappeningfeed"
+		$().QueryApi("get", {
+			strUrl : queryUrl,
+			successHandler : function(jsonResponse, intTransactionId){
+				var dateNow = Date.today();
+				var dateToday = Date.today().add({days: -1});
+				var dateYesterday = Date.today().add({days: -2});
+				var strHtml = "";
+				strHtml += '<ul data-role="listview" data-inset="true" class="mobi-listview">';
+				for (var i = 0; i < jsonResponse.activityStream.items.length; i++){
+					strHtml += '<li><a href="#">';
+					strHtml += '<span class="mobi-activity-title">';
+					if (jsonResponse.activityStream.items[i].object.objectType === "grade") {
+						strHtml += "Grade Posted";
+					} else if (jsonResponse.activityStream.items[i].object.objectType === "dropbox-submission") {
+						strHtml += "Dropbox Submission";
+					} else if (jsonResponse.activityStream.items[i].object.objectType === "remark") {
+						strHtml += "Student Remark";
+					} else if (jsonResponse.activityStream.items[i].object.objectType === "thread-topic") {
+						strHtml += "New Discussion Topic";
+					} else if (jsonResponse.activityStream.items[i].object.objectType === "exam-submission") {
+						strHtml += "Exam";
+					} else if (jsonResponse.activityStream.items[i].object.objectType === "thread-post") {
+						strHtml += "Thread Post";
+					}
+					strHtml += "</span><span class='mobi-course-title'>";
+					strHtml += jsonResponse.activityStream.items[i].target.title;
+					strHtml += "</span>";
+					var strTotalDate = jsonResponse.activityStream.items[i].postedTime;
+					var strDate = strTotalDate.split("T")[0];
+					var strTime = strTotalDate.split("T")[1];
+					var dateActivity = Date.parse(strDate);
+
+					//dateActivity = Date.parse(jsonResponse.activityStream.items[i].postedTime);
+					
+					//dateActivity = Date.parse(jsonResponse.activityStream.items[i].postedTime);
+
+					strHtml += '<span class="mobi-course-date">';
+					if (dateActivity.between(dateToday, dateNow)){
+						strHtml += "Today";
+					} else if (dateActivity.between(dateYesterday, dateNow)){
+						strHtml += "Yesterday";
+					} else {
+						strHtml += dateActivity.toString("MMM d");
+					}
+					//strHtml += jsonResponse.activityStream.items[i].postedTime;
+					
+					strHtml += '</span>';
+					strHtml += "</a></li>";
+				}
+				strHtml += "</ul>";
+				$("#pageHome .view-activity").html(strHtml);
+				$("#pageHome .view-activity .mobi-listview").listview();
+				$(".view-activity").show();
+				$.mobile.pageLoading(true);
+			},
+			errorHandler : function() {
+				alert('error');
+			}
+		})
+		
+
+	})
 	//$(".navbar-home").click();
 
 	$(".container-navbar a").click(function(event){
 		event.preventDefault();
-	})
-})
-		
+	});
+});
 		</script>
 		
 	</head>
 	<body>
 		<div data-role="page" id="pageHome">
+
 			<div class="layout-header">
-				<h1>Pearson</h1>
+				<p class="branding-header-logo">Pearson</p>
 				<a class="button-menu">Menu</a>
 				<div class="clear"></div>
 				<ul data-role="listview" data-inset="true">
 					<li><a href="#">Home</a></li>
-					<li><a href="#">My Profile</a></li>
+					<li><a href="#pageProfile" data-transition="flip">My Profile</a></li>
 					<li><a href="#">Settings</a></li>
 					<li><a href="#" class="menu-logout">Logout</a></li>
 				</ul>
 				<div class="clear"></div>
 			</div>
 			<div data-role="content">
+				
 				<div data-role="navbar" class="container-navbar">
 					<ul>
 						<li><a href="#" data-transition="flip" class="ui-btn-active">Home</a></li>
@@ -190,66 +254,51 @@ $(document).ready(function() {
 						<li><a href="#pageProfile" data-transition="flip">Profile</a></li>
 					</ul>
 				</div>
+
 				<div data-role="controlgroup" data-type="horizontal" class="ui-fluid ui-even-2 subnav">
 					<a href="#" data-role="button" class="btn-whatsdue">What's Due</a>
 					<a href="#" data-role="button" class="btn-activity">Activity</a>
 				</div>
+
 				<div class="view-activity">
-					<ul data-role="listview" data-inset="true" data-theme="d" data-dividertheme="b" class="mobi-listview">
+					
+				</div>
+				
+				<!--
+				<div class="view-activity-template" style="display: none;">
+					<ul class="mobi-listview">
 						<li data-role="list-divider">Today</li>
 						<li id="activity1">
 							<a href="#">
-								<p class="mobi-activity-title">Ends Today</p>
-								<p>Accounting and the Business Environment so here's a title that's really long</p>
-								<p class="mobi-course-title">Accounting 1001</p>
-								<p class="mobi-course-date">Today</p>
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								<p class="mobi-activity-title">Ends Today</p>
-								<p>Accounting and the Business Environment so here's a title that's really long</p>
-								<p class="mobi-course-title">Accounting 1001</p>
-								<p class="mobi-course-date">Today</p>
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								<p class="mobi-activity-title">Ends Today</p>
-								<p>Accounting and the Business Environment so here's a title that's really long</p>
-								<p class="mobi-course-title">Accounting 1001</p>
-								<p class="mobi-course-date">Today</p>
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								<p class="mobi-activity-title">Ends Today</p>
-								<p>Accounting and the Business Environment so here's a title that's really long</p>
-								<p class="mobi-course-title">Accounting 1001</p>
-								<p class="mobi-course-date">Today</p>
+								<span class="mobi-activity-title">Ends Today</span>
+								<span>Accounting and the Business Environment so here's a title that's really long</span>
+								<span class="mobi-course-title">Accounting 1001</span>
+								<span class="mobi-course-date">Today</span>
 							</a>
 						</li>
 					</ul>
 				</div>
+				-->
+				
 				<div class="view-whatsdue">
 					<h3>There is nothing due today.</h3>
 				</div>
+				
 			</div>
-			<div data-role="footer">
-				<h2>footer</h2>
-			</div>
+
+			
 		</div>
 		
 		
 		
 		<div data-role="page" id="pageDiscuss">
 			<div class="layout-header">
-				<h1>Pearson</h1>
+				<p class="branding-header-logo">Pearson</p>
 				<a class="button-menu">Menu</a>
 				<div class="clear"></div>
 				<ul data-role="listview" data-inset="true">
-					<li><a href="#">Home</a></li>
-					<li><a href="#">My Profile</a></li>
+					<li><a href="#pageHome" data-transition="flip">Home</a></li>
+					<li><a href="#pageProfile" data-transition="flip">My Profile</a></li>
 					<li><a href="#">Settings</a></li>
 					<li><a href="#" class="menu-logout">Logout</a></li>
 				</ul>
@@ -268,19 +317,16 @@ $(document).ready(function() {
 				<h3>Discussions</h3>
 
 			</div>
-			<div data-role="footer">
-				<h2>footer</h2>
-			</div>
 		</div>
 		
 		<div data-role="page" id="pageClasses">
 			<div class="layout-header">
-				<h1>Pearson</h1>
+				<p class="branding-header-logo">Pearson</p>
 				<a class="button-menu">Menu</a>
 				<div class="clear"></div>
 				<ul data-role="listview" data-inset="true">
-					<li><a href="#">Home</a></li>
-					<li><a href="#">My Profile</a></li>
+					<li><a href="#pageHome" data-transition="flip">Home</a></li>
+					<li><a href="#pageProfile" data-transition="flip">My Profile</a></li>
 					<li><a href="#">Settings</a></li>
 					<li><a href="#" class="menu-logout">Logout</a></li>
 				</ul>
@@ -299,19 +345,16 @@ $(document).ready(function() {
 				<h3>Classes</h3>
 
 			</div>
-			<div data-role="footer">
-				<h2>footer</h2>
-			</div>
 		</div>
 
 		<div data-role="page" id="pagePeople">
 			<div class="layout-header">
-				<h1>Pearson</h1>
+				<p class="branding-header-logo">Pearson</p>
 				<a class="button-menu">Menu</a>
 				<div class="clear"></div>
 				<ul data-role="listview" data-inset="true">
-					<li><a href="#">Home</a></li>
-					<li><a href="#">My Profile</a></li>
+					<li><a href="#pageHome" data-transition="flip">Home</a></li>
+					<li><a href="#pageProfile" data-transition="flip">My Profile</a></li>
 					<li><a href="#">Settings</a></li>
 					<li><a href="#" class="menu-logout">Logout</a></li>
 				</ul>
@@ -330,18 +373,15 @@ $(document).ready(function() {
 				<h3>People</h3>
 
 			</div>
-			<div data-role="footer">
-				<h2>footer</h2>
-			</div>
 		</div>
 
 		<div data-role="page" id="pageProfile">
 			<div class="layout-header">
-				<h1>Pearson</h1>
+				<p class="branding-header-logo">Pearson</p>
 				<a class="button-menu">Menu</a>
 				<div class="clear"></div>
 				<ul data-role="listview" data-inset="true">
-					<li><a href="#">Home</a></li>
+					<li><a href="#pageHome" data-transition="flip">Home</a></li>
 					<li><a href="#">My Profile</a></li>
 					<li><a href="#">Settings</a></li>
 					<li><a href="#" class="menu-logout">Logout</a></li>
@@ -360,9 +400,6 @@ $(document).ready(function() {
 				</div>
 				<h3>Profile</h3>
 
-			</div>
-			<div data-role="footer">
-				<h2>footer</h2>
 			</div>
 		</div>
 
