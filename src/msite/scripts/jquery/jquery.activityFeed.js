@@ -124,11 +124,26 @@
 			// Browsers that do not grok localStorage will just hit the service every time.
 
 			var queryUrl = configSettings.apiproxy + "/me/whatshappeningfeed";
-			if (dataStorage.isSupported()) {
-				var strCachedFeedDate = dataStorage.get("activity-feed-fetch-date");
+			var strCachedFeedDate = dataStorage.get("activity-feed-fetch-date");
+			var strCachedFeed = dataStorage.get("activity-feed")
+			if (dataStorage.isSupported()) {;
 				var queryUrl = configSettings.apiproxy + "/me/whatshappeningfeed";
-				if ((Date.parse(strCachedFeedDate) > Date.today().add({hours: 1})) || settings.boolForceRefresh) {
-
+				
+				// Do we need to refetch the cache?
+				var boolRefetch = false;
+				if ((strCachedFeedDate == null) || (strCachedFeed == null)) {
+					boolRefetch = true;
+				} else {
+					if(strCachedFeed.length < 10) {
+						boolRefetch = true;
+					}
+					if (Date.parse(strCachedFeedDate) > Date.today().add({hours: 1})) {
+						boolRefetch = true;
+					}
+				}
+				
+				if (boolRefetch || settings.boolForceRefresh) {
+					// Fetch a new feed and cache it.
 					$().QueryApi("get", {
 						strUrl: queryUrl,
 						successHandler: function(jsonResponse, intTransactionId){
@@ -141,9 +156,8 @@
 						}
 					});
 				} else {
-					// stored feed is sufficiently new so let's use it instead
-					// and save the network traffic
-					objFeed = JSON.parse(dataStorage.get("activity-feed"));
+					// Use cached feed 
+					objFeed = JSON.parse(strCachedFeed);
 					settings.callbackSuccess(objFeed, -100);
 				}
 			} else {
@@ -158,8 +172,6 @@
 					}
 				});
 			}
-			//settings.callback();
-			///return objFeed;
 		}
 		
 	}
