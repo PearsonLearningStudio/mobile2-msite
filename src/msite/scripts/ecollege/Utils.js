@@ -411,3 +411,26 @@ var validateAuthHeaderAndGo = function(p_authorizationHeader, p_errorCode, p_cli
 	    p_callbackIfValid();
 	}
 };
+
+var dataStorage = {
+    isSupported: function () {
+        try {
+            return ('localStorage' in window && window['localStorage'] !== null);           
+        } catch (e) {
+            return false;
+        }
+    },
+    add: function (key, value) {
+        try {
+                localStorage.setItem(key, value);
+                //or localStorage[key] = value; //like associative arrays
+            } catch (e) {
+                alert(e.Description);
+                return -1;
+            }
+    },
+    get: function (key) {
+        return localStorage.getItem(key);
+        //or localStorage[key];
+    }
+};

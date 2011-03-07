@@ -99,6 +99,7 @@ div.layout-header .menu-active {
 		<script type="text/javascript" src="scripts/jquery/jquery.mobile-1.0a3.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.msiteConnect.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.queryApi.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery.activityFeed.js"></script>
 		<script type="text/javascript" src="scripts/date.js"></script>
 		<script type="text/javascript" src="scripts/json2.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/AjaxManager.js"></script>
@@ -149,86 +150,67 @@ $(document).ready(function() {
 		$(this).addClass("ui-btn-active");
 		$(".view-activity").hide();
 		$(".view-whatsdue").show();
-	}).click(); // default view for page
+		
+		$(window).unbind("scroll");
+	}).click(); // default view for page, set on load.
 	
 	// Initialize click listener for Activity button
 	$(".btn-activity").click(function() {
 		$(".btn-whatsdue").removeClass("ui-btn-active");
 		$(this).addClass("ui-btn-active");
 		$(".view-whatsdue").hide();
-		$.mobile.pageLoading();
-		// Call API to get information
-		var past = Date.today().add(-14).days();
-		var strDate = past.toString("M/d/yyyy"); 
-		var queryUrl = configSettings.apiproxy + "/me/whatshappeningfeed?since=" + strDate;
-		$().QueryApi("get", {
-			strUrl : queryUrl,
-			successHandler : function(jsonResponse, intTransactionId){
-				var strHtml = "";
-				if (jsonResponse.activityStream.items.length === 0) {
-					strHtml += "<h3>No activities in the last 14 days.</h3>";
-				} else {
-					var dateNow = Date.today();
-					var dateToday = Date.today().add({days: -1});
-					var dateYesterday = Date.today().add({days: -2});
+		$(".view-activity").show();
+		
+		// If this view is empty, we need to get the Activities list.
+		
+		if ($("#pageHome .view-activity .mobi-listview").length === 0) {
+		
+			$.mobile.pageLoading();
+			
+			// Fetch the feed and insert into DOM.
+			$().activityFeed("toHtml", {
+				callbackSuccess: function(objReturn){
+					var strFeedHtml = objReturn.strFeedHtml;
+					var strHtml = "";
 					
 					strHtml += '<ul data-role="listview" data-inset="true" class="mobi-listview">';
-					strHtml += '<li data-role="list-divider">All Activity in the last 14 days</li>';
-					for (var i = 0; i < jsonResponse.activityStream.items.length; i++){
-						strHtml += '<li><a href="#">';
-						strHtml += '<span class="mobi-activity-title">';
-						if (jsonResponse.activityStream.items[i].object.objectType === "grade") {
-							strHtml += "Grade Posted";
-						} else if (jsonResponse.activityStream.items[i].object.objectType === "dropbox-submission") {
-							strHtml += "Dropbox Submission";
-						} else if (jsonResponse.activityStream.items[i].object.objectType === "remark") {
-							strHtml += "Student Remark";
-						} else if (jsonResponse.activityStream.items[i].object.objectType === "thread-topic") {
-							strHtml += "New Discussion Topic";
-						} else if (jsonResponse.activityStream.items[i].object.objectType === "exam-submission") {
-							strHtml += "Exam";
-						} else if (jsonResponse.activityStream.items[i].object.objectType === "thread-post") {
-							strHtml += "Thread Post";
-						}
-						strHtml += "</span><span class='mobi-course-title'>";
-						strHtml += jsonResponse.activityStream.items[i].target.title;
-						strHtml += "</span>";
-						var strTotalDate = jsonResponse.activityStream.items[i].postedTime;
-						var strDate = strTotalDate.split("T")[0];
-						var strTime = strTotalDate.split("T")[1];
-						var dateActivity = Date.parse(strDate);
-	
-						strHtml += '<span class="mobi-course-date">';
-						if (dateActivity.between(dateToday, dateNow)){
-							strHtml += "Today";
-						} else if (dateActivity.between(dateYesterday, dateNow)){
-							strHtml += "Yesterday";
-						} else {
-							strHtml += dateActivity.toString("MMM d");
-						}
-						
-						strHtml += '</span>';
-						strHtml += "</a></li>";
-					}
-					strHtml += "</ul>";
+					strHtml += '<li data-role="list-divider">All Activity</li>';
+					strHtml += strFeedHtml;
+					
+					$("#pageHome .view-activity").html(strHtml);
+					$("#pageHome .view-activity .mobi-listview").listview();
+					$.mobile.pageLoading(true);
 				}
-				$("#pageHome .view-activity").html(strHtml);
-				$("#pageHome .view-activity .mobi-listview").listview();
-				$(".view-activity").show();
-				$.mobile.pageLoading(true);
-			},
-			errorHandler : function() {
-				alert('error');
+			});
+		}
+
+		// Add scroll event for infinite scroll.
+		$(window).scroll(function() {
+			if (($(window).scrollTop() + 150) >= ($(document).height() - $(window).height())) {
+				// Get more goodies!
+				$.mobile.pageLoading();
+				
+				// Fetch the feed and insert into DOM.
+				$().activityFeed("toHtml", {
+					intStartIndex: configSettings.intCurrentNumberOfActivities,
+					intEndIndex: configSettings.intCurrentNumberOfActivities + configSettings.intNumberOfActivities,
+					callbackSuccess: function(objReturn) {
+						$(".activity-scroll-indicator").remove();
+						var strFeedHtml = objReturn.strFeedHtml;
+				
+						$("#pageHome .view-activity .mobi-listview").append(strFeedHtml);
+						$("#pageHome .view-activity .mobi-listview").listview("refresh");
+						$.mobile.pageLoading(true);
+						configSettings.intCurrentNumberOfActivities += configSettings.intNumberOfActivities;
+						if (objReturn.boolAllItems) {
+							$(window).unbind("scroll");
+						}
+					}
+				});
 			}
 		})
-		
 
 	})
-	//$(".navbar-home").click();
-
-	$(".container-navbar a").click(function(event){
-		event.preventDefault();
-	});
 });
 		</script>
 		

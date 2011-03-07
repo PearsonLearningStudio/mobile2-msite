@@ -14,7 +14,15 @@
 			ajaxManager = AjaxManager.getInstance();
 		
 			sessionManager.getAuthorizationHeader(function(authorizationHeader, errorCode) {
-				ajaxManager.get(settings.strUrl, [authorizationHeader], function(jsonResponse, intTransactionId) {options.successHandler(jsonResponse, intTransactionId)}, function() {options.errorHandler()});
+				ajaxManager.get(settings.strUrl, 
+							    [authorizationHeader], 
+								function(jsonResponse, intTransactionId) {
+									options.successHandler(jsonResponse, intTransactionId)
+									
+								}, 
+								function() {
+									options.errorHandler()
+								});
 			});
 		},
 		
