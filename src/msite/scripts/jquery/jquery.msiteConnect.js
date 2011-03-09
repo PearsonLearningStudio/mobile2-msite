@@ -49,7 +49,10 @@ var cs;
 				$.extend(settings, options);
 			}
 			var accessCookie = readCookie("access_grant");
-			if (accessCookie.length < 1 ) {
+			if (accessCookie === null) {
+				$(location).attr("href", settings.redirectUrl);
+			}
+			if (accessCookie.length < 5 ) {
 				$(location).attr("href", settings.redirectUrl);
 			}
 		}

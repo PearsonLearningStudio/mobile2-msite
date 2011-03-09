@@ -3,6 +3,12 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>eCollege</title>
+		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<link rel="apple-touch-icon" href="images/icon.png" />
+		<link rel="apple-touch-icon-precomposed" href="images/icon.png">
+		<link rel="apple-touch-startup-image" href="images/startup.png">
 		<link rel="stylesheet" href="css/jquery.mobile-1.0a3.css" />
 		<link rel="stylesheet" href="css/msite.css" />
 		<link rel="stylesheet" href="css/branding.css" />
@@ -76,6 +82,34 @@ div.layout-header .menu-active {
 	font-size: 90%;
 }
 
+/*
+ * Bookmark popup
+ */
+.bookmark-popup {
+	display: none;
+	width: 100px;
+	height: 75px;
+	background-color: #ccc;
+	border: 1px solid #000;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+.bookmark-popup h3 {
+	font-size: 80%;
+	margin: 0px;
+	padding: 0px;
+	margin-left: 20px;
+	margin-top: 0.75em;
+	margin-bottom: 0.5em;
+}
+
+.bookmark-popup p {
+	font-size: 70%;
+	margin: 0px;
+	padding: 0px;
+	margin-left: 20px;
+}
 
 
 .clear {
@@ -120,11 +154,17 @@ div.layout-header .menu-active {
 			
 // Check to see if there is already an access grant of some sort.  If there is, we should forward on to home page.
 $().msiteConnect("checkAuth");
-
 $(document).ready(function() {
+	
+	// Be sure the dropdown menu is hidden each time we change a page
+	$(document).bind("pagebeforeshow", function() {
+		$("div.layout-header ul").hide();
+		$(".layout-header .button-menu").removeClass("menu-active");
+	});
 	$(".menu-logout").bind("click", function() {
-		$("html").addClass( "ui-loading" );
+		$("body").addClass( "ui-loading" );
 		sessionManager.logOut();
+		createCookie("access_grant", "", -1);
 		$(location).attr("href", "/");
 		return false;
 	});
@@ -184,8 +224,15 @@ $(document).ready(function() {
 			});
 		}
 
-		// Add scroll event for infinite scroll.
+		// Add scroll event for infinite scroll and positioning bookmark alert div
 		$(window).scroll(function() {
+			
+			// always position the bookmark popup at the bottom of the viewport
+			if ($("#pageHome .bookmark-popup:visible").length > 0){
+				$("#pageHome .bookmark-popup").positionBottomOfViewport()
+			}
+			
+			// Infinite scroll
 			if (($(window).scrollTop() + 150) >= ($(document).height() - $(window).height())) {
 				// Get more goodies!
 				$.mobile.pageLoading();
@@ -203,19 +250,116 @@ $(document).ready(function() {
 						$.mobile.pageLoading(true);
 						configSettings.intCurrentNumberOfActivities += configSettings.intNumberOfActivities;
 						if (objReturn.boolAllItems) {
+							// All items have been returned and displayed, so unbind the scroll event.
 							$(window).unbind("scroll");
 						}
 					}
 				});
+	
 			}
 		})
 
-	})
+	});
+
+
+	// Check to see if we need to display a bookmark popup
+	if (dataStorage.isSupported()) {
+		var strPopupShownDate = dataStorage.get("popup-shown-date");
+		
+		
+		// Show the popup if we've never shown it before, or if we haven't shown it in the last 5 days.
+		var boolShow = false;
+		if (strPopupShownDate == null) {
+			boolShow = true;
+		}
+		else {
+			if (Date.parse(strPopupShownDate) > Date.today().add({days: 5})) {
+				boolShow = true;
+			};
+		};
+		var boolStandalone = window.navigator.standalone;
+		if ((boolStandalone != undefined) && (boolStandalone)) {
+			// We're in fullscreen mode.  The only way to get there is by accessing the app via an icon on the home screen of an iOS browser.
+			// So if we have that, we don't need to show the popup.
+			boolShow = false;
+		}
+		
+		
+		if (boolShow) {
+			// Show the popup
+			var intWidth = $(document).width() - 50;
+			var strDevice = detectDevice();
+			var strHtml = '<h3>You are on a not-iOS, not-Android device</h3>';
+			strHtml += "<p>To add this app to your bookmarks, do whatever it is you need to do to do that.</p>"
+			if (strDevice === "ios") {
+				strHtml = '<h3>You are on an iOS device</h3><p>To add this app to your home screen, ';
+				strHtml += 'tap the bookmark icon in the toolbar below and follow the prompts.</p>';
+			}
+			else 
+				if (strDevice === "android") {
+					strHtml = "<h3>You are on an Android device</h3><p>To add this app to your home screen, ";
+					strHtml += "add it as a bookmark and follow the prompts.</p>";
+				}
+			$("#pageHome .bookmark-popup").html(strHtml).width(intWidth).positionBottomOfViewport().show().click(function(){
+				$(this).hide();
+			});
+			
+			// Need to move it in case of orientation change
+			$(document).bind("orientationchange", function() {
+				$("#pageHome .bookmark-popup").positionBottomOfViewport();
+			})
+		}
+		
+	};
+	
+	$("body").removeClass("ui-loading");
 });
+
+(function($){
+	$.fn.positionBottomOfViewport = function(options) {
+		var pos = {
+			sTop : function() {
+				return window.pageYOffset || document.documentElement && document.documentElement.scrollTop ||	document.body.scrollTop;
+			},
+			wHeight : function() {
+				return window.innerHeight || document.documentElement && document.documentElement.clientHeight || document.body.clientHeight;
+			}
+		};
+	    return this.each(function(index) {
+			if (index == 0) {
+				var $this = $(this);
+				var elHeight = $this.outerHeight();
+				var elTop = pos.sTop() + (pos.wHeight()) - (elHeight);
+		        $this.css({
+					position: 'absolute',
+					margin: '0',
+					top: elTop,
+					left: (($(window).width() - $this.outerWidth()) / 2) + 'px'
+				});
+			}
+		});
+	};
+})(jQuery);
+
+
+var detectDevice = function() {
+	var strUserAgent = navigator.userAgent.toLowerCase();
+	var strDevice = "other";
+	if ((strUserAgent.search("iphone") > -1) || (strUserAgent.search("ipod") >-1)) {
+		strDevice = "ios";
+	} else if (strUserAgent.search("android") > -1) {
+		strDevice = "android";
+	}
+	return strDevice;
+}
+
+
+
 		</script>
 		
 	</head>
 	<body>
+		
 		<div data-role="page" id="pageHome">
 
 			<div class="layout-header">
@@ -271,6 +415,9 @@ $(document).ready(function() {
 					<h3>There is nothing due today.</h3>
 				</div>
 				
+				<div class="bookmark-popup">
+				</div>
+				
 			</div>
 
 			
@@ -301,7 +448,7 @@ $(document).ready(function() {
 						<li><a href="#pageProfile" data-transition="flip">Profile</a></li>
 					</ul>
 				</div>
-				<h3>Discussions</h3>
+				<h3>Discussions.</h3>
 
 			</div>
 		</div>
@@ -390,8 +537,35 @@ $(document).ready(function() {
 			</div>
 		</div>
 
+		<div data-role="page" id="pageActivityDetail">
+			<div class="layout-header">
+				<p class="branding-header-logo">Pearson</p>
+				<a class="button-menu">Menu</a>
+				<div class="clear"></div>
+				<ul data-role="listview" data-inset="true">
+					<li><a href="#pageHome" data-transition="flip">Home</a></li>
+					<li><a href="#">My Profile</a></li>
+					<li><a href="#">Settings</a></li>
+					<li><a href="#" class="menu-logout">Logout</a></li>
+				</ul>
+				<div class="clear"></div>
+			</div>
+			<div data-role="content">
+				<div data-role="navbar" class="container-navbar">
+					<ul>
+						<li><a href="#pageHome" data-transition="flip">Home</a></li>
+						<li><a href="#pageDiscuss" data-transition="flip">Discuss</a></li>
+						<li><a href="#pageClasses" data-transition="flip">Classes</a></li>
+						<li><a href="#pagePeople" data-transition="flip">People</a></li>
+						<li><a href="#pageProfile" data-transition="flip">Profile</a></li>
+					</ul>
+				</div>
+				<h3>Activity Detail Page</h3>
+				<a data-theme="b" href="#" class="ui-btn-left ui-btn ui-btn-icon-left ui-btn-corner-all ui-shadow ui-btn-up-b" data-rel="back" data-icon="arrow-l"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Back</span><span class="ui-icon ui-icon-arrow-l ui-icon-shadow"></span></span></a>
 
 
+			</div>
+		</div>
 
 
 

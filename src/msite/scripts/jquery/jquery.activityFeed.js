@@ -8,7 +8,7 @@
 		 * 		intStartIndex: The starting point in the zero-indexed items array
 		 * 		intEndIndex: The ending point in the array; -1 for end of array
 		 * 		boolForceRefresh: Force a refresh of the cached feed.
-		 * 		callback: a function to execute just before returning the HTML
+		 * 		callbackSuccess: the callback function 
 		 * 
 		 * get: Get a feed and return it as a JSON object, either from the service or from local storage
 		 * 	options:
@@ -45,7 +45,7 @@
 				}
 				for (var i = settings.intStartIndex; i < intEnd; i++) {
 					var dateActivity = Date.parse(objFeed.activityStream.items[i].postedTime.split("T")[0]);
-					strHtml += '<li><a href="#">';
+					strHtml += '<li><a href="#pageActivityDetail">';
 					strHtml += '<span class="mobi-activity-title">';
 					if (objFeed.activityStream.items[i].object.objectType === "grade") {
 						strHtml += "Grade Posted";
@@ -124,9 +124,10 @@
 			// Browsers that do not grok localStorage will just hit the service every time.
 
 			var queryUrl = configSettings.apiproxy + "/me/whatshappeningfeed";
-			var strCachedFeedDate = dataStorage.get("activity-feed-fetch-date");
-			var strCachedFeed = dataStorage.get("activity-feed")
+			
 			if (dataStorage.isSupported()) {;
+				var strCachedFeedDate = dataStorage.get("activity-feed-fetch-date");
+				var strCachedFeed = dataStorage.get("activity-feed");
 				var queryUrl = configSettings.apiproxy + "/me/whatshappeningfeed";
 				
 				// Do we need to refetch the cache?

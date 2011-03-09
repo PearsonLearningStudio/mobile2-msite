@@ -434,3 +434,17 @@ var dataStorage = {
         //or localStorage[key];
     }
 };
+
+var detectDevice = function() {
+	var strUserAgent = navigator.userAgent.toLowerCase();
+	var strDevice = "other";
+	if ((strUserAgent.search("iphone") > -1) || (strUserAgent.search("ipod") >-1)) {
+		strDevice = "ios";
+	} else if (strUserAgent.search("android")) {
+		strDevice = "android";
+	}
+	return strDevice;
+}
+
+
+
