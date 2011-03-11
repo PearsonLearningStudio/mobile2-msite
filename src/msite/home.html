@@ -71,15 +71,21 @@ div.layout-header .menu-active {
 	font-weight: bold;
 	font-size: 105%;
 	margin-top: 0.2em;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 .mobi-listview .mobi-course-title {
-	font-style: italic;
 }
 .mobi-listview .mobi-course-date {
 	position: absolute;
 	top: 2px;
 	right: 10px;
 	font-size: 90%;
+}
+.mobi-listview .mobi-course-summary {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	font-style: italic;
 }
 
 /*
@@ -263,12 +269,11 @@ $(document).ready(function() {
 
 
 	// Check to see if we need to display a bookmark popup
+	var boolShow = false;
 	if (dataStorage.isSupported()) {
 		var strPopupShownDate = dataStorage.get("popup-shown-date");
 		
-		
 		// Show the popup if we've never shown it before, or if we haven't shown it in the last 5 days.
-		var boolShow = false;
 		if (strPopupShownDate == null) {
 			boolShow = true;
 		}
@@ -283,34 +288,34 @@ $(document).ready(function() {
 			// So if we have that, we don't need to show the popup.
 			boolShow = false;
 		}
-		
-		
-		if (boolShow) {
-			// Show the popup
-			var intWidth = $(document).width() - 50;
-			var strDevice = detectDevice();
-			var strHtml = '<h3>You are on a not-iOS, not-Android device</h3>';
-			strHtml += "<p>To add this app to your bookmarks, do whatever it is you need to do to do that.</p>"
-			if (strDevice === "ios") {
-				strHtml = '<h3>You are on an iOS device</h3><p>To add this app to your home screen, ';
-				strHtml += 'tap the bookmark icon in the toolbar below and follow the prompts.</p>';
-			}
-			else 
-				if (strDevice === "android") {
-					strHtml = "<h3>You are on an Android device</h3><p>To add this app to your home screen, ";
-					strHtml += "add it as a bookmark and follow the prompts.</p>";
-				}
-			$("#pageHome .bookmark-popup").html(strHtml).width(intWidth).positionBottomOfViewport().show().click(function(){
-				$(this).hide();
-			});
-			
-			// Need to move it in case of orientation change
-			$(document).bind("orientationchange", function() {
-				$("#pageHome .bookmark-popup").positionBottomOfViewport();
-			})
-		}
-		
+
 	};
+	
+	if (boolShow) {
+		// Show the popup
+		var intWidth = $(document).width() - 50;
+		var strDevice = detectDevice();
+		var strHtml = '<h3>You are on a not-iOS, not-Android device</h3>';
+		strHtml += "<p>To add this app to your bookmarks, do whatever it is you need to do to do that.</p>"
+		if (strDevice === "ios") {
+			strHtml = '<h3>You are on an iOS device</h3><p>To add this app to your home screen, ';
+			strHtml += 'tap the bookmark icon in the toolbar below and follow the prompts.</p>';
+		} else if (strDevice === "android") {
+			strHtml = "<h3>You are on an Android device</h3><p>To add this app to your home screen, ";
+			strHtml += "add it as a bookmark and follow the prompts.</p>";
+		}
+		$("#pageHome .bookmark-popup").html(strHtml).width(intWidth).positionBottomOfViewport().show().click(function(){
+			$(this).hide();
+			if (dataStorage.isSupported()) {
+				dataStorage.add("popup-shown-date", Date.today());
+			}
+		});
+		
+		// Need to move it in case of orientation change
+		$(document).bind("orientationchange", function() {
+			$("#pageHome .bookmark-popup").positionBottomOfViewport();
+		})
+	}
 	
 	$("body").removeClass("ui-loading");
 });

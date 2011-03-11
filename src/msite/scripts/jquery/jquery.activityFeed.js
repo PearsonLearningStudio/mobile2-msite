@@ -37,44 +37,64 @@
 				var dateYesterday = Date.today().add({days: -2});
 				var intEnd = settings.intEndIndex;
 				var boolItems = false;
-				var strEndHtml = '<li data-role="list-divider" class="activity-scroll-indicator">Loading more...</li>';
+				var strEndHtml = '<li data-role="list-divider" class="activity-scroll-indicator">Loading more...</li>\n';
 				if ((intEnd > objFeed.activityStream.items.length)|| (intEnd === -1)) {
 					intEnd = objFeed.activityStream.items.length;
 					boolItems = true;
 					strEndHtml = "";
 				}
 				for (var i = settings.intStartIndex; i < intEnd; i++) {
-					var dateActivity = Date.parse(objFeed.activityStream.items[i].postedTime.split("T")[0]);
+					// Parse the activity date: it is an ISO8601 format
+					var dateActivity = Date.parseExact(objFeed.activityStream.items[i].postedTime, "yyyy-MM-ddTHH:mm:ssZ");
+					var strSuffix = " AM";
+					if (parseInt(dateActivity.toString("HH")) > 12) {
+						strSuffix = " PM";
+					}
 					strHtml += '<li><a href="#pageActivityDetail">';
 					strHtml += '<span class="mobi-activity-title">';
 					if (objFeed.activityStream.items[i].object.objectType === "grade") {
-						strHtml += "Grade Posted";
+						strHtml += "Grade: " + objFeed.activityStream.items[i].target.title;
+						strHtml += "</span><span class='mobi-course-summary'>";
+						strHtml += GetGrade(objFeed.activityStream.items[i]);
+						strHtml += "</span>";
 					} else if (objFeed.activityStream.items[i].object.objectType === "dropbox-submission") {
-						strHtml += "Dropbox Submission";
+						strHtml += "Dropbox: " + objFeed.activityStream.items[i].target.title;
+						strHtml += "</span><span class='mobi-course-summary'>";
+						strHtml += GetSummary(objFeed.activityStream.items[i]);
+						strHtml += "</span>";
 					} else if (objFeed.activityStream.items[i].object.objectType === "remark") {
-						strHtml += "Student Remark";
+						strHtml += "Remark: " + objFeed.activityStream.items[i].object.title;
+						strHtml += "</span><span class='mobi-course-summary'>";
+						strHtml += GetSummary(objFeed.activityStream.items[i]);
+						strHtml += "</span>";
 					} else if (objFeed.activityStream.items[i].object.objectType === "thread-topic") {
-						strHtml += "New Discussion Topic";
+						strHtml += "Topic: " + objFeed.activityStream.items[i].object.title;
+						strHtml += "</span><span class='mobi-course-summary'>";
+						strHtml += GetSummary(objFeed.activityStream.items[i]);
+						strHtml += "</span>";
 					} else if (objFeed.activityStream.items[i].object.objectType === "exam-submission") {
-						strHtml += "Exam";
+						strHtml += "Exam: " + objFeed.activityStream.items[i].target.title;
+						strHtml += "</span><span class='mobi-course-summary'>";
+						strHtml += GetSummary(objFeed.activityStream.items[i]);
+						strHtml += "</span>";
 					} else if (objFeed.activityStream.items[i].object.objectType === "thread-post") {
-						strHtml += "Thread Post";
+						strHtml += "Re: " + objFeed.activityStream.items[i].object.title;
+						strHtml += "</span><span class='mobi-course-summary'>";
+						strHtml += GetSummary(objFeed.activityStream.items[i]);
+						strHtml += "</span>";
 					}
-					strHtml += "</span><span class='mobi-course-title'>";
-					strHtml += objFeed.activityStream.items[i].target.title;
-					strHtml += "</span>";
 					
 					// "Friendly dates": Yesterday, Today, nice formatted dates.
 					strHtml += '<span class="mobi-course-date">';
 					if (dateActivity.between(dateToday, dateNow)) {
-						strHtml += "Today";
+						strHtml += dateActivity.toString("h:mm") + strSuffix;
 					} else if (dateActivity.between(dateYesterday, dateNow)) {
-						strHtml += "Yesterday";
+						strHtml += dateActivity.toString("h:mm") + strSuffix + " Yesterday";
 					} else {
 						strHtml += dateActivity.toString("MMM d");
 					}
 					strHtml += '</span>';
-					strHtml += "</a></li>";
+					strHtml += "</a></li>\n";
 				}
 				strHtml += strEndHtml;
 				var objReturn = {
@@ -83,6 +103,37 @@
 					boolAllItems : boolItems
 				}
 				return objReturn;
+			}
+			// GetGrade: Helper method for getting a prettily-formatted grade from an activity list item.
+			var GetGrade = function(objItem) {
+				var strLetterGrade = objItem.object.letterGrade;
+				var strPointsAchieved = objItem.object.pointsAchieved;
+				var strPointsPossible = objItem.target.pointsPossible;
+				var strReturn = "";
+				if (strLetterGrade != null) {
+					if (strLetterGrade != "") {
+						strReturn = strLetterGrade;
+					}
+				}
+				if ((strPointsAchieved != null) && (strPointsPossible != null)) {
+					strReturn += " (" + strPointsAchieved + "/" + strPointsPossible + ")";
+				}
+				return strReturn;
+			}
+			
+			// GetSummary: Helper method for getting the text of the summary from an activity list item.
+			var GetSummary = function(objItem) {
+				var strSummary = objItem.object.summary;
+				var strReturn = "";
+				var strStrippedSummary = strSummary.replace(/(<([^>]+)>)/ig,"");
+				if (strStrippedSummary.length > 200) {
+					strReturn = strStrippedSummary.substr(0, 200);
+				} else if (strStrippedSummary.length === 0) {
+					strReturn = "&nbsp;";
+				} else {
+					strReturn = strStrippedSummary;
+				}
+				return strReturn;
 			}
 			
 			// If a feed object has been included in the function call, parse that
