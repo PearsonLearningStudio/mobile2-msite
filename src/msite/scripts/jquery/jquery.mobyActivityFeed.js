@@ -140,89 +140,25 @@
 			// otherwise, we need to get a new one.
 			if (settings.objFeed === "") {
 				// get the feed
-				$().activityFeed("get", {
+				$().mobyCacheData({
 					boolForceRefresh: settings.boolForceRefresh,
-					callbackSuccess: function(objFeed, intIndex){
-						objReturn = createHtml(objFeed);
+					strQueryUrl: configSettings.apiproxy + "/me/whatshappeningfeed",
+					strQueryType: "get",
+					strQueryData: "",
+					strCacheDate: "activity-feed-fetch-date",
+					strCacheInfo: "activity-feed",
+					objCacheRefresh: {
+						hours: 1
+					},
+					callbackSuccess : function(jsonResponse, intTransactionId) {
+						objReturn = createHtml(jsonResponse);
 						settings.callbackSuccess(objReturn);
 					}
-				});
+				})
 			} else {
 				objFeed = settings.objFeed;
 				objReturn = createHtml(objFeed);
 				settings.callbackSuccess(objReturn);
-			}
-			
-		},
-		get : function(options) {
-			var settings = {
-				boolForceRefresh: false,
-				callbackSuccess : function(jsonResponse, intTransactionId) {
-					return jsonResponse;
-				},
-				callbackError: function() {
-					alert('Error getting feed information from server. Please retry.');
-				}
-			};
-			if ( options ) {
-				$.extend( settings, options );
-			}
-			
-			
-			// Get Activity Feed:
-			// If there is a feed stored in localStorage AND it is recent enough, return that.
-			// Otherwise, return a new feed fetched from the server.
-			// Browsers that do not grok localStorage will just hit the service every time.
-
-			var queryUrl = configSettings.apiproxy + "/me/whatshappeningfeed";
-			
-			if (dataStorage.isSupported()) {;
-				var strCachedFeedDate = dataStorage.get("activity-feed-fetch-date");
-				var strCachedFeed = dataStorage.get("activity-feed");
-				var queryUrl = configSettings.apiproxy + "/me/whatshappeningfeed";
-				
-				// Do we need to refetch the cache?
-				var boolRefetch = false;
-				if ((strCachedFeedDate == null) || (strCachedFeed == null)) {
-					boolRefetch = true;
-				} else {
-					if(strCachedFeed.length < 10) {
-						boolRefetch = true;
-					}
-					if (Date.parse(strCachedFeedDate) > Date.today().add({hours: 1})) {
-						boolRefetch = true;
-					}
-				}
-				
-				if (boolRefetch || settings.boolForceRefresh) {
-					// Fetch a new feed and cache it.
-					$().QueryApi("get", {
-						strUrl: queryUrl,
-						successHandler: function(jsonResponse, intTransactionId){
-							dataStorage.add("activity-feed", JSON.stringify(jsonResponse));
-							dataStorage.add("activity-feed-fetch-date", Date.today());
-							settings.callbackSuccess(jsonResponse, intTransactionId);
-						},
-						errorHandler: function(){
-							settings.callbackError();
-						}
-					});
-				} else {
-					// Use cached feed 
-					objFeed = JSON.parse(strCachedFeed);
-					settings.callbackSuccess(objFeed, -100);
-				}
-			} else {
-				// This browser does not support localStorage, so we need to get the feed.
-				$().QueryApi("get", {
-					strUrl: queryUrl,
-					successHandler: function(jsonResponse, intTransactionId){
-						settings.callbackSuccess();
-					},
-					errorHandler: function(){
-						settings.callbackError();
-					}
-				});
 			}
 		}
 		

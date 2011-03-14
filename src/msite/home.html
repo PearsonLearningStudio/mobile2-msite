@@ -137,11 +137,12 @@ div.layout-header .menu-active {
 		</style>
 		<script type="text/javascript" src="scripts/jquery/jquery-1.5.1.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.mobile-1.0a3.js"></script>
-		<script type="text/javascript" src="scripts/jquery/jquery.msiteConnect.js"></script>
-		<script type="text/javascript" src="scripts/jquery/jquery.queryApi.js"></script>
-		<script type="text/javascript" src="scripts/jquery/jquery.activityFeed.js"></script>
 		<script type="text/javascript" src="scripts/date.js"></script>
 		<script type="text/javascript" src="scripts/json2.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery.mobyConnect.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery.mobyQueryApi.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery.mobyActivityFeed.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery.mobyCacheData.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/AjaxManager.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/VariableValidator.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/AjaxRequestHeader.js"></script>
@@ -159,165 +160,24 @@ div.layout-header .menu-active {
 		<script>
 			
 // Check to see if there is already an access grant of some sort.  If there is, we should forward on to home page.
-$().msiteConnect("checkAuth");
+$().mobyConnect("checkAuth");
+
+
 $(document).ready(function() {
 	
-	// Be sure the dropdown menu is hidden each time we change a page
-	$(document).bind("pagebeforeshow", function() {
-		$("div.layout-header ul").hide();
-		$(".layout-header .button-menu").removeClass("menu-active");
-	});
-	$(".menu-logout").bind("click", function() {
-		$("body").addClass( "ui-loading" );
-		sessionManager.logOut();
-		createCookie("access_grant", "", -1);
-		$(location).attr("href", "/");
-		return false;
-	});
-	
-	// Initialize cross site connector and session manager
-	$().msiteConnect();
-
-	$(".layout-header .button-menu").bind("click", function() {
-		$(this).siblings("ul").slideToggle(0);
-		$(this).toggleClass("menu-active");
-		return false;
-	});
-
-	// Initialize mobi-listviev elements
-	$(".mobi-listview li").click(function() {
-		var strUrl = $(this).attr("id") + ".html";
-		$.mobile.changePage(strUrl);
-	});
-	
-	// Initialize click listener for what's due button
-	$(".btn-whatsdue").click(function() {
-		$("div.subnav a").removeClass("ui-btn-active");
-		$(this).addClass("ui-btn-active");
-		$(".view-activity").hide();
-		$(".view-whatsdue").show();
 		
-		$(window).unbind("scroll");
-	}).click(); // default view for page, set on load.
-	
-	// Initialize click listener for Activity button
-	$(".btn-activity").click(function() {
-		$(".btn-whatsdue").removeClass("ui-btn-active");
-		$(this).addClass("ui-btn-active");
-		$(".view-whatsdue").hide();
-		$(".view-activity").show();
-		
-		// If this view is empty, we need to get the Activities list.
-		
-		if ($("#pageHome .view-activity .mobi-listview").length === 0) {
-		
-			$.mobile.pageLoading();
-			
-			// Fetch the feed and insert into DOM.
-			$().activityFeed("toHtml", {
-				callbackSuccess: function(objReturn){
-					var strFeedHtml = objReturn.strFeedHtml;
-					var strHtml = "";
-					
-					strHtml += '<ul data-role="listview" data-inset="true" class="mobi-listview">';
-					strHtml += '<li data-role="list-divider">All Activity</li>';
-					strHtml += strFeedHtml;
-					
-					$("#pageHome .view-activity").html(strHtml);
-					$("#pageHome .view-activity .mobi-listview").listview();
-					$.mobile.pageLoading(true);
-				}
-			});
+	// Initialize cross site connector and session manager,
+	// and only once that is done should we do anything else.
+	$().mobyConnect("init", {
+		crossDomainReadyHandler: function() {
+			$().InitPage();
+		},
+		crossDomainErrorHandler: function() {
+			alert('error initializing cross domain functions');
 		}
-
-		// Add scroll event for infinite scroll and positioning bookmark alert div
-		$(window).scroll(function() {
-			
-			// always position the bookmark popup at the bottom of the viewport
-			if ($("#pageHome .bookmark-popup:visible").length > 0){
-				$("#pageHome .bookmark-popup").positionBottomOfViewport()
-			}
-			
-			// Infinite scroll
-			if (($(window).scrollTop() + 150) >= ($(document).height() - $(window).height())) {
-				// Get more goodies!
-				$.mobile.pageLoading();
-				
-				// Fetch the feed and insert into DOM.
-				$().activityFeed("toHtml", {
-					intStartIndex: configSettings.intCurrentNumberOfActivities,
-					intEndIndex: configSettings.intCurrentNumberOfActivities + configSettings.intNumberOfActivities,
-					callbackSuccess: function(objReturn) {
-						$(".activity-scroll-indicator").remove();
-						var strFeedHtml = objReturn.strFeedHtml;
-				
-						$("#pageHome .view-activity .mobi-listview").append(strFeedHtml);
-						$("#pageHome .view-activity .mobi-listview").listview("refresh");
-						$.mobile.pageLoading(true);
-						configSettings.intCurrentNumberOfActivities += configSettings.intNumberOfActivities;
-						if (objReturn.boolAllItems) {
-							// All items have been returned and displayed, so unbind the scroll event.
-							$(window).unbind("scroll");
-						}
-					}
-				});
-	
-			}
-		})
-
+		
 	});
 
-
-	// Check to see if we need to display a bookmark popup
-	var boolShow = false;
-	if (dataStorage.isSupported()) {
-		var strPopupShownDate = dataStorage.get("popup-shown-date");
-		
-		// Show the popup if we've never shown it before, or if we haven't shown it in the last 5 days.
-		if (strPopupShownDate == null) {
-			boolShow = true;
-		}
-		else {
-			if (Date.parse(strPopupShownDate) > Date.today().add({days: 5})) {
-				boolShow = true;
-			};
-		};
-		var boolStandalone = window.navigator.standalone;
-		if ((boolStandalone != undefined) && (boolStandalone)) {
-			// We're in fullscreen mode.  The only way to get there is by accessing the app via an icon on the home screen of an iOS browser.
-			// So if we have that, we don't need to show the popup.
-			boolShow = false;
-		}
-
-	};
-	
-	if (boolShow) {
-		// Show the popup
-		var intWidth = $(document).width() - 50;
-		var strDevice = detectDevice();
-		var strHtml = '<h3>You are on a not-iOS, not-Android device</h3>';
-		strHtml += "<p>To add this app to your bookmarks, do whatever it is you need to do to do that.</p>"
-		if (strDevice === "ios") {
-			strHtml = '<h3>You are on an iOS device</h3><p>To add this app to your home screen, ';
-			strHtml += 'tap the bookmark icon in the toolbar below and follow the prompts.</p>';
-		} else if (strDevice === "android") {
-			strHtml = "<h3>You are on an Android device</h3><p>To add this app to your home screen, ";
-			strHtml += "add it as a bookmark and follow the prompts.</p>";
-		}
-		$("#pageHome .bookmark-popup").html(strHtml).width(intWidth).positionBottomOfViewport().show().click(function(){
-			$(this).hide();
-			if (dataStorage.isSupported()) {
-				dataStorage.add("popup-shown-date", Date.today());
-			}
-		});
-		
-		// Need to move it in case of orientation change
-		$(document).bind("orientationchange", function() {
-			$("#pageHome .bookmark-popup").positionBottomOfViewport();
-		})
-	}
-	
-	$("body").removeClass("ui-loading");
 });
 
 (function($){
@@ -346,6 +206,169 @@ $(document).ready(function() {
 	};
 })(jQuery);
 
+(function($){
+	$.fn.InitPage = function() {
+		// Be sure the dropdown menu is hidden each time we change a page
+		$(document).bind("pagebeforeshow", function() {
+			$("div.layout-header ul").hide();
+			$(".layout-header .button-menu").removeClass("menu-active");
+		});
+		$(".menu-logout").bind("click", function() {
+			$("body").addClass( "ui-loading" );
+			sessionManager.logOut();
+			createCookie("access_grant", "", -1);
+			$(location).attr("href", "/");
+			return false;
+		});
+		
+		// Initialize information caches
+		$().mobyCacheData();
+		
+	
+		$(".layout-header .button-menu").bind("click", function() {
+			$(this).siblings("ul").slideToggle(0);
+			$(this).toggleClass("menu-active");
+			return false;
+		});
+	
+		// Initialize mobi-listviev elements
+		$(".mobi-listview li").click(function() {
+			var strUrl = $(this).attr("id") + ".html";
+			$.mobile.changePage(strUrl);
+		});
+		
+		// Initialize click listener for what's due button
+		$(".btn-whatsdue").click(function() {
+			$("div.subnav a").removeClass("ui-btn-active");
+			$(this).addClass("ui-btn-active");
+			$(".view-activity").hide();
+			$(".view-whatsdue").show();
+			
+			$(window).unbind("scroll");
+		}).click(); // default view for page, set on load.
+		
+		// Initialize click listener for Activity button
+		$(".btn-activity").click(function() {
+			$(".btn-whatsdue").removeClass("ui-btn-active");
+			$(this).addClass("ui-btn-active");
+			$(".view-whatsdue").hide();
+			$(".view-activity").show();
+			
+			// If this view is empty, we need to get the Activities list.
+			
+			if ($("#pageHome .view-activity .mobi-listview").length === 0) {
+			
+				$.mobile.pageLoading();
+				
+				// Fetch the feed and insert into DOM.
+				$().activityFeed("toHtml", {
+					callbackSuccess: function(objReturn){
+						var strFeedHtml = objReturn.strFeedHtml;
+						var strHtml = "";
+						
+						strHtml += '<ul data-role="listview" data-inset="true" class="mobi-listview">';
+						strHtml += '<li data-role="list-divider">All Activity</li>';
+						strHtml += strFeedHtml;
+						
+						$("#pageHome .view-activity").html(strHtml);
+						$("#pageHome .view-activity .mobi-listview").listview();
+						$.mobile.pageLoading(true);
+					}
+				});
+			}
+	
+			// Add scroll event for infinite scroll and positioning bookmark alert div
+			$(window).scroll(function() {
+				
+				// always position the bookmark popup at the bottom of the viewport
+				if ($("#pageHome .bookmark-popup:visible").length > 0){
+					$("#pageHome .bookmark-popup").positionBottomOfViewport()
+				}
+				
+				// Infinite scroll
+				if (($(window).scrollTop() + 150) >= ($(document).height() - $(window).height())) {
+					// Get more goodies!
+					$.mobile.pageLoading();
+					
+					// Fetch the feed and insert into DOM.
+					$().activityFeed("toHtml", {
+						intStartIndex: configSettings.intCurrentNumberOfActivities,
+						intEndIndex: configSettings.intCurrentNumberOfActivities + configSettings.intNumberOfActivities,
+						callbackSuccess: function(objReturn) {
+							$(".activity-scroll-indicator").remove();
+							var strFeedHtml = objReturn.strFeedHtml;
+					
+							$("#pageHome .view-activity .mobi-listview").append(strFeedHtml);
+							$("#pageHome .view-activity .mobi-listview").listview("refresh");
+							$.mobile.pageLoading(true);
+							configSettings.intCurrentNumberOfActivities += configSettings.intNumberOfActivities;
+							if (objReturn.boolAllItems) {
+								// All items have been returned and displayed, so unbind the scroll event.
+								$(window).unbind("scroll");
+							}
+						}
+					});
+		
+				}
+			})
+	
+		});
+	
+	
+		// Check to see if we need to display a bookmark popup
+		var boolShow = false;
+		if (dataStorage.isSupported()) {
+			var strPopupShownDate = dataStorage.get("popup-shown-date");
+			
+			// Show the popup if we've never shown it before, or if we haven't shown it in the last 5 days.
+			if (strPopupShownDate == null) {
+				boolShow = true;
+			}
+			else {
+				if (Date.parse(strPopupShownDate) > Date.today().add({days: 5})) {
+					boolShow = true;
+				};
+			};
+			var boolStandalone = window.navigator.standalone;
+			if ((boolStandalone != undefined) && (boolStandalone)) {
+				// We're in fullscreen mode.  The only way to get there is by accessing the app via an icon on the home screen of an iOS browser.
+				// So if we have that, we don't need to show the popup.
+				boolShow = false;
+			}
+	
+		};
+		
+		if (boolShow) {
+			// Show the popup
+			var intWidth = $(document).width() - 50;
+			var strDevice = detectDevice();
+			var strHtml = '<h3>You are on a not-iOS, not-Android device</h3>';
+			strHtml += "<p>To add this app to your bookmarks, do whatever it is you need to do to do that.</p>"
+			if (strDevice === "ios") {
+				strHtml = '<h3>You are on an iOS device</h3><p>To add this app to your home screen, ';
+				strHtml += 'tap the bookmark icon in the toolbar below and follow the prompts.</p>';
+			} else if (strDevice === "android") {
+				strHtml = "<h3>You are on an Android device</h3><p>To add this app to your home screen, ";
+				strHtml += "add it as a bookmark and follow the prompts.</p>";
+			}
+			$("#pageHome .bookmark-popup").html(strHtml).width(intWidth).positionBottomOfViewport().show().click(function(){
+				$(this).hide();
+				if (dataStorage.isSupported()) {
+					dataStorage.add("popup-shown-date", Date.today());
+				}
+			});
+			
+			// Need to move it in case of orientation change
+			$(document).bind("orientationchange", function() {
+				$("#pageHome .bookmark-popup").positionBottomOfViewport();
+			})
+		}
+		
+		$("body").removeClass("ui-loading");
+	}
+	
+})(jQuery);
+
 
 var detectDevice = function() {
 	var strUserAgent = navigator.userAgent.toLowerCase();
@@ -357,6 +380,7 @@ var detectDevice = function() {
 	}
 	return strDevice;
 }
+
 
 
 

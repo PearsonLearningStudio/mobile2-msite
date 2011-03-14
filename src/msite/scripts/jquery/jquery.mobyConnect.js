@@ -1,7 +1,17 @@
+/*
+ * Global variables for connection manager:
+ * crossDomainIntializer: the instance of the CrossDomainInitializer class
+ * sessionManager: the instance of the SessionManager class
+ * clientStringManager: the instance of the ClientStringManager class
+ * cs: the client string
+ * userId: the current authenticated user's ID
+ */
+
 var crossDomainInitializer;
 var sessionManager;
 var clientStringManager;
 var cs;
+var userId;
 
 (function($) {
 
@@ -58,7 +68,7 @@ var cs;
 		}
 	}
 	
-	$.fn.msiteConnect = function(method) {
+	$.fn.mobyConnect = function(method) {
 		// Method calling logic
 		if ( methods[method] ) {
 			return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
