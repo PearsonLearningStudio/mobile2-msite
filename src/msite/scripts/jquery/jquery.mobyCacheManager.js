@@ -25,8 +25,8 @@
 				strQueryUrl: configSettings.apiproxy + "/me/whatshappeningfeed",
 				strQueryType: "get",
 				strQueryData: "",
-				strCacheDate: "activity-feed-fetch-date",
-				strCacheInfo: "activity-feed",
+				strCacheDate: "activities-timestamp",
+				strCacheInfo: "activities",
 				objCacheRefresh: {
 					hours: 1
 				},

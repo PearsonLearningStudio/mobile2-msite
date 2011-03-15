@@ -91,6 +91,7 @@
 			var callMe = function(courseInfo, arrLength) {
 				var objCourse = {
 					"id" : courseInfo.courses[0].id,
+					"number" : courseInfo.courses[0].displayCourseCode,
 					"title" : courseInfo.courses[0].title
 				}
 				arrCourses.push(objCourse);

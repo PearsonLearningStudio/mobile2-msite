@@ -20,7 +20,7 @@
 				objFeed : "",
 				intStartIndex: 0,
 				intEndIndex: configSettings.intNumberOfActivities,
-				boolForceRefresh: false,
+				boolForceRefresh: true,
 				callbackSuccess: function(objReturn) {
 					return objReturn;
 				}
@@ -52,6 +52,7 @@
 					}
 					strHtml += '<li><a href="#pageActivityDetail">';
 					strHtml += '<span class="mobi-activity-title">';
+					
 					if (objFeed.activityStream.items[i].object.objectType === "grade") {
 						strHtml += "Grade: " + objFeed.activityStream.items[i].target.title;
 						strHtml += "</span><span class='mobi-course-summary'>";
@@ -83,6 +84,16 @@
 						strHtml += GetSummary(objFeed.activityStream.items[i]);
 						strHtml += "</span>";
 					}
+					
+					// Get course title 
+					var strTitle = "";
+					var courseId = objFeed.activityStream.items[i].object.courseId;
+					for (var j = 0; j < arrCourses.length; j++) {
+						if (arrCourses[j].id === courseId) {
+							strTitle = arrCourses[j].number + ": " + arrCourses[j].title;
+						}
+					}
+					strHtml += '<span class="mobi-course-title">' +strTitle+ '</span>';
 					
 					// "Friendly dates": Yesterday, Today, nice formatted dates.
 					strHtml += '<span class="mobi-course-date">';
@@ -129,7 +140,7 @@
 				if (strStrippedSummary.length > 200) {
 					strReturn = strStrippedSummary.substr(0, 200);
 				} else if (strStrippedSummary.length === 0) {
-					strReturn = "&nbsp;";
+					strReturn = "";
 				} else {
 					strReturn = strStrippedSummary;
 				}
@@ -145,8 +156,8 @@
 					strQueryUrl: configSettings.apiproxy + "/me/whatshappeningfeed",
 					strQueryType: "get",
 					strQueryData: "",
-					strCacheDate: "activity-feed-fetch-date",
-					strCacheInfo: "activity-feed",
+					strCacheDate: "activities-timestamp",
+					strCacheInfo: "activities",
 					objCacheRefresh: {
 						hours: 1
 					},
