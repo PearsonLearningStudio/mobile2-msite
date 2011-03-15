@@ -141,8 +141,9 @@ div.layout-header .menu-active {
 		<script type="text/javascript" src="scripts/json2.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.mobyConnect.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.mobyQueryApi.js"></script>
-		<script type="text/javascript" src="scripts/jquery/jquery.mobyActivityFeed.js"></script>
-		<script type="text/javascript" src="scripts/jquery/jquery.mobyCacheData.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery.mobyActivityManager.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery.mobyCacheManager.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery.mobyCourseManager.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/AjaxManager.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/VariableValidator.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/AjaxRequestHeader.js"></script>
@@ -221,8 +222,11 @@ $(document).ready(function() {
 			return false;
 		});
 		
-		// Initialize information caches
-		$().mobyCacheData();
+		// Initialize course cache
+		// Force a refresh in case this is a new login
+		$().mobyCourseManager({
+			boolForceRefresh: true
+		});
 		
 	
 		$(".layout-header .button-menu").bind("click", function() {
@@ -261,7 +265,7 @@ $(document).ready(function() {
 				$.mobile.pageLoading();
 				
 				// Fetch the feed and insert into DOM.
-				$().activityFeed("toHtml", {
+				$().mobyActivityManager("toHtml", {
 					callbackSuccess: function(objReturn){
 						var strFeedHtml = objReturn.strFeedHtml;
 						var strHtml = "";
@@ -291,7 +295,7 @@ $(document).ready(function() {
 					$.mobile.pageLoading();
 					
 					// Fetch the feed and insert into DOM.
-					$().activityFeed("toHtml", {
+					$().mobyActivityManager("toHtml", {
 						intStartIndex: configSettings.intCurrentNumberOfActivities,
 						intEndIndex: configSettings.intCurrentNumberOfActivities + configSettings.intNumberOfActivities,
 						callbackSuccess: function(objReturn) {

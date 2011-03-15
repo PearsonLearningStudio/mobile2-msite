@@ -144,7 +144,7 @@ var registerHandler = function(p_success, p_errorCode)
 	
 };
 $(document).ready(function() {
-	$().msiteConnect({
+	$().mobyConnect({
 		crossDomainErrorHandler : function() {
 			$("#dialogError div.errorMessage").html(msite.localization.index["generic-server-error"]);
 			$("#show-error-message").click();

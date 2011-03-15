@@ -29,7 +29,7 @@
 				$.extend( settings, options );
 			}
 			// Internal function to create the HTML from an Activity Feed json object
-			var createHtml = function (objFeed) {
+			var createHtml = function (objFeed, arrCourses) {
 				// Create the HTML from the data
 				var strHtml = "";
 				var dateNow = Date.today();
@@ -140,7 +140,7 @@
 			// otherwise, we need to get a new one.
 			if (settings.objFeed === "") {
 				// get the feed
-				$().mobyCacheData({
+				$().mobyCacheManager({
 					boolForceRefresh: settings.boolForceRefresh,
 					strQueryUrl: configSettings.apiproxy + "/me/whatshappeningfeed",
 					strQueryType: "get",
@@ -151,8 +151,12 @@
 						hours: 1
 					},
 					callbackSuccess : function(jsonResponse, intTransactionId) {
-						objReturn = createHtml(jsonResponse);
-						settings.callbackSuccess(objReturn);
+						$().mobyCourseManager({
+							callbackSuccess : function(arrCourses) {
+								objReturn = createHtml(jsonResponse, arrCourses);
+								settings.callbackSuccess(objReturn);
+							}
+						})
 					}
 				})
 			} else {
@@ -164,7 +168,7 @@
 		
 	}
 	
-	$.fn.activityFeed = function(method) {
+	$.fn.mobyActivityManager = function(method) {
 		// Method calling logic
 		if ( methods[method] ) {
 			return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));

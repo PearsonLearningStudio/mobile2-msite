@@ -1,16 +1,16 @@
 /*
  * mobyCacheData: Plugin for caching information locally in localStorage, retrieving the cached information,
  * and refreshing the cache.
- * Browsers that do not have localStorage capabilities will be required to fetch data live.
+ * Browsers that do not have localStorage capabilities will be required to fetch data live each time.
  * 
  * Options:
- * 	boolForceRefresh: force a refresh of the cache (boolean)
- * 	strQueryUrl: the URL of the service
- * 	strQueryType: the type of the query ("get" or "post");
- * 	strQueryData: post data to pass to service
- * 	strCacheDate: the name of the timestamp of the cache in localStorage
- * 	strCacheInfo: the name of the cached info in localStorge
- * 	objCacheRefresh: How often to refresh the cache, using date.js-type object
+ * 	boolForceRefresh: force a refresh of the cache (boolean default to false)
+ * 	strQueryUrl: the URL of the resource to cache (string, default to activity feed)
+ * 	strQueryType: the type of the resource query ("get" or "post", default to "get")
+ * 	strQueryData: post data to pass to service (string, default to "")
+ * 	strCacheDate: the name of the timestamp of the cache in localStorage (string, default to "activity-feed-fetch-date")
+ * 	strCacheInfo: the name of the cached info in localStorge (string, default to "activity-feed")
+ * 	objCacheRefresh: How often to refresh the cache, using date.js format time object (object, default {hours:1})
  * 	callbackSuccess:  The callback to execute when information is ready. Receives the json object and transaction ID.
  * 	callbackError: the callback to execute if anything goes wrong
  * 
@@ -22,13 +22,13 @@
 		init : function(options) {
 			var settings = {
 				boolForceRefresh: false,
-				strQueryUrl: configSettings.apiproxy + "/me/courses",
+				strQueryUrl: configSettings.apiproxy + "/me/whatshappeningfeed",
 				strQueryType: "get",
 				strQueryData: "",
-				strCacheDate: "classes-timestamp",
-				strCacheInfo: "classes",
+				strCacheDate: "activity-feed-fetch-date",
+				strCacheInfo: "activity-feed",
 				objCacheRefresh: {
-					days: 5
+					hours: 1
 				},
 				callbackSuccess : function(jsonResponse, intTransactionId) {
 					return jsonResponse;
@@ -97,7 +97,7 @@
 		}
 	}
 	
-	$.fn.mobyCacheData = function(method) {
+	$.fn.mobyCacheManager = function(method) {
 		// Method calling logic
 		if ( methods[method] ) {
 			return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
