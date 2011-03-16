@@ -1,0 +1,195 @@
+div.layout-header {
+	position: relative;
+	min-height: 40px;
+	background-color: #333;
+}
+div.layout-header .branding-header-logo {
+	position: absolute;
+	top: 0px;
+	left: 5px;
+	margin: 0px;
+	padding: 0px;
+	height: 40px;
+	line-height: 40px;
+	color: #fff;
+}
+div.layout-header ul {
+	float: right;
+	display: none;
+	width: 100%;
+}
+div.layout-header .button-menu {
+	float: right;
+	color: #ccc;
+	text-shadow: none;
+	height: 40px;
+	line-height: 40px;
+	padding-left: 8px;
+	padding-right: 8px;
+}
+div.layout-header .menu-active {
+	background-color: #fff;
+	color: #666;
+}
+.layout-header li {
+	border-radius: 0px;
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+}
+/* Mobile List View base classes*/
+.mobi-listview li a {
+	display: block;
+	width: 100%;
+	height: 100%;
+	font-weight: normal;
+}
+.mobi-listview span {
+	display: block;
+	line-height: 1.2em;
+}
+.mobi-listview .mobi-date {
+	position: absolute;
+	top: 4px;
+	right: 10px;
+	font-size: 80%;
+}
+
+.mobi-listview .mobi-title {
+	font-weight: bold;
+	font-size: 90%;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	margin-bottom: 0.1em;
+}
+
+/* Activity list view */
+.mobi-listview .mobi-activity-title {
+	font-weight: bold;
+	font-size: 105%;
+	margin-top: 0.2em;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+.view-activity .mobi-course-title {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	font-size: 80%;
+	margin-top: 0.3em;
+	padding-bottom: 5px;
+}
+.view-activity .mobi-summary {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	font-style: italic;
+}
+
+/* Discussion list view */
+.view-discussion .mobi-title {
+}
+.view-discussion .mobi-response-count {
+	font-size: 70%;
+	font-weight: bold;
+}
+.view-discussion .mobi-your-responses {
+	font-size: 70%;
+	font-style: italic;
+	margin-top: 0.2em;
+}
+.view-discussion .mobi-icon-response-count {
+	position: absolute;
+	color: #fff;
+	background-color: #666;
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	right: 26px;
+	top: 26px;
+	padding-left: 4px;
+	padding-right: 4px;
+	padding-bottom: 1px;
+	font-size: 90%;
+}
+.view-discussion .mobi-icon-arrow-r {
+	position: absolute;
+	color: #666;
+	font-weight: bold;
+	right: 10px;
+	top: 23px;
+}
+.view-discussion .ui-icon-arrow-r {
+	display: none;
+}
+
+/* course filter for discussion view */
+
+.container-navbar .ui-select {
+	width: 100%;
+}
+.container-navbar .ui-field-contain {
+	padding: 0px;
+	margin: 0px;
+}
+.container-navbar .ui-select,
+.container-navbar .ui-select > *  {
+	margin: 0px;
+}
+.container-navbar .ui-btn-corner-all {
+	border-radius: 0;
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+}
+.container-navbar .ui-shadow {
+	-moz-box-shadow: 0px 0px 0px 			rgba(0,0,0,.3);
+	-webkit-box-shadow: 0px 0px 0px 		rgba(0,0,0,.3);
+	box-shadow: 0px 0px 0px 				rgba(0,0,0,.3);
+}
+.container-navbar .ui-icon {
+	margin-top: -10px;
+}
+
+/*
+ * Bookmark popup
+ */
+.bookmark-popup {
+	display: none;
+	width: 100px;
+	height: 75px;
+	background-color: #ccc;
+	border: 1px solid #000;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+.bookmark-popup h3 {
+	font-size: 80%;
+	margin: 0px;
+	padding: 0px;
+	margin-left: 20px;
+	margin-top: 0.75em;
+	margin-bottom: 0.5em;
+}
+
+.bookmark-popup p {
+	font-size: 70%;
+	margin: 0px;
+	padding: 0px;
+	margin-left: 20px;
+}
+
+
+.clear {
+	clear: both;
+}
+
+.ui-fluid, .min-width-480px .ui-fluid .ui-controlgroup-controls{ display: table; width: 100%; }
+.ui-table-row { display: table-row; }
+.ui-fluid .ui-btn { display: table-cell; text-align: center; }
+.ui-even-2 .ui-btn {
+	width: 50%;
+}
+.ui-fluid .ui-btn .ui-btn-inner { width: 100%; padding: 0.6em 0px; }
+
+.ui-fluid .ui-controlgroup-controls { width: 100%; display: table; }
+.ui-fluid .ui-checkbox, .ui-fluid .ui-radio { display: table-cell; }
+.ui-fluid .ui-checkbox label, .ui-fluid .ui-radio label { width: 100%;display: block; text-align: center; }
+

@@ -53,7 +53,7 @@ var userId;
 			// This method does not require that the init method be called first, 
 			// because it is just checking a cookie.
 			var settings = {
-				redirectUrl : "/"
+				redirectUrl : "login.html"
 			}
 			if (options) {
 				$.extend(settings, options);

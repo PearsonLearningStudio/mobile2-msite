@@ -51,36 +51,36 @@
 						strSuffix = " PM";
 					}
 					strHtml += '<li><a href="#pageActivityDetail">';
-					strHtml += '<span class="mobi-activity-title">';
+					strHtml += '<span class="mobi-title">';
 					
 					if (objFeed.activityStream.items[i].object.objectType === "grade") {
 						strHtml += "Grade: " + objFeed.activityStream.items[i].target.title;
-						strHtml += "</span><span class='mobi-course-summary'>";
+						strHtml += "</span><span class='mobi-summary'>";
 						strHtml += GetGrade(objFeed.activityStream.items[i]);
 						strHtml += "</span>";
 					} else if (objFeed.activityStream.items[i].object.objectType === "dropbox-submission") {
 						strHtml += "Dropbox: " + objFeed.activityStream.items[i].target.title;
-						strHtml += "</span><span class='mobi-course-summary'>";
+						strHtml += "</span><span class='mobi-summary'>";
 						strHtml += GetSummary(objFeed.activityStream.items[i]);
 						strHtml += "</span>";
 					} else if (objFeed.activityStream.items[i].object.objectType === "remark") {
 						strHtml += "Remark: " + objFeed.activityStream.items[i].object.title;
-						strHtml += "</span><span class='mobi-course-summary'>";
+						strHtml += "</span><span class='mobi-summary'>";
 						strHtml += GetSummary(objFeed.activityStream.items[i]);
 						strHtml += "</span>";
 					} else if (objFeed.activityStream.items[i].object.objectType === "thread-topic") {
 						strHtml += "Topic: " + objFeed.activityStream.items[i].object.title;
-						strHtml += "</span><span class='mobi-course-summary'>";
+						strHtml += "</span><span class='mobi-summary'>";
 						strHtml += GetSummary(objFeed.activityStream.items[i]);
 						strHtml += "</span>";
 					} else if (objFeed.activityStream.items[i].object.objectType === "exam-submission") {
 						strHtml += "Exam: " + objFeed.activityStream.items[i].target.title;
-						strHtml += "</span><span class='mobi-course-summary'>";
+						strHtml += "</span><span class='mobi-summary'>";
 						strHtml += GetSummary(objFeed.activityStream.items[i]);
 						strHtml += "</span>";
 					} else if (objFeed.activityStream.items[i].object.objectType === "thread-post") {
 						strHtml += "Re: " + objFeed.activityStream.items[i].object.title;
-						strHtml += "</span><span class='mobi-course-summary'>";
+						strHtml += "</span><span class='mobi-summary'>";
 						strHtml += GetSummary(objFeed.activityStream.items[i]);
 						strHtml += "</span>";
 					}
@@ -96,7 +96,7 @@
 					strHtml += '<span class="mobi-course-title">' +strTitle+ '</span>';
 					
 					// "Friendly dates": Yesterday, Today, nice formatted dates.
-					strHtml += '<span class="mobi-course-date">';
+					strHtml += '<span class="mobi-date">';
 					if (dateActivity.between(dateToday, dateNow)) {
 						strHtml += dateActivity.toString("h:mm") + strSuffix;
 					} else if (dateActivity.between(dateYesterday, dateNow)) {
