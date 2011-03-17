@@ -21,6 +21,7 @@
 		<script type="text/javascript" src="scripts/jquery/jquery.mobyActivityManager.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.mobyCacheManager.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.mobyCourseManager.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery.mobyDiscussionManager.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/AjaxManager.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/VariableValidator.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/AjaxRequestHeader.js"></script>
@@ -111,7 +112,7 @@ $(document).ready(function() {
 			return false;
 		});
 	
-		// Initialize mobi-listviev elements
+		// Initialize mobi-listview elements
 		$(".mobi-listview li").click(function() {
 			var strUrl = $(this).attr("id") + ".html";
 			$.mobile.changePage(strUrl);
@@ -244,6 +245,65 @@ $(document).ready(function() {
 			})
 		}
 		
+		// Initialize handler for discussions tab 
+		$("#pageDiscuss").bind("pageshow", function() {
+			
+			$.mobile.pageLoading();
+			
+			
+			$().mobyDiscussionManager("userTopicsToHtml",  {
+				callbackSuccess : function(strDiscussionHtml) {
+					var strHtml = '<ul data-role="listview" data-inset="true" class="mobi-listview">';
+					strHtml += strDiscussionHtml;
+					strHtml += "</ul>";
+					$("#pageDiscuss .view-discussion").html(strHtml);
+					$("#pageDiscuss .view-discussion .mobi-listview").listview();
+					// fill in the filter
+					$().mobyCourseManager({
+						callbackSuccess: function(arrCourses) {
+							var strHtml = '<select name="select-filter-discussions" id="select-filter-discussions">';
+							strHtml += '<option value="all">All</option>';
+								
+							for (var i = 0; i < arrCourses.length; i++) {
+								var strClass = ".course-" + arrCourses[i].id;
+								if ($(strClass).length > 0) {
+									strHtml += '<option value="'+arrCourses[i].id+'">' +arrCourses[i].title+ '</option>';
+								}
+							}
+							
+							strHtml += "</select>";
+							
+							$("#container-filter-discussions").html(strHtml);
+							$("select").selectmenu();
+							$("#select-filter-discussions").change(function() {
+								var strValue = $(this).val();
+								if (strValue === "all") {
+									$(".view-discussion .mobi-listview li").show();
+									$(".view-discussion .mobi-listview .ui-corner-top").removeClass("ui-corner-top");
+									$(".view-discussion .mobi-listview .ui-li-divider:visible:first").addClass("ui-corner-top");
+								} else {
+									var strClass = ".course-" + strValue;
+									var $items = $(strClass);
+									if ($items.length > 0) {
+										$(".view-discussion .mobi-listview .ui-corner-top").removeClass("ui-corner-top");
+										$(".view-discussion .mobi-listview li").hide();
+										$items.show();
+										$(".view-discussion .mobi-listview .ui-li-divider:visible:first").addClass("ui-corner-top");
+									}
+									
+								}
+							})
+						}
+					});
+					$.mobile.pageLoading(true);
+				}
+			})
+			
+
+			
+		})
+		
+		
 		 $("body").removeClass("ui-loading");
 	}
 	
@@ -354,81 +414,12 @@ var detectDevice = function() {
 						<li><a href="#pagePeople" data-transition="flip">People</a></li>
 						<li><a href="#pageProfile" data-transition="flip">Profile</a></li>
 					</ul>
-					<div data-role="fieldcontain">
-						<select name="select-filter-discussions" id="select-filter-discussions">
-							<option value="all">All</option>
-							<option value="course 1">Course 1</option>
-							<option value="course 2">Course 2</option>
-							<option value="course 3">Course 3</option>
-						</select>
+					<div data-role="fieldcontain" id="container-filter-discussions">
 					</div>
 				</div>
 				<div class="view-discussion">
-
-					<ul data-role="listview" data-inset="true" class="mobi-listview">
-						<li data-role="list-divider">Accounting 1(A)</li>
-						<li>
-							<a href="#">
-								<span class="mobi-title">Discussion Title</span>
-								<span class="mobi-response-count">100 total responses</span>
-								<span class="mobi-your-responses">0 responses by you</span>
-								<span class="mobi-icon-response-count">63</span>
-								<span class="mobi-icon-arrow-r">&gt;</span>
-								<span class="mobi-date">Today</span>
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								<span class="mobi-title">Discussion Title</span>
-								<span class="mobi-response-count">100 total responses</span>
-								<span class="mobi-your-responses">0 responses by you</span>
-								<span class="mobi-icon-response-count">63</span>
-								<span class="mobi-icon-arrow-r">&gt;</span>
-								<span class="mobi-date">Today</span>
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								<span class="mobi-title">Discussion Title</span>
-								<span class="mobi-response-count">100 total responses</span>
-								<span class="mobi-your-responses">0 responses by you</span>
-								<span class="mobi-icon-response-count">63</span>
-								<span class="mobi-icon-arrow-r">&gt;</span>
-								<span class="mobi-date">Today</span>
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								<span class="mobi-title">Discussion Title</span>
-								<span class="mobi-response-count">100 total responses</span>
-								<span class="mobi-your-responses">0 responses by you</span>
-								<span class="mobi-icon-response-count">63</span>
-								<span class="mobi-icon-arrow-r">&gt;</span>
-								<span class="mobi-date">Today</span>
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								<span class="mobi-title">Discussion Title</span>
-								<span class="mobi-response-count">100 total responses</span>
-								<span class="mobi-your-responses">0 responses by you</span>
-								<span class="mobi-icon-response-count">63</span>
-								<span class="mobi-icon-arrow-r">&gt;</span>
-								<span class="mobi-date">Today</span>
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								<span class="mobi-title">Discussion Title</span>
-								<span class="mobi-response-count">100 total responses</span>
-								<span class="mobi-your-responses">0 responses by you</span>
-								<span class="mobi-icon-response-count">63</span>
-								<span class="mobi-icon-arrow-r">&gt;</span>
-								<span class="mobi-date">Today</span>
-							</a>
-						</li>
-					</ul>
 				</div>
+				
 
 			</div>
 		</div>

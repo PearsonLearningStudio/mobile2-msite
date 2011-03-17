@@ -108,6 +108,8 @@ div.layout-header .menu-active {
 	padding-right: 4px;
 	padding-bottom: 1px;
 	font-size: 90%;
+	min-width: 20px;
+	text-align: center;
 }
 .view-discussion .mobi-icon-arrow-r {
 	position: absolute;
