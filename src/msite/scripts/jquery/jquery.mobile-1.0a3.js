@@ -1465,7 +1465,7 @@ $.widget( "mobile.page", $.mobile.widget, {
 		//will not appear if $.mobile.loadingMessage is false
 		$loader = $.mobile.loadingMessage ?
 			$( "<div class='ui-loader ui-body-a ui-corner-all'>" +
-						"<span class='ui-icon ui-icon-loading spin'></span>" +
+						"<span class='ui-icon ui-icon-loading'></span>" +
 						"<h1>" + $.mobile.loadingMessage + "</h1>" +
 					"</div>" )
 			: undefined;
