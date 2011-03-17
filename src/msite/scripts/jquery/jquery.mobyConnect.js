@@ -1,4 +1,13 @@
 /*
+ * mobyConnect:  Plugin wrapper for the eCollege authentication manager and cross-domain AJAX system
+ * 
+ * Methods:
+ * 	init:  initialize a cross domain communication pathway and the session manager.  This is the default method of the plugin.
+ * 		crossDomainReadyhandler:  The callback to execute when the cross domain communication pathway has been successfully initialized.
+ * 		crossDomainErrorHandler:  The callback to execute if the cross domain communication pathway cannot be initialized.
+ * 	checkAuth:  Check if an existing authorization grant exists for the client.
+ * 		redirectUrl:  The url to redirect to if the client does not have a valid authorization grant.
+ * 		
  * Global variables for connection manager:
  * crossDomainIntializer: the instance of the CrossDomainInitializer class
  * sessionManager: the instance of the SessionManager class
@@ -20,8 +29,7 @@ var userId;
 			// Initialize the cross domain communicator and session manager.
 			var settings = {
 				crossDomainReadyHandler : function() {},
-				crossDomainErrorHandler : function() {},
-				callback: function() {}
+				crossDomainErrorHandler : function() {}
 			};
 			if ( options ) {
 				$.extend( settings, options );

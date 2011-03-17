@@ -1,20 +1,19 @@
+/*
+ * mobyActivityManager: Plugin for managing activities.
+ * 
+ * Methods:
+ * 	toHtml:  Get a feed and return the HTML for displaying it in the UI.  The feed will be fetched from the cache, or if the cache is empty
+ *  out of date, from the service.
+ *  	objFeed: an Activity Feed JSON object to use, otherwise the plugin will query the cache or the service as appropriate
+ *  	intStartIndex: the starting point in the zero-indexed items array
+ *  	intEndIndex: The ending point in the array; -1 for the end of array
+ *  	boolForceRefresh: Force a refresh of the cached feed.
+ *  	callbackSuccess:  The callback to execute upon successful generation of the HTML.
+ *  	callbackError:  The callback to execute if an error occurs.
+ */
+
 (function($) {
 	var methods = {
-		/*
-		 * Methods for activityFeed plugin
-		 * toHtml: Return the HTML for a given section of the feed
-		 * 	options:
-		 * 		objFeed: an Activity Feed JSON object to use, otherwise plugin will fetch one
-		 * 		intStartIndex: The starting point in the zero-indexed items array
-		 * 		intEndIndex: The ending point in the array; -1 for end of array
-		 * 		boolForceRefresh: Force a refresh of the cached feed.
-		 * 		callbackSuccess: the callback function 
-		 * 
-		 * get: Get a feed and return it as a JSON object, either from the service or from local storage
-		 * 	options:
-		 * 		boolForceRefresh: Force a refresh from the service, rather than looking at local storage
-		 * 		callback: a function to execute just before returning the JSON
-		 */
 		toHtml : function(options) {
 			var settings = {
 				objFeed : "",
@@ -23,6 +22,9 @@
 				boolForceRefresh: true,
 				callbackSuccess: function(objReturn) {
 					return objReturn;
+				},
+				callbackError: function() {
+					alert('Unable to get the activities list.  The cache was out of date and the server is not responding.');
 				}
 			};
 			if ( options ) {
@@ -168,6 +170,9 @@
 								settings.callbackSuccess(objReturn);
 							}
 						})
+					},
+					callbackError: function() {
+						settings.callbackError();
 					}
 				})
 			} else {
