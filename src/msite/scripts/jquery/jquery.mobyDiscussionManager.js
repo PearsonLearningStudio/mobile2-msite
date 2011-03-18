@@ -105,16 +105,16 @@
 									if (objUserTopics.userTopics[j].childResponseCounts.totalResponseCount === 0) {
 										strTotalResponsesText = "No responses";
 									} else if (objUserTopics.userTopics[j].childResponseCounts.totalResponseCount === 1) {
-										strTotalResponseText = "1 response";
+										strTotalResponsesText = "1 response";
 									} else {
-										strTotalResponsetext = objUserTopics.userTopics[j].childResponseCounts.totalResponseCount + " responses";
+										strTotalResponsestext = objUserTopics.userTopics[j].childResponseCounts.totalResponseCount + " responses";
 									}
 									tempHtml += '<li class="course-'+objUserTopics.userTopics[j].topic.containerInfo.courseID+'">';
 									// To do: Link this off to a detail page.
 									tempHtml += '<a href="#">';
 									
 									tempHtml += '<span class="mobi-title">'+objUserTopics.userTopics[j].topic.containerInfo.contentItemTitle+'</span>';
-									tempHtml += '<span class="mobi-response-count">'+strTotalResponseText+'</span>';
+									tempHtml += '<span class="mobi-response-count">'+strTotalResponsesText+'</span>';
 									// Build the "your responses" string
 									if (objUserTopics.userTopics[j].childResponseCounts.personalResponseCount === 1) {
 										tempHtml += '<span class="mobi-your-responses">'+objUserTopics.userTopics[j].childResponseCounts.personalResponseCount+' response by you</span>';

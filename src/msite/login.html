@@ -25,6 +25,8 @@ h2 {
 </style>
 		<script type="text/javascript" src="scripts/jquery/jquery-1.5.1.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.mobile-1.0a3.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery.mobyConnect.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery.mobyAppInit.js"></script>
 		<script type="text/javascript" src="scripts/json2.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/AjaxManager.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/VariableValidator.js"></script>
@@ -39,7 +41,6 @@ h2 {
 		<script type="text/javascript" src="scripts/ecollege/ConfigSettings.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/ClientStringManager.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/preloadUtils.js"></script>
-		<script type="text/javascript" src="scripts/jquery/jquery.mobyConnect.js"></script>
 		<script type="text/javascript" src="scripts/i8ln/en-us/strings.js"></script>
 		<script>
 // Check to see if there is already an access grant of some sort.  If there is, we should forward on to home page.
@@ -48,146 +49,16 @@ if (accessCookie && (accessCookie.length >0) ) {
 	$(location).attr("href", "index.html");
 }
 
-
-
-var signInClickHandler = function() {
-	if ($("#userId").val == "" || $("#password").val() == "") {
-		$("#dialogError .errorMessage").html(msite.localization.index["username-password-required"]);
-		$("#show-error-message").click();
-		return;
-	}
-	
-	$.mobile.pageLoading();
-	clientStringManager.setClientString(cs);	// just in case the user clears their cookies after page loads
-	// get only the client string part of the entire client sort string (the text before the first ".")
-	var epClientString = cs.split(".", 1)[0];
-	sessionManager.logIn(epClientString, $("#userId").val(), $("#password").val(), $("#rememberMe")[0].checked, signInHandler);
-};
-
-/**
-	Handler for a response to authorize a user. If a user was authorized successfully, 
-	redirect them to the main page. Otherwise show them an error.
-	@param		{Boolean}	p_isLoggedIn	true if the user was authorized successfully, false otherwise
-	@param		{String}	p_errorCode		the HTTP error code on the response
-*/
-var signInHandler = function(p_isLoggedIn, p_errorCode) {
-	if (p_isLoggedIn) {
-		eraseCookie("currentPage");
-		$(location).attr("href", "index.html");
-		return;
-	}
-	//not logged in, what went wrong?
-	switch(p_errorCode) {
-		case "400":
-			// if the response was a "bad request", show message that login credentials were incorrect.
-			$("#dialogError div.errorMessage").html(msite.localization.index["username-password-incorrect"]);
-			break;
-		case "500":
-			// if the response was a 500 "internal server error", show a message of the likely cause.
-			$("#dialogError div.errorMessage").html(msite.localization.index["generic-server-error"]);
-			break;
-		default:
-			// otherwise show a general message that the communication was unsuccessful.
-			$("#dialogError div.errorMessage").html(msite.localization.index["generic-server-error"]);
-	}
-	$.mobile.pageLoading(true);
-	$("#show-error-message").click();
-};
-
-/**
-	When the user clicks the register button, attempt to register them
-*/
-var registerClickHandler = function() {
-	if ($("#lastName").val == "" || $("#systemEmail").val() == "") {
-		$("#dialogError div.errorMessage").html(msite.localization.index["lastname-email-required"]);
-		$("#show-error-message").click();
-		return;
-	}
-	$.mobile.pageLoading();
-	sessionManager.register(clientStringManager.getClientString(), $("#lastName").val(), $("#systemEmail").val(), registerHandler);
-};
-
-/**
-	Handler for a response to authorize a user. If a user was authorized successfully, 
-	redirect them to the main page. Otherwise show them an error.
-	@param		{Boolean}	p_success	true if the user was authorized successfully, false otherwise
-	@param		{String}	p_errorCode		the HTTP error code on the response
-*/
-var registerHandler = function(p_success, p_errorCode)
-{
-	$("#registerButton").show();
-	$("#loadingImage").hide();
-	if (p_success) 	{
-		eraseCookie("currentPage");
-		$("#emailSentTo").html($("#systemEmail").val());
-		$.mobile.changePage("#dialogSuccess", "flip");
-		return;
-	}
-	//not logged in, what went wrong?
-	switch(p_errorCode) {
-		case "400":
-			// if the response was a "bad request", show message that login credentials were incorrect.
-			$("#dialogError div.errorMessage").html(msite.localization.index['unable-to-verify']);
-			break;
-		case "500":
-			// if the response was a 500 "internal server error", show a message of the likely cause.
-			$("#dialogError div.errorMessage").html(msite.localization.index["generic-server-error"]);
-			break;
-		default:
-			// otherwise show a general message that the communication was unsuccessful.
-			$("#dialogError div.errorMessage").html(msite.localization.index["timeout"]);
-	}
-	$.mobile.pageLoading(true);
-	$("#show-error-message").click();
-	
-};
 $(document).ready(function() {
 	$().mobyConnect({
+		crossDomainReadyHandler: function() {
+			$().mobyAppInit("initLogin");
+		},
 		crossDomainErrorHandler : function() {
 			$("#dialogError div.errorMessage").html(msite.localization.index["generic-server-error"]);
 			$("#show-error-message").click();
 		}
 	});
-	
-	
-
-	
-	// assign actions to the sign in button
-	$("#signInBtn").bind("click", signInClickHandler);
-	
-	// listen for form submit events, and forward them to the sign in click handler
-	$("#loginForm").bind("submit", function(p_event) {
-		p_event.preventDefault();
-		signInClickHandler();
-	});
-	
-	// assign actions to the register button
-	$("#registerButton").bind("click", registerClickHandler);
-	
-	// listen for form submit events, and forward them to the sign in click handler
-	$("#registerFormContainer").bind("submit", function(p_event) {
-		p_event.preventDefault();
-		registerClickHandler();
-	});
-
-	// Check to see if there is a valid authorization grant in the url
-	var accessGrant = getQueryStringValue("access_grant");
-	if (accessGrant.length > 0) {
-		$.mobile.pageLoading();
-		var timeout = setTimeout(function() {
-				sessionManager.loginWithEmailGrant(accessGrant, function(boolSuccessful, strErrorCode) {
-					if(boolSuccessful) {
-						$(location).attr("href", "index.html");
-					} else {
-						$("#dialogError div.errorMessage").html(msite.localization.index['invalid-email-access']);
-						$.mobile.pageLoading(false);
-						$("#show-error-message").click();
-					};
-				});
-		}, 5000);
-	};
-
-	$("body").removeClass("ui-loading");
 })
 		</script>
 		

@@ -69,8 +69,7 @@ var userId;
 			var accessCookie = readCookie("access_grant");
 			if (accessCookie === null) {
 				$(location).attr("href", settings.redirectUrl);
-			}
-			if (accessCookie.length < 5 ) {
+			} else if (accessCookie.length < 5 ) {
 				$(location).attr("href", settings.redirectUrl);
 			}
 		}

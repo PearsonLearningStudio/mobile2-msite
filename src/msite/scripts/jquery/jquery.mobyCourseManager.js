@@ -5,9 +5,9 @@
  * 	init:  Return an array of course information from either the cache or, if the cache is out of date or empty, from the 
  * 	appropriate services.  This is the default method of the plugin.
  * 	arrCourses[{
- * 		id,
- * 		number,
- * 		title
+ * 		int id,
+ * 		string number,
+ * 		string title
  * 	}]
  * 		boolForceRefresh: Force a refresh of the information and store the results in the cache
  * 		callbackSuccess:  The callback to execute upon successful fetching of the course information array
