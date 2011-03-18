@@ -122,6 +122,120 @@ div.layout-header .menu-active {
 	display: none;
 }
 
+/* Discussion detail view */
+.header-discussion-detail {
+	min-height: 45px;
+}
+
+.header-discussion-detail .mobi-title {
+	float: left; 
+	margin-left: 90px;
+	margin-top: 10px;
+}
+.header-discussion-detail .icon-thread {
+	float: right; 
+	margin-right: 5px; 
+	background-color: #fff; 
+	width: 45px;
+	height: 45px; 
+	overflow: hidden;
+}
+
+#pageDiscussionTopicDetail .container-discussion-detail {
+	margin: 0px;
+	padding: 0px;
+}
+.container-discussion-detail {
+	padding-top: 0px;
+	margin-top: 0px;
+}
+.container-discussion-detail .container-topicinfo {
+	padding-left: 30px;
+	margin-top: 5px;
+	padding-bottom: 5px;
+	font-size: 90%;
+	border-bottom: 1px solid black;
+	position: relative;
+}
+.container-discussion-detail p {
+	margin: 0px;
+	padding: 0px;
+	padding-bottom: 0.2em;
+}
+.container-discussion-detail .mobi-title {
+	font-weight: bold;
+}
+.container-discussion-detail .mobi-author {
+	margin-left: 10px;
+	font-style: italic;
+}
+.container-discussion-detail .mobi-total-responses {
+	font-weight: bold;
+	margin-left: 20px;
+}
+.container-discussion-detail .mobi-date {
+	position: absolute;
+	top: 0px;
+	right: 10px;
+	font-size: 90%;
+}
+.container-discussion-detail .mobi-unread-responses {
+	position: absolute;
+	color: #fff;
+	background-color: #666;
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	right: 15px;
+	top: 26px;
+	padding-left: 4px;
+	padding-right: 4px;
+	padding-bottom: 1px;
+	font-size: 90%;
+	min-width: 20px;
+	text-align: center;
+}
+
+.container-discussion-detail .container-message {
+	border-bottom: 1px solid black;
+	padding-left: 10px;
+	padding-right: 30px;
+	font-size: 90%;
+	padding-top: 5px;
+	position: relative;
+	padding-bottom: 5px;
+	height: 2.2em;
+	overflow: hidden;
+}
+.container-message p {
+	margin-bottom: 0.2em;
+	line-height: 1.2em;
+}
+.container-discussion-detail div {
+}
+.container-discussion-detail .container-message div {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	width: 20px;
+	height: 20px;
+	color: #fff;
+	background-color: #666;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	overflow: hidden;
+	text-align: center;
+	line-height: 20px;
+}
+
+.container-discussion-detail .container-response {
+	border-bottom: 1px solid black;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 3px;
+}
+
 /* course filter for discussion view */
 
 .container-navbar .ui-select {

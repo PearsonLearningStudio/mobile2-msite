@@ -185,8 +185,7 @@
 			$("#pageDiscuss").bind("pageshow", function() {
 				
 				$.mobile.pageLoading();
-				
-				
+
 				$().mobyDiscussionManager("userTopicsToHtml",  {
 					callbackSuccess : function(strDiscussionHtml) {
 						var strHtml = '<ul data-role="listview" data-inset="true" class="mobi-listview">';

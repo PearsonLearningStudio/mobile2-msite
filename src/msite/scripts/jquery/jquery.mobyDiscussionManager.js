@@ -111,7 +111,7 @@
 									}
 									tempHtml += '<li class="course-'+objUserTopics.userTopics[j].topic.containerInfo.courseID+'">';
 									// To do: Link this off to a detail page.
-									tempHtml += '<a href="#">';
+									tempHtml += '<a href="#pageDiscussionTopicDetail">';
 									
 									tempHtml += '<span class="mobi-title">'+objUserTopics.userTopics[j].topic.containerInfo.contentItemTitle+'</span>';
 									tempHtml += '<span class="mobi-response-count">'+strTotalResponsesText+'</span>';
