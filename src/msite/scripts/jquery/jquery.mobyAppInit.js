@@ -234,6 +234,12 @@
 					}
 				})
 			})
+			
+			$(".container-discussion-detail .container-message div.layout-button-expand").click(function() {
+				var $this = $(this);
+				$this.parents(".container-message").toggleClass("container-message-open");
+			})
+		
 		
 			$("body").removeClass("ui-loading");
 

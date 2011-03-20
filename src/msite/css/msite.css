@@ -171,7 +171,7 @@ div.layout-header .menu-active {
 }
 .container-discussion-detail .mobi-total-responses {
 	font-weight: bold;
-	margin-left: 20px;
+	margin-left: 10px;
 }
 .container-discussion-detail .mobi-date {
 	position: absolute;
@@ -207,13 +207,17 @@ div.layout-header .menu-active {
 	height: 2.2em;
 	overflow: hidden;
 }
+.container-discussion-detail .container-message-open {
+	height: auto;
+}
+
 .container-message p {
 	margin-bottom: 0.2em;
 	line-height: 1.2em;
 }
 .container-discussion-detail div {
 }
-.container-discussion-detail .container-message div {
+.container-discussion-detail .container-message div.layout-button-expand {
 	position: absolute;
 	top: 10px;
 	right: 10px;
@@ -227,6 +231,7 @@ div.layout-header .menu-active {
 	overflow: hidden;
 	text-align: center;
 	line-height: 20px;
+	cursor: pointer;
 }
 
 .container-discussion-detail .container-response {
@@ -234,6 +239,14 @@ div.layout-header .menu-active {
 	padding-top: 10px;
 	padding-bottom: 10px;
 	padding-left: 3px;
+}
+
+.container-discussion-detail .container-threads {
+	font-size: 80%;
+}
+.container-discussion-detail .mobi-summary {
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 
 /* course filter for discussion view */
