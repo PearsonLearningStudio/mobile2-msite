@@ -239,7 +239,7 @@
 				var $this = $(this);
 				$this.parents(".container-message").toggleClass("container-message-open");
 			})
-		
+			alert(location.hash);
 		
 			$("body").removeClass("ui-loading");
 
