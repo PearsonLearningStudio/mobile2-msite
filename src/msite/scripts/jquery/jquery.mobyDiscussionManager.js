@@ -9,7 +9,11 @@
  * 		objUserTopics: a user topics object to use.  If one is not supplied, the method will call the getUserTopics method.
  * 		callbackSuccess:  The callback to execute upon successful creation of the HTML.
  * 		callbackError: the callback to execute if an error occurs.
+ * 	userResponsesToHtml: Return the HTML for displaying a user response object in the UI.
+ * 		objUserResponses: A user responses object to use.  
  */
+
+var arrGlobalTopics = [];
 
 (function($) {
 	var methods = {
@@ -51,6 +55,59 @@
 					});
 				}
 			})
+		},
+		
+		userResponsesToHtml : function(options) {
+			var settings = {
+				objUserResponses: "",
+				callbackSuccess: function(strHtml) {
+					return strHtml;
+				},
+				callbackError: function() {
+					alert('Unable to get topics.');
+				}
+			}
+			if (options) {
+				$.extend(settings, options);
+			}
+			
+			if (settings.objUserResponses == "") {
+				strHtml = false;
+				settings.callbackSuccess(strHtml);
+			}
+			
+			// Given a userresponses object, return the HTML necessary for a formatted list.
+			var strHtml = "";
+			for (var i = 0; i < settings.objUserResponses.userResponses.length; i++) {
+				// Build the text for "total responses"
+				var strTotalResponsesText = "";
+				var tempHtml = "";
+				if (settings.objUserResponses.userResponses[i].childResponseCounts.totalResponseCount === 0) {
+					strTotalResponsesText = "No responses";
+				} else if (settings.objUserResponses.userResponses[i].childResponseCounts.totalResponseCount === 1) {
+					strTotalResponsesText = "1 response";
+				} else {
+					strTotalResponsestext = settings.objUserResponses.userResponses[i].childResponseCounts.totalResponseCount + " responses";
+				}
+				tempHtml += '<li class="response-'+settings.objUserResponses.userResponses[i].response.id+'">';
+
+				tempHtml += '<a href="#pageDiscussionResponseDetail" class="listitem-response" id="response_'+settings.objUserResponses.userResponses[i].id+'">';
+				
+				tempHtml += '<span class="mobi-title">'+settings.objUserResponses.userResponses[i].response.title+'</span>';
+				tempHtml += '<span class="mobi-author">' +settings.objUserResponses.userResponses[i].response.author.firstName + " " + settings.objUserResponses.userResponses[i].response.author.lastName+ '</span>';
+				tempHtml += '<span class="mobi-total-responses">' + strTotalResponsestext + '</span>';
+				tempHtml += '<span class="mobi-summary">' +stripTags(settings.objUserResponses.userResponses[i].response.description)+ '</span>';
+				
+				var intNumberOfUnreadResponses = settings.objUserResponses.userResponses[i].childResponseCounts.unreadResponseCount;
+				if (intNumberOfUnreadResponses > 0) {
+					tempHtml += '<span class="mobi-icon-response-count">'+intNumberOfUnreadResponses+'</span>';
+				}
+				tempHtml += '<span class="mobi-icon-arrow-r">&gt;</span>';
+				tempHtml += '</a></li>\n';
+				strHtml += tempHtml;
+			}
+			settings.callbackSuccess(strHtml);
+
 		},
 		
 		userTopicsToHtml : function(options) {
@@ -111,7 +168,7 @@
 									}
 									tempHtml += '<li class="course-'+objUserTopics.userTopics[j].topic.containerInfo.courseID+'">';
 									// To do: Link this off to a detail page.
-									tempHtml += '<a href="#pageDiscussionTopicDetail">';
+									tempHtml += '<a href="#pageDiscussionTopicDetail" class="listitem-topic" id="topic_'+objUserTopics.userTopics[j].id+'">';
 									
 									tempHtml += '<span class="mobi-title">'+objUserTopics.userTopics[j].topic.containerInfo.contentItemTitle+'</span>';
 									tempHtml += '<span class="mobi-response-count">'+strTotalResponsesText+'</span>';
@@ -144,10 +201,12 @@
 				}
 				return strHtml;
 			}
-		}
+			
+			
+		}// End method list
 		
 		
-	}
+	}// end methods
 	
 
 	

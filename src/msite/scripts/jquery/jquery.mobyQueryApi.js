@@ -19,7 +19,7 @@
 		get : function(options) {
 			var settings = {
 				strUrl : "",
-				successHandler : function() {},
+				successHandler : function(jsonResponse, intTransactionId) {},
 				errorHandler : function() {}
 			}
 			if (options) {

@@ -230,16 +230,119 @@
 								})
 							}
 						});
+						
+						$(".listitem-topic").click(function() {
+							var strCurrentTopic = $(this).attr("id").split("_")[1];
+							arrGlobalTopics.push(strCurrentTopic);
+						})
+						
+						
 						$.mobile.pageLoading(true);
 					}
 				})
 			})
 			
+			// Page show event for a discussion topic detail page
+			$("#pageDiscussionTopicDetail").bind("pageshow", function(event, ui) {
+				// Get the threads in the topic, which is stored in the global array.
+				$.mobile.pageLoading();
+				var $thisView = $("#" + event.currentTarget.id);
+				$thisView.find(".container-discussion-detail .container-message").html("");
+				var intLast = arrGlobalTopics.length -1;
+				var strCurrentUrl = configSettings.apiproxy + "/me/usertopics/" + arrGlobalTopics[intLast];
+				$().mobiQueryApi("get", {
+					strUrl: strCurrentUrl,
+					successHandler: function(jsonResponse, intTransactionId) {
+						var strTitle = jsonResponse.userTopics[0].topic.containerInfo.contentItemTitle;
+						var strAuthor = jsonResponse.userTopics[0].topic.containerInfo.contentAuthor;
+						var intTotalResponses = jsonResponse.userTopics[0].childResponseCounts.totalResponseCount;
+						var intUnreadResponses = jsonResponse.userTopics[0].childResponseCounts.unreadResponseCount;
+						var strMessage = jsonResponse.userTopics[0].topic.description;
+						$thisView.find(".mobi-title").html(strTitle);
+						if (strAuthor != undefined) {
+							if (strAuthor != "") {
+								$thisView.find(".container-topicinfo .mobi-author").html(strAuthor);
+							} 
+						} else {
+							$thisView.find(".container-topicinfo .mobi-author").remove();
+						}
+						if (intTotalResponses === 0) {
+							$thisView.find(".container-topicinfo .mobi-total-responses").text("No responses");
+						} else if (intTotalResponses === 1) {
+							$thisView.find(".container-topicinfo .mobi-total-responses").text("1 response");
+						} else {
+							$thisView.find(".container-topicinfo .mobi-total-responses").text(intTotalResponses + " total responses");
+						}
+						if (intUnreadResponses === 0) {
+							$thisView.find(".container-topicinfo .mobi-unread-responses").remove();
+						} else {
+							$thisView.find(".container-topicinfo .mobi-unread-responses").text(intUnreadResponses);
+						}
+						
+						var $thisMessage = $thisView.find(".container-message");
+						// Quickly add 4 lines of text to the div to get the height.
+						var intMinHeight = $thisMessage.addClass("container-message-open").html("<p>Lorem<br>Ipsum<br>dolor<br>sit</p>").height();
+						$thisMessage.empty().html(strMessage);
+						// if the message is higher than 4 lines, we must add the button, attach the click listener, and collapse the 
+						// div
+						if ($thisMessage.height() > intMinHeight) {
+							var $button = $('<div class="layout-button-expand">&nbsp;</div>');
+							$thisMessage.prepend($button);
+							$("div.layout-button-expand").click(function() {
+								var $this = $(this);
+								$this.parents(".container-message").toggleClass("container-message-open");
+							})
+							$thisMessage.toggleClass("container-message-open");
+						}
+						$thisView.find("#textarea-response").html("Post a response to " + strTitle);
+						
+						// if there are responses, we need to get them.
+						var $theseThreads = $thisView.find(".container-threads");
+
+						$theseThreads.empty();
+						if (intTotalResponses> 0) {
+							var strNewUrl = configSettings.apiproxy + "/me/topics/" + jsonResponse.userTopics[0].topic.id + "/userresponses";
+							$().mobiQueryApi("get", {
+								strUrl: strNewUrl,
+								successHandler: function(jsonResponse, intTransactionId) {
+									$().mobyDiscussionManager("userResponsesToHtml", {
+										objUserResponses: jsonResponse,
+										callbackSuccess: function(strReturnHtml) {
+											var strHtml = '<ul data-role="listview" data-inset="true" class="mobi-listview">';
+											strHtml += strReturnHtml;
+											strHtml += "</ul>"
+											$theseThreads.html(strHtml)
+											$theseThreads.find(".mobi-listview").listview();
+											
+											$.mobile.pageLoading(true);
+										}
+									})
+								},
+								errorHandler: function() {
+									alert('Unable to fetch response information for topic.');
+									
+									$.mobile.pageLoading(true);
+								}
+							})
+						} else {
+							$theseThreads.html("<h4>No responses.</h4>");
+							
+							$.mobile.pageLoading(true);
+						}
+						
+					},
+					errorHandler: function() {
+						alert("Unable to fetch the topic's responses. Please try again.");
+						
+						$.mobile.pageLoading(true);
+					}
+				})
+			});
+
 			$(".container-discussion-detail .container-message div.layout-button-expand").click(function() {
 				var $this = $(this);
 				$this.parents(".container-message").toggleClass("container-message-open");
 			})
-			alert(location.hash);
 		
 			$("body").removeClass("ui-loading");
 

@@ -128,13 +128,18 @@ div.layout-header .menu-active {
 }
 
 .header-discussion-detail .mobi-title {
-	float: left; 
-	margin-left: 90px;
+	float: left;
 	margin-top: 10px;
+	padding-left: 70px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	width: 60%;
 }
 .header-discussion-detail .icon-thread {
-	float: right; 
-	margin-right: 5px; 
+	position: absolute;
+	top: 2px;
+	right: 5px; 
 	background-color: #fff; 
 	width: 45px;
 	height: 45px; 
@@ -195,6 +200,9 @@ div.layout-header .menu-active {
 	min-width: 20px;
 	text-align: center;
 }
+#pageDiscussionTopicDetail .mobi-unread-responses {
+	top: 9px;
+}
 
 .container-discussion-detail .container-message {
 	border-bottom: 1px solid black;
@@ -204,7 +212,7 @@ div.layout-header .menu-active {
 	padding-top: 5px;
 	position: relative;
 	padding-bottom: 5px;
-	height: 2.2em;
+	height: 4.4em;
 	overflow: hidden;
 }
 .container-discussion-detail .container-message-open {
