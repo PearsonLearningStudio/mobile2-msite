@@ -344,10 +344,10 @@
 											$theseThreads.find(".mobi-listview").listview();
 											
 											// Tap event listener
-											$.mobile.pageLoading();
 											$(".listitem-response").click(function() {
 												// The user has tapped on a thread.  We need
 												// to display the thread detail page.
+												$.mobile.pageLoading();
 												var $this = $(this);
 												var objInfo = {
 													strNewId: $this.attr("id").split("_")[1],
@@ -390,7 +390,7 @@
 				$this.parents(".container-message").toggleClass("container-message-open");
 			})
 			
-			// Page show event for the 
+			// Page show event for the thread detail page
 			$("#pageDiscussionThreadDetail").bind("pageshow", function(event, ui) {
 				$.mobile.pageLoading();
 				// What thread should we show?  This information should be contained in the
@@ -494,6 +494,11 @@
 						alert('unable to get the thread information');
 						$.mobile.pageLoading(true);
 					}		
+				})
+				// Back button:  If we tap the back button, it will take us back to the prior screen.
+				// We must therefore remove the current element from the array.
+				$("#pageDiscussionThreadDetail #back-thread-detail").click(function() {
+					arrGlobalThreads.pop();
 				})
 			});
 			
@@ -606,6 +611,13 @@
 						alert('unable to get the thread information');
 						$.mobile.pageLoading(true);
 					}		
+				})
+				
+				
+				// Back button:  If we tap the back button, it will take us back to the prior screen.
+				// We must therefore remove the current element from the array.
+				$("#pageDiscussionThreadDetail2 #back-thread-detail-2").click(function() {
+					arrGlobalThreads.pop();
 				})
 			});
 			
