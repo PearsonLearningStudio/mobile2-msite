@@ -14,6 +14,7 @@
  */
 
 var arrGlobalTopics = [];
+var arrGlobalThreads = [];
 
 (function($) {
 	var methods = {
@@ -60,6 +61,7 @@ var arrGlobalTopics = [];
 		userResponsesToHtml : function(options) {
 			var settings = {
 				objUserResponses: "",
+				strUrl: "#pageDiscussionThreadDetail",
 				callbackSuccess: function(strHtml) {
 					return strHtml;
 				},
@@ -78,6 +80,11 @@ var arrGlobalTopics = [];
 			
 			// Given a userresponses object, return the HTML necessary for a formatted list.
 			var strHtml = "";
+			if (settings.objUserResponses === "") {
+				// Abort
+				strHtml = "<h3>No responses.</h3>";
+				callbackSuccess(strHtml);
+			}
 			for (var i = 0; i < settings.objUserResponses.userResponses.length; i++) {
 				// Build the text for "total responses"
 				var strTotalResponsesText = "";
@@ -87,16 +94,18 @@ var arrGlobalTopics = [];
 				} else if (settings.objUserResponses.userResponses[i].childResponseCounts.totalResponseCount === 1) {
 					strTotalResponsesText = "1 response";
 				} else {
-					strTotalResponsestext = settings.objUserResponses.userResponses[i].childResponseCounts.totalResponseCount + " responses";
+					strTotalResponsesText = settings.objUserResponses.userResponses[i].childResponseCounts.totalResponseCount + " responses";
 				}
 				tempHtml += '<li class="response-'+settings.objUserResponses.userResponses[i].response.id+'">';
 
-				tempHtml += '<a href="#pageDiscussionResponseDetail" class="listitem-response" id="response_'+settings.objUserResponses.userResponses[i].id+'">';
+				tempHtml += '<a href="'+settings.strUrl+'" class="listitem-response" id="response_'+settings.objUserResponses.userResponses[i].id+'">';
 				
 				tempHtml += '<span class="mobi-title">'+settings.objUserResponses.userResponses[i].response.title+'</span>';
 				tempHtml += '<span class="mobi-author">' +settings.objUserResponses.userResponses[i].response.author.firstName + " " + settings.objUserResponses.userResponses[i].response.author.lastName+ '</span>';
-				tempHtml += '<span class="mobi-total-responses">' + strTotalResponsestext + '</span>';
+				tempHtml += '<span class="mobi-total-responses">' + strTotalResponsesText + '</span>';
+
 				tempHtml += '<span class="mobi-summary">' +stripTags(settings.objUserResponses.userResponses[i].response.description)+ '</span>';
+				tempHtml += '<span class="mobi-description" style="display: block">' + settings.objUserResponses.userResponses[i].response.description + '</span>';
 				
 				var intNumberOfUnreadResponses = settings.objUserResponses.userResponses[i].childResponseCounts.unreadResponseCount;
 				if (intNumberOfUnreadResponses > 0) {
