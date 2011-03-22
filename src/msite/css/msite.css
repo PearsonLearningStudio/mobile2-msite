@@ -103,7 +103,7 @@ div.layout-header .menu-active {
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
 	right: 26px;
-	top: 26px;
+	top: 30%;
 	padding-left: 4px;
 	padding-right: 4px;
 	padding-bottom: 1px;
@@ -116,7 +116,7 @@ div.layout-header .menu-active {
 	color: #666;
 	font-weight: bold;
 	right: 10px;
-	top: 23px;
+	top: 30%;
 }
 .view-discussion .ui-icon-arrow-r {
 	display: none;
