@@ -11,7 +11,7 @@
  * 		strRedirectUrl:  The URL to redirect to when the error happens.
  * 
  */
-
+boolClicked = true;
 (function($) {
 	var methods = {
 		initIndex : function(options) {
@@ -396,11 +396,8 @@
 				// What thread should we show?  This information should be contained in the
 				// arrGlobalThreads array.  If it isn't, we should go back.
 				if (arrGlobalThreads.length === 0) {
-					// abort
-					// TODO: Possibly we could fail more gracefully than just reshowing the
-					// home page.
-					alert('There is no thread to display.  Please try again.');
-					$(location).attr("href", "index.html");
+					// Nothing left to show in the stack.  Go back to topic detail page.
+					$.mobile.changePage("#pageDiscussionTopicDetail");
 				}
 				var $thisView = $("#" + event.currentTarget.id);
 				$thisView.find(".container-discussion-detail .container-message").html("");
@@ -497,7 +494,8 @@
 				})
 				// Back button:  If we tap the back button, it will take us back to the prior screen.
 				// We must therefore remove the current element from the array.
-				$("#pageDiscussionThreadDetail #back-thread-detail").click(function() {
+				$("#pageDiscussionThreadDetail #back-thread-detail").unbind(".myclick").bind("click.myclick", function() {
+					$.mobile.pageLoading();
 					arrGlobalThreads.pop();
 				})
 			});
@@ -514,11 +512,8 @@
 				// What thread should we show?  This information should be contained in the
 				// arrGlobalThreads array.  If it isn't, we should go back.
 				if (arrGlobalThreads.length === 0) {
-					// abort
-					// TODO: Possibly we could fail more gracefully than just reshowing the
-					// home page.
-					alert('There is no thread to display.  Please try again.');
-					$(location).attr("href", "index.html");
+					// Nothing left to show in the stack.  Go back to topic detail page.
+					$.mobile.changePage("#pageDiscussionTopicDetail");
 				}
 				var $thisView = $("#" + event.currentTarget.id);
 				$thisView.find(".container-discussion-detail .container-message").html("");
@@ -616,7 +611,8 @@
 				
 				// Back button:  If we tap the back button, it will take us back to the prior screen.
 				// We must therefore remove the current element from the array.
-				$("#pageDiscussionThreadDetail2 #back-thread-detail-2").click(function() {
+				$("#pageDiscussionThreadDetail2 #back-thread-detail-2").unbind(".myclick").bind("click.myclick", function() {
+					$.mobile.pageLoading();
 					arrGlobalThreads.pop();
 				})
 			});

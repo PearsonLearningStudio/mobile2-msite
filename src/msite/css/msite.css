@@ -144,6 +144,7 @@ div.layout-header .menu-active {
 	width: 45px;
 	height: 45px; 
 	overflow: hidden;
+	display: none;
 }
 
 #pageDiscussionTopicDetail .container-discussion-detail {
