@@ -11,7 +11,7 @@
  * 		strRedirectUrl:  The URL to redirect to when the error happens.
  * 
  */
-
+boolClicked = true;
 (function($) {
 	var methods = {
 		initIndex : function(options) {
@@ -395,10 +395,10 @@
 											$theseThreads.find(".mobi-listview").listview();
 											
 											// Tap event listener
-											$.mobile.pageLoading();
 											$(".listitem-response").click(function() {
 												// The user has tapped on a thread.  We need
 												// to display the thread detail page.
+												$.mobile.pageLoading();
 												var $this = $(this);
 												var objInfo = {
 													strNewId: $this.attr("id").split("_")[1],
@@ -441,17 +441,14 @@
 				$this.parents(".container-message").toggleClass("container-message-open");
 			});
 			
-			// Page show event for the 
+			// Page show event for the thread detail page
 			$("#pageDiscussionThreadDetail").bind("pageshow", function(event, ui) {
 				$.mobile.pageLoading();
 				// What thread should we show?  This information should be contained in the
 				// arrGlobalThreads array.  If it isn't, we should go back.
 				if (arrGlobalThreads.length === 0) {
-					// abort
-					// TODO: Possibly we could fail more gracefully than just reshowing the
-					// home page.
-					alert('There is no thread to display.  Please try again.');
-					$(location).attr("href", "index.html");
+					// Nothing left to show in the stack.  Go back to topic detail page.
+					$.mobile.changePage("#pageDiscussionTopicDetail");
 				}
 				var $thisView = $("#" + event.currentTarget.id);
 				$thisView.find(".container-discussion-detail .container-message").html("");
@@ -546,6 +543,12 @@
 						$.mobile.pageLoading(true);
 					}		
 				})
+				// Back button:  If we tap the back button, it will take us back to the prior screen.
+				// We must therefore remove the current element from the array.
+				$("#pageDiscussionThreadDetail #back-thread-detail").unbind(".myclick").bind("click.myclick", function() {
+					$.mobile.pageLoading();
+					arrGlobalThreads.pop();
+				})
 			});
 			
 			
@@ -560,11 +563,8 @@
 				// What thread should we show?  This information should be contained in the
 				// arrGlobalThreads array.  If it isn't, we should go back.
 				if (arrGlobalThreads.length === 0) {
-					// abort
-					// TODO: Possibly we could fail more gracefully than just reshowing the
-					// home page.
-					alert('There is no thread to display.  Please try again.');
-					$(location).attr("href", "index.html");
+					// Nothing left to show in the stack.  Go back to topic detail page.
+					$.mobile.changePage("#pageDiscussionTopicDetail");
 				}
 				var $thisView = $("#" + event.currentTarget.id);
 				$thisView.find(".container-discussion-detail .container-message").html("");
@@ -657,6 +657,14 @@
 						alert('unable to get the thread information');
 						$.mobile.pageLoading(true);
 					}		
+				})
+				
+				
+				// Back button:  If we tap the back button, it will take us back to the prior screen.
+				// We must therefore remove the current element from the array.
+				$("#pageDiscussionThreadDetail2 #back-thread-detail-2").unbind(".myclick").bind("click.myclick", function() {
+					$.mobile.pageLoading();
+					arrGlobalThreads.pop();
 				})
 			});
 			
