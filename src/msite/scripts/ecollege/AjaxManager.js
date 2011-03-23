@@ -255,7 +255,7 @@ var AjaxManager = (function()
 			@private
 		*/
 		var _makeRequest = function(p_url, p_type, p_numberOfTries, p_transactionId, p_data)
-		{
+		{ 
 			// store the number of times to attempt the request on a per transaction basis
 			_transactionDictionary[p_transactionId] = p_numberOfTries;
 			
@@ -263,7 +263,7 @@ var AjaxManager = (function()
 			var requestDomain = p_url.replace(/https?:\/\/(.*?)\/.*/, "$1");
 			// if the call is made to the same domain, or is relative to the same domain
 			if (requestDomain.indexOf(document.domain) > -1 || (requestProtocol != "http" && requestProtocol != "https"))
-			{
+			{ 
 				// make the ajax request
 				$.ajax({
 					type: p_type,
@@ -298,7 +298,7 @@ var AjaxManager = (function()
 			}
 			// otherwise this is a cross domain call
 			else
-			{
+			{  
 				// create a CrossFrameMessage with properties for the iframe to use when making the ajax request
 				var message = new CrossFrameMessage();
 				message.messageType = CrossFrameMessage.MESSAGE_TYPE_AJAX;
@@ -324,9 +324,9 @@ var AjaxManager = (function()
 				
 				var iFrame = $("[src*='" + requestDomain + "']");
 				if (iFrame.length < 1)
-				{
+				{      
 					throw new Error("AjaxManager._makeRequest() - There is no iFrame on the page that is associated with the domain of this request: " + requestDomain);
-				}
+				} 
 				// post a message to the iFrame that is in the same domain as the request
 				iFrame.get(0).contentWindow.postMessage(JSON.stringify(message), requestProtocol + "://" + requestDomain);
 			}
@@ -417,8 +417,8 @@ var AjaxManager = (function()
 													will be invoked INSTEAD of the global error handler for this request.
 			@return	{Integer} 	The ID of the transaction
 		*/
-		this.get = function(p_url, p_requestHeaders, p_successHandler, p_errorHandler)
-		{
+		this.get = function(p_url, p_requestHeaders, p_successHandler, p_errorHandler) 
+		{ 
 			VariableValidator.require(this, p_url, "string");
 			VariableValidator.optional(this, p_requestHeaders, "Array");
 			VariableValidator.optional(this, p_successHandler, "function");

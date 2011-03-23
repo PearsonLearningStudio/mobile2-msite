@@ -81,7 +81,7 @@
 					$().mobyActivityManager("toHtml", {
 						callbackSuccess: function(objReturn){
 							var strFeedHtml = objReturn.strFeedHtml;
-							var strHtml = "";
+							var strHtml = "", activityType;
 							
 							strHtml += '<ul data-role="listview" data-inset="true" class="mobi-listview">';
 							strHtml += '<li data-role="list-divider">All Activity</li>';
@@ -90,6 +90,13 @@
 							$("#pageHome .view-activity").html(strHtml);
 							$("#pageHome .view-activity .mobi-listview").listview();
 							$.mobile.pageLoading(true);
+							$(".listitem-activity").live('click',  function(){
+								arrGlobalActivity =  this.className.match(/\w+[-]*\w+\d+/ig);
+								activityType = arrGlobalActivity[0].split('_')[0];
+								if(activityType === 'thread-topic' || activityType === 'thread-post'){
+									
+								}
+							} );
 						}
 					});
 				}
@@ -181,6 +188,7 @@
 				})
 			}
 			
+			
 			// Initialize handler for discussions tab 
 			$("#pageDiscuss").bind("pageshow", function() {
 				
@@ -251,7 +259,50 @@
 						$.mobile.pageLoading(true);
 					}
 				})
-			})
+			});
+			
+			//Page show event for an activity feed detail page
+			$("#pageActivityDetail").bind("pageshow", function(event, ui){
+				var $thisView = $(this), url, details, 
+					$contMessage = $thisView.find('.container-message'),
+					//activityType = arrGlobalActivity[0].split('_')[0],
+					//courseId = arrGlobalActivity[0].split('_')[1],
+					refId = arrGlobalActivity[0].split('_')[2],
+					activity = objGlobalResources[refId],
+					activityType = activity.object.objectType;
+					
+					//console.log(objGlobalResources[referenceId]);
+				// We are showing the activity tab.
+				// First, show the loading spinner
+				$.mobile.pageLoading();
+				
+				$contMessage.html("");
+				
+				//initial data passed via objGlobalResources
+				$thisView.find(".mobi-course-title").html(activity.courseTitle);
+				$thisView.find(".mobi-activity-type").html(activity.object.objectType);
+				
+				//get the details
+				if(activity.object.objectType === 'grade'){
+					url = '/me/courses/' + activity.target.courseId + '/gradebookItems/' + activity.target.referenceId +'/grade';
+				} 
+				$().mobiQueryApi("get", { 
+					strUrl: configSettings.apiproxy + url,
+					successHandler: function(jsonResponse, intTransactionId){
+						//console.log(jsonResponse, intTransactionId);
+						if(activityType === 'grade'){ 
+							details = '<p class="mobi-course-grade">' + activity.grade + '</p><p class="mobi-grade-comments">' + jsonResponse.grade.comments + '</p><p class="mobi-activity-time">' + activity.time + '</p>';
+							details += '<a class="ui-btn ui-btn-up-c" data-transition="slide" data-direction="reverse" data-role="button" data-theme="c" href="#pageActivitiesViewAll"><span class="ui-btn-inner">View all course ' + activity.object.objectType.replace('-', ' ') + 's</span></a>';
+							$contMessage.html(details);	
+						} 
+						$.mobile.pageLoading(true);
+					},
+					errorHandler: function() {
+						//alert("Unable to fetch the topic's responses. Please try again.");
+					}
+				});   
+			} );
+		
 			
 			// Page show event for a discussion topic detail page
 			$("#pageDiscussionTopicDetail").bind("pageshow", function(event, ui) {
@@ -388,7 +439,7 @@
 			$(".container-discussion-detail .container-message div.layout-button-expand").click(function() {
 				var $this = $(this);
 				$this.parents(".container-message").toggleClass("container-message-open");
-			})
+			});
 			
 			// Page show event for the 
 			$("#pageDiscussionThreadDetail").bind("pageshow", function(event, ui) {
@@ -671,7 +722,7 @@
 				@param		{Boolean}	p_isLoggedIn	true if the user was authorized successfully, false otherwise
 				@param		{String}	p_errorCode		the HTTP error code on the response
 			*/
-			var signInHandler = function(p_isLoggedIn, p_errorCode) {
+			var signInHandler = function(p_isLoggedIn, p_errorCode) { 
 				if (p_isLoggedIn) {
 					eraseCookie("currentPage");
 					$(location).attr("href", "index.html");

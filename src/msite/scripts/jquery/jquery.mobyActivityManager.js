@@ -11,6 +11,9 @@
  *  	callbackSuccess:  The callback to execute upon successful generation of the HTML.
  *  	callbackError:  The callback to execute if an error occurs.
  */
+ 
+var arrGlobalActivity = [],
+ 	objGlobalResources = {};
 
 (function($) {
 	var methods = {
@@ -33,63 +36,80 @@
 			// Internal function to create the HTML from an Activity Feed json object
 			var createHtml = function (objFeed, arrCourses) {
 				// Create the HTML from the data
-				var strHtml = "";
-				var dateNow = Date.today();
-				var dateToday = Date.today().add({days: -1});
-				var dateYesterday = Date.today().add({days: -2});
-				var intEnd = settings.intEndIndex;
-				var boolItems = false;
-				var strEndHtml = '<li data-role="list-divider" class="activity-scroll-indicator">Loading more...</li>\n';
-				if ((intEnd > objFeed.activityStream.items.length)|| (intEnd === -1)) {
-					intEnd = objFeed.activityStream.items.length;
+				var strHtml = "",
+					dateNow = Date.today(),
+					dateToday = Date.today().add({days: -1}),
+					dateYesterday = Date.today().add({days: -2}),
+					intEnd = settings.intEndIndex,
+					boolItems = false,
+					//short cut
+					objFeedItems = objFeed.activityStream.items, item, time, grade,
+					strEndHtml = '<li data-role="list-divider" class="activity-scroll-indicator">Loading more...</li>\n';
+					
+				if ((intEnd > objFeedItems.length)|| (intEnd === -1)) {
+					intEnd = objFeedItems.length;
 					boolItems = true;
 					strEndHtml = "";
 				}
+				
 				for (var i = settings.intStartIndex; i < intEnd; i++) {
+					//short cut for objFeedItems[i]
+					item = objFeedItems[i];
+					
 					// Parse the activity date: it is an ISO8601 format
-					var dateActivity = Date.parseExact(objFeed.activityStream.items[i].postedTime, "yyyy-MM-ddTHH:mm:ssZ");
+					var dateActivity = Date.parseExact(item.postedTime, "yyyy-MM-ddTHH:mm:ssZ");
 					var strSuffix = " AM";
 					if (parseInt(dateActivity.toString("HH")) > 12) {
 						strSuffix = " PM";
 					}
-					strHtml += '<li><a href="#pageActivityDetail">';
-					strHtml += '<span class="mobi-title">';
 					
-					if (objFeed.activityStream.items[i].object.objectType === "grade") {
-						strHtml += "Grade: " + objFeed.activityStream.items[i].target.title;
+					if (item.object.objectType === "grade") {
+						strHtml += '<li><a class="listitem-activity grade_' + item.object.courseId + '_' + item.object.referenceId + '" href="#pageActivityDetail">';
+						strHtml += '<span class="mobi-title">';
+						strHtml += "Grade: " + item.target.title;
 						strHtml += "</span><span class='mobi-summary'>";
-						strHtml += GetGrade(objFeed.activityStream.items[i]);
+						strHtml += grade  = GetGrade(item);
 						strHtml += "</span>";
-					} else if (objFeed.activityStream.items[i].object.objectType === "dropbox-submission") {
-						strHtml += "Dropbox: " + objFeed.activityStream.items[i].target.title;
+					} else if (item.object.objectType === "dropbox-submission") {
+						strHtml += '<li><a class="listitem-activity dropbox-submission_' + item.object.courseId + '_'  + item.object.referenceId + '" href="#pageActivityDetail">';
+						strHtml += '<span class="mobi-title">';
+						strHtml += "Dropbox: " + item.target.title;
 						strHtml += "</span><span class='mobi-summary'>";
-						strHtml += GetSummary(objFeed.activityStream.items[i]);
+						strHtml += GetSummary(item);
 						strHtml += "</span>";
-					} else if (objFeed.activityStream.items[i].object.objectType === "remark") {
-						strHtml += "Remark: " + objFeed.activityStream.items[i].object.title;
+					} else if (item.object.objectType === "remark") {
+						strHtml += '<li><a class="listitem-activity remark_' + item.object.courseId + '_'  + item.object.referenceId + '" href="#pageActivityDetail">';
+						strHtml += '<span class="mobi-title">';
+						strHtml += "Remark: " + item.object.title;
 						strHtml += "</span><span class='mobi-summary'>";
-						strHtml += GetSummary(objFeed.activityStream.items[i]);
+						strHtml += GetSummary(item);
 						strHtml += "</span>";
-					} else if (objFeed.activityStream.items[i].object.objectType === "thread-topic") {
-						strHtml += "Topic: " + objFeed.activityStream.items[i].object.title;
+					} else if (item.object.objectType === "thread-topic") {
+						strHtml += '<li><a class="listitem-activity thread-topic_' + item.object.courseId + '_'  + item.object.referenceId + ' topic_" href="#pageDiscussionTopicDetail">';
+						strHtml += '<span class="mobi-title">';
+						strHtml += "Topic: " + item.object.title;
 						strHtml += "</span><span class='mobi-summary'>";
-						strHtml += GetSummary(objFeed.activityStream.items[i]);
+						strHtml += GetSummary(item);
 						strHtml += "</span>";
-					} else if (objFeed.activityStream.items[i].object.objectType === "exam-submission") {
-						strHtml += "Exam: " + objFeed.activityStream.items[i].target.title;
+					} else if (item.object.objectType === "exam-submission") {
+						strHtml += '<li><a class="listitem-activity exam-submission_' + item.object.courseId + '_'  + item.object.referenceId + '" href="#pageActivityDetail">';
+						strHtml += '<span class="mobi-title">';
+						strHtml += "Exam: " + item.target.title;
 						strHtml += "</span><span class='mobi-summary'>";
-						strHtml += GetSummary(objFeed.activityStream.items[i]);
+						strHtml += GetSummary(item);
 						strHtml += "</span>";
-					} else if (objFeed.activityStream.items[i].object.objectType === "thread-post") {
-						strHtml += "Re: " + objFeed.activityStream.items[i].object.title;
+					} else if (item.object.objectType === "thread-post") {
+						strHtml += '<li><a class="listitem-activity thread-post_' + item.object.courseId + '_'  + item.object.referenceId + ' response_" href="#pageDiscussionThreadDetail">';
+						strHtml += '<span class="mobi-title">';
+						strHtml += "Re: " + item.object.title;
 						strHtml += "</span><span class='mobi-summary'>";
-						strHtml += GetSummary(objFeed.activityStream.items[i]);
+						strHtml += GetSummary(item);
 						strHtml += "</span>";
 					}
 					
 					// Get course title 
 					var strTitle = "";
-					var courseId = objFeed.activityStream.items[i].object.courseId;
+					var courseId = item.object.courseId;
 					for (var j = 0; j < arrCourses.length; j++) {
 						if (arrCourses[j].id === courseId) {
 							strTitle = arrCourses[j].number + ": " + arrCourses[j].title;
@@ -100,18 +120,22 @@
 					// "Friendly dates": Yesterday, Today, nice formatted dates.
 					strHtml += '<span class="mobi-date">';
 					if (dateActivity.between(dateToday, dateNow)) {
-						strHtml += dateActivity.toString("h:mm") + strSuffix;
+						strHtml += time = dateActivity.toString("h:mm") + strSuffix;
 					} else if (dateActivity.between(dateYesterday, dateNow)) {
-						strHtml += dateActivity.toString("h:mm") + strSuffix + " Yesterday";
+						strHtml += time = dateActivity.toString("h:mm") + strSuffix + " Yesterday";
 					} else {
-						strHtml += dateActivity.toString("MMM d");
+						strHtml += time = dateActivity.toString("MMM d");
 					}
 					strHtml += '</span>';
 					strHtml += "</a></li>\n";
+					objGlobalResources[item.object.referenceId] = item;
+					objGlobalResources[item.object.referenceId]['courseTitle'] = strTitle;
+					objGlobalResources[item.object.referenceId]['time']  = time;
+					 objGlobalResources[item.object.referenceId]['grade'] = grade;
 				}
 				strHtml += strEndHtml;
 				var objReturn = {
-					intActivities: objFeed.activityStream.items.length,
+					intActivities: objFeedItems.length,
 					strFeedHtml : strHtml,
 					boolAllItems : boolItems
 				}
