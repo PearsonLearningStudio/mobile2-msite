@@ -27,7 +27,7 @@
 				utils.js
 */
 var SessionManager = (function()
-{
+{ 
 	/**
 		The singleton instance of the SessionManager class.
 		@private
@@ -360,7 +360,7 @@ var SessionManager = (function()
 														with the access token information, or null if authorization failed.
 		*/
 		this.getAuthorizationHeader = function(p_callback)
-		{
+		{ 
 			VariableValidator.require(this, p_callback, "function");
 			
 			if (!_locked)
@@ -368,7 +368,7 @@ var SessionManager = (function()
 				var now = new Date();
 				// if the access token has expired
 				if (_accessTokenAuthHeader == null || _accessTokenExpiresOn.getTime() <= now.getTime())
-				{
+				{ 
 					_locked = true;
 					// get new token
 					var serviceUrl = this.serviceLocation + "/authorize/token";
@@ -377,7 +377,7 @@ var SessionManager = (function()
 					_callbacks.push(p_callback);
 				}
 				else
-				{
+				{ 
 					p_callback(_accessTokenAuthHeader);
 				}
 			}
