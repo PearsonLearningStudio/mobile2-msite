@@ -291,8 +291,13 @@ boolClicked = true;
 					successHandler: function(jsonResponse, intTransactionId){
 						//console.log(jsonResponse, intTransactionId);
 						if(activityType === 'grade'){ 
-							details = '<p class="mobi-course-grade">' + activity.grade + '</p><p class="mobi-grade-comments">' + jsonResponse.grade.comments + '</p><p class="mobi-activity-time">' + activity.time + '</p>';
-							details += '<a class="ui-btn ui-btn-up-c" data-transition="slide" data-direction="reverse" data-role="button" data-theme="c" href="#pageActivitiesViewAll"><span class="ui-btn-inner">View all course ' + activity.object.objectType.replace('-', ' ') + 's</span></a>';
+							details = '<p class="mobi-course-grade">Grade: ' + activity.grade + '</p>';
+							details += '<p class="mobi-course-title">' + activity.courseTitle + '</p>';
+							//if(jsonResponse.grade.comments){
+								details += '<p class="mobi-grade-comments">Comments: ' + jsonResponse.grade.comments + '</p>';
+							//}
+							details += '<p class="mobi-activity-time">' + activity.courseTitle + ' <span>'+ activity.time + '</span></p>';
+							details += '<a id="btn-viewall-activity" class="ui-btn ui-btn-up-c" data-transition="slide" data-direction="reverse" data-role="button" data-theme="c" href="#pageActivitiesViewAll"><span class="ui-btn-inner">View all course ' + activity.object.objectType.replace('-', ' ') + 's</span></a>';
 							$contMessage.html(details);	
 						} 
 						$.mobile.pageLoading(true);

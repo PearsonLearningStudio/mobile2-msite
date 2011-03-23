@@ -272,6 +272,24 @@ div.layout-header .menu-active {
 	float: left;	
 }
 
+#pageActivityDetail .container-topicinfo {
+	float: left;
+	margin: .5em 10px 0;
+}
+
+.container-topicinfo .mobi-course-title,
+.container-topicinfo .mobi-activity-type {
+	font-weight: bold;
+	margin: 0;
+	padding: 0 0 0.2em;
+	text-transform: capitalize;
+}
+
+.container-topicinfo .mobi-activity-type {
+	font-size: 21px;
+	color: #2e3a81;
+}
+
 #container-activity-detail {
 	background-color: #fff;
 	border: 1px solid #fff;
@@ -285,18 +303,26 @@ div.layout-header .menu-active {
 }
 
 #container-activity-detail p {
-	margin-left: 25px;
+	 margin: 0 0 0 35px;
+   	 padding: 0 0 0.2em;
 }
 
-#container-activity-detail .mobi-course-title,
-#container-activity-detail .mobi-activity-type {
+#container-activity-detail .mobi-course-grade {
 	font-weight: bold;
-	margin: 0;
-	padding: 0 0 0.2em;
+	margin-bottom: 5px;
 }
 
-#container-activity-detail .mobi-activity-type {
-	text-transform: capitalize;
+#container-activity-detail .mobi-activity-time {
+	font-style: italic;
+	margin-top: 20px;
+}
+
+#container-activity-detail .mobi-activity-time span {
+	margin-left: 5px;
+}
+
+#btn-viewall-activity {
+	margin-left: 35px;
 }
 
 /* activity detail view */
