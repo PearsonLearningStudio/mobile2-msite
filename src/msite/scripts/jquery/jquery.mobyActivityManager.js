@@ -56,13 +56,6 @@ var arrGlobalActivity = [],
 					//short cut for objFeedItems[i]
 					item = objFeedItems[i];
 					
-					// Parse the activity date: it is an ISO8601 format
-					var dateActivity = Date.parseExact(item.postedTime, "yyyy-MM-ddTHH:mm:ssZ");
-					var strSuffix = " AM";
-					if (parseInt(dateActivity.toString("HH")) > 12) {
-						strSuffix = " PM";
-					}
-					
 					if (item.object.objectType === "grade") {
 						strHtml += '<li><a class="listitem-activity grade_' + item.object.courseId + '_' + item.object.referenceId + '" href="/activitydetail.html">';
 						strHtml += '<span class="mobi-title">';
@@ -119,14 +112,7 @@ var arrGlobalActivity = [],
 					
 					// "Friendly dates": Yesterday, Today, nice formatted dates.
 					strHtml += '<span class="mobi-date">';
-					var strFriendlyDate = friendlyDate(dateActivity);
-					if (dateActivity.between(dateToday, dateNow)) {
-						strHtml += time = dateActivity.toString("h:mm") + strSuffix;
-					} else if (dateActivity.between(dateYesterday, dateNow)) {
-						strHtml += time = dateActivity.toString("h:mm") + strSuffix + " Yesterday";
-					} else {
-						strHtml += time = dateActivity.toString("MMM d");
-					}
+					strHtml += time = friendlyDate(item.postedTime);
 					strHtml += '</span>';
 					strHtml += "</a></li>\n";
 					objGlobalResources[item.object.referenceId] = item;
