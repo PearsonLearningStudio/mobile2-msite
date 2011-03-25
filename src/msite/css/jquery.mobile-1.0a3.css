@@ -284,17 +284,17 @@
 	font-family: Helvetica, Arial, sans-serif;
 }
 .ui-body-c {
-	border: 1px solid 		#B3B3B3;
+/*	border: 1px solid 		#B3B3B3;*/
 	color: 					#333333;
 	text-shadow: 0 1px 0 	#fff;
-	background: 			#f0f0f0;
+	/*background: 			#f0f0f0;
 	background-image: -moz-linear-gradient(top, 
 							#eeeeee, 
 							#dddddd);
 	background-image: -webkit-gradient(linear,left top,left bottom,
 		color-stop(0, 		#eeeeee),
 		color-stop(1, 		#dddddd));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#eeeeee', EndColorStr='#dddddd')";
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#eeeeee', EndColorStr='#dddddd')";*/
 }
 .ui-body-c,
 .ui-body-c input,
@@ -928,9 +928,9 @@ a.ui-link-inherit {
 	border-bottom-left-radius: 			1em;
 }
 .ui-btn-corner-all {
-	-moz-border-radius: 				1em;
-	-webkit-border-radius: 				1em;
-	border-radius: 						1em;
+	-moz-border-radius: 				9px; /*.6em;*/
+	-webkit-border-radius: 				9px; /*.6em;*/
+	border-radius: 						9px; /*.6em;*/
 }
 
 /* radius clip workaround for cleaning up corner trapping */
@@ -1589,7 +1589,7 @@ textarea.ui-input-text { height: 50px; -webkit-transition: height 200ms linear; 
 */
 .ui-listview { margin: 0; counter-reset: listnumbering; }
 .ui-content .ui-listview { margin: -15px; }
-.ui-content .ui-listview-inset { margin: 1em 0;  }
+.ui-content .ui-listview-inset { margin: 1em 0; }
 .ui-listview, .ui-li { list-style:none; padding:0; zoom: 1; }
 .ui-li { display: block; margin:0; position: relative; overflow: hidden; text-align: left; border-width: 0; border-top-width: 1px; }
 .ui-li .ui-btn-text { text-overflow: ellipsis; overflow: hidden; white-space: nowrap;  }

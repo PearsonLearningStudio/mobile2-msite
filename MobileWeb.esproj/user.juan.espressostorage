@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ESProjectShowHiddenFilesKey</key>
+	<false/>
+	<key>com.macrabbit.Espresso.Workspace.Tabs</key>
+	<dict>
+		<key>Tabs</key>
+		<array>
+			<dict>
+				<key>DocumentURL</key>
+				<string>file://localhost/Users/juan/Desktop/projects/EffectiveUI/eCollege/Development/MobileWeb/src/msite/login.html</string>
+				<key>StateType</key>
+				<string>DefaultTab</string>
+			</dict>
+			<dict>
+				<key>DocumentURL</key>
+				<string>file://localhost/Users/juan/Desktop/projects/EffectiveUI/eCollege/Development/MobileWeb/src/msite/css/branding.css</string>
+				<key>StateType</key>
+				<string>DefaultTab</string>
+			</dict>
+			<dict>
+				<key>DocumentURL</key>
+				<string>file://localhost/Users/juan/Desktop/projects/EffectiveUI/eCollege/Development/MobileWeb/src/msite/css/jquery.mobile-1.0a3.css</string>
+				<key>StateType</key>
+				<string>DefaultTab</string>
+			</dict>
+		</array>
+	</dict>
+</dict>
+</plist>

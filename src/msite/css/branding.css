@@ -1,0 +1,131 @@
+#loginFormSection h1.signon_logo {
+  background: url(../images/logo_signon.png) left top no-repeat;
+  width: 201px;
+  height: 100px;
+  text-indent: -9999px;
+  margin: 0 auto;
+}
+
+#loginPage {
+  background: url(../images/background_signon.png) left top no-repeat;
+}
+
+#loginForm .authFields ul {
+  background-image: -moz-linear-gradient(top, 
+  						rgba(255,255,255,.9), 
+  						rgba(255,255,255,.8));
+  background-image: -webkit-gradient(linear,left top,left bottom,
+  	color-stop(0, 		rgba(255,255,255,.9)),
+  	color-stop(1, 		rgba(255,255,255,.8)));
+  	-msfilter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='rgba(255,255,255,.9)', EndColorStr='rgba(255,255,255,.8)";
+}
+
+#loginForm .authFields ul li {
+  background: transparent;
+  border: none;
+}
+
+#loginForm .authFields ul li label {
+  color: #354394;
+  text-shadow: #FFFFFF 0 1px 0;
+  font-weight: bold;
+  float: left;
+  line-height: 40px;
+  text-align: right;
+  width: 20%;
+  padding: 0 10px 0 0;
+}
+
+#loginForm .authFields ul li input[type=text],
+#loginForm .authFields ul li input[type=password] {
+  float: left;
+  border: solid 1px #CCC;
+  width: 60%;
+}
+
+#loginForm .authFields ul li .ui-checkbox input[type=checkbox] {
+/*  margin: 30px 0 0 0;*/
+}
+
+#loginForm .authFields ul li .ui-checkbox label {
+  background: transparent;
+  border: none;
+  width: 50%;
+  margin: -30px 0 0 0;
+  color: #333;
+}
+
+#loginForm .authFields ul li .ui-checkbox label .ui-btn-text {
+  line-height: 48px;
+  height: 36px;
+  padding: 2px 0 0 10px;
+  width: 100%;
+  display: inline-block;
+  text-align: left;
+  float: left;
+}
+
+#loginForm .authFields ul li .ui-checkbox label .ui-icon-checkbox-on,
+#loginForm .authFields ul li .ui-checkbox label .ui-icon-checkbox-off {
+  width: 33px;
+  height: 33px;
+  background-size: 32px 33px;
+}
+
+#loginForm .authFields ul li .ui-checkbox label .ui-icon-checkbox-on {
+  background: url(../images/form_check_on.png) left top no-repeat;
+}
+
+#loginForm .authFields ul li .ui-checkbox label .ui-icon-checkbox-off {
+  background: url(../images/form_check_off.png) left top no-repeat;
+}
+
+/* Sign On Button */
+
+#loginFormContainer .ui-btn-up-c {
+	border: none;
+	background: 			#364395;
+	font-weight: bold;
+	color: 					#FFFFFF;
+	cursor: pointer;
+	text-shadow: 0 -1px 0px #000;
+	text-decoration: none;
+	background-image: -moz-linear-gradient(top, 
+							#364395, 
+							#212B5E);
+	background-image: -webkit-gradient(linear,left top,left bottom,
+		color-stop(0, 		#364395),
+		color-stop(1, 		#212B5E));
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#364395', EndColorStr='#eeeeee')";
+}
+
+#loginFormContainer a.ui-link-inherit {
+	color: 					#FFFFFF;
+}
+
+.ui-btn-hover-c {
+	border: none;
+	background: 			#5461B2;
+	font-weight: bold;
+	color: 					#FFFFFF;
+	text-decoration: none;
+	text-shadow: 0 -1px 0px #000;
+	background-image: -moz-linear-gradient(top, 
+							#5461B2, 
+							#414C80);
+	background-image: -webkit-gradient(linear,left top,left bottom,
+		color-stop(0, 		#5461B2),
+		color-stop(1, 		#414C80));
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#5461B2', EndColorStr='#414C80')";
+}
+.ui-btn-hover-c a.ui-link-inherit {
+	color: 					#FFFFFF;
+}
+
+#loginPage .container-footer {
+  background: rgba(0,0,0,.8);
+}
+
+#loginPage .container-footer .ui-link{
+  color: #FFF;
+}

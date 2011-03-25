@@ -67,25 +67,22 @@ $(document).ready(function() {
 		
 		<!-- Begin login page -->
 		<div data-role="page" id="loginPage">
-			<div class="section_header" data-role="header">
-				<h1>Pearson</h1>
-			</div>
 			<div id="loginFormSection" class="section_content" data-role="content">
 				
 				<div id="loginFormContainer">
-					<h2>eCollege Mobile</h2>
+					<h1 class="signon_logo">Strata University</h1>
 					<form method="GET" id="loginForm" action="submit">
 						<div class="authFields">
 							<ul data-role="listview" data-inset="true" data-theme="d" data-dividertheme="b">
 								<li>
-									<label for="userId">Username:</label>
+									<label for="userId">Username</label>
 									<input class="inputtext" type="text" name="userId" id="userId" autocapitalize="off" />
 								</li>
 								<li>
-									<label for="password">Password:</label>
+									<label for="password">Password</label>
 									<input class="inputtext" type="password" name="password" id="password" autocapitalize="off" />
 								</li>
-								<li>
+								<li class="checkbox">
 									<input type="checkbox" name="rememberMe" id="rememberMe" />
 									<label for="rememberMe">Keep Me Signed In</label>
 								</li>
