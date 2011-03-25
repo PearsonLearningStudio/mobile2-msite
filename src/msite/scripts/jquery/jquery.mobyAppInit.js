@@ -331,7 +331,7 @@ boolClicked = true;
 				$().mobiQueryApi("get", {
 					strUrl: strCurrentUrl,
 					successHandler: function(jsonResponse, intTransactionId) {
-						var strTitle = jsonResponse.userTopics[0].topic.containerInfo.contentItemTitle;
+						var strTitle = jsonResponse.userTopics[0].topic.title;
 						var strAuthor = jsonResponse.userTopics[0].topic.containerInfo.contentAuthor;
 						var intTotalResponses = jsonResponse.userTopics[0].childResponseCounts.totalResponseCount;
 						var intUnreadResponses = jsonResponse.userTopics[0].childResponseCounts.unreadResponseCount;
@@ -412,7 +412,8 @@ boolClicked = true;
 													strTitle: $this.find(".mobi-title").text(),
 													strTotalResponseString: $this.find(".mobi-total-responses").text(),
 													strUnreadResponseString: $this.find(".mobi-unread-responses").text(),
-													strDescription: $this.find(".mobi-description").data("description")
+													strDescription: $this.find(".mobi-description").data("description"),
+													strDate: $this.find(".mobi-date").text()
 												}
 												arrGlobalThreads.push(objInfo);
 											})
@@ -461,9 +462,10 @@ boolClicked = true;
 				var objThread = arrGlobalThreads[intLast];
 				
 				// Fill in the thread detail information
-				$thisView.find(".container-discussion-detail .container-topicinfo .mobi-title").text(objThread.strTitle);
+				$thisView.find(".mobi-title").text(objThread.strTitle);
 				$thisView.find(".container-discussion-detail .container-topicinfo .mobi-author").text(objThread.strAuthorName);
 				$thisView.find(".container-discussion-detail .container-topicinfo .mobi-total-responses").text(objThread.strTotalResponseString);
+				$thisView.find(".container-discussion-detail .container-topicinfo .mobi-date").text(objThread.strDate);
 
 				$thisView.find(".container-discussion-detail .container-topicinfo .mobi-unread-responses").text(objThread.strUnreadResponseString);
 				if (objThread.strUnreadResponseString === "") {
@@ -558,10 +560,6 @@ boolClicked = true;
 			
 			
 			
-			
-			
-			
-			
 			// Page show event for the 
 			$("#pageDiscussionThreadDetail2").bind("pageshow", function(event, ui) {
 				$.mobile.pageLoading();
@@ -580,6 +578,7 @@ boolClicked = true;
 				$thisView.find(".container-discussion-detail .container-topicinfo .mobi-title").text(objThread.strTitle);
 				$thisView.find(".container-discussion-detail .container-topicinfo .mobi-author").text(objThread.strAuthorName);
 				$thisView.find(".container-discussion-detail .container-topicinfo .mobi-total-responses").text(objThread.strTotalResponseString);
+				$thisView.find(".container-discussion-detail .container-topicinfo .mobi-date").text(objThread.strDate);
 
 				$thisView.find(".container-discussion-detail .container-topicinfo .mobi-unread-responses").text(objThread.strUnreadResponseString);
 				if (objThread.strUnreadResponseString === "") {
