@@ -481,11 +481,16 @@ var friendlyDate = function(myDate) {
 		strReturn = "Today " + dateActivity.toString("h:mm") + strSuffix;
 	} else if (dateActivity.between(dateYesterday, dateNow)) {
 		// If the date is yesterday, return "h:mm am/pm Yesterday"
-		strReturn = dateActivity.toString("h:mm") + strSuffix + " Yesterday";
+		//strReturn = dateActivity.toString("h:mm") + strSuffix + " Yesterday";
+		//Actually, just return "Yesterday"
+		strReturn = "Yesterday"
+	} else if(dateNow.getFullYear() > dateActivity.getFullYear()) {
+		strReturn = dateActivity.toString("MMM d, yyyy");
 	} else {
 		// Otherwise return "MMM d" (e.g., "Mar 12" or "Sep 20")
 		strReturn = dateActivity.toString("MMM d");
 	}
+	
 	return strReturn;
 }
 
