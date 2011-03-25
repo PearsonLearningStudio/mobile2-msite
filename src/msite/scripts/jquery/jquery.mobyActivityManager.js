@@ -34,7 +34,7 @@ var arrGlobalActivity = [],
 				$.extend( settings, options );
 			}
 			// Internal function to create the HTML from an Activity Feed json object
-			var createHtml = function (objFeed, arrCourses) { console.log(objFeed);
+			var createHtml = function (objFeed, arrCourses) { //(objFeed);
 				// Create the HTML from the data
 				var strHtml = "",
 					dateNow = Date.today(),
@@ -64,42 +64,42 @@ var arrGlobalActivity = [],
 					}
 					
 					if (item.object.objectType === "grade") {
-						strHtml += '<li><a class="listitem-activity grade_' + item.object.courseId + '_' + item.object.referenceId + '" href="#pageActivityDetail">';
+						strHtml += '<li><a class="listitem-activity grade_' + item.object.courseId + '_' + item.object.referenceId + '" href="/activitydetail.html">';
 						strHtml += '<span class="mobi-title">';
 						strHtml += "Grade: " + item.target.title;
 						strHtml += "</span><span class='mobi-summary'>";
 						strHtml += grade  = GetGrade(item);
 						strHtml += "</span>";
 					} else if (item.object.objectType === "dropbox-submission") {
-						strHtml += '<li><a class="listitem-activity dropbox-submission_' + item.object.courseId + '_'  + item.object.referenceId + '" href="#pageActivityDetail">';
+						strHtml += '<li><a class="listitem-activity dropbox-submission_' + item.object.courseId + '_'  + item.object.referenceId + '" href="/activitydetail.html">';
 						strHtml += '<span class="mobi-title">';
 						strHtml += "Dropbox: " + item.target.title;
 						strHtml += "</span><span class='mobi-summary'>";
 						strHtml += GetSummary(item);
 						strHtml += "</span>";
 					} else if (item.object.objectType === "remark") {
-						strHtml += '<li><a class="listitem-activity remark_' + item.object.courseId + '_'  + item.object.referenceId + '" href="#pageActivityDetail">';
+						strHtml += '<li><a class="listitem-activity remark_' + item.object.courseId + '_'  + item.object.referenceId + '" href="/activitydetail.html">';
 						strHtml += '<span class="mobi-title">';
 						strHtml += "Remark: " + item.object.title;
 						strHtml += "</span><span class='mobi-summary'>";
 						strHtml += GetSummary(item);
 						strHtml += "</span>";
 					} else if (item.object.objectType === "thread-topic") {
-						strHtml += '<li><a class="listitem-activity thread-topic_' + item.object.courseId + '_'  + item.object.referenceId + '" href="#pageDiscussionTopicDetail">';
+						strHtml += '<li><a class="listitem-activity thread-topic_' + item.object.courseId + '_'  + item.object.referenceId + '" href="/discussiontopicdetail.html">';
 						strHtml += '<span class="mobi-title">';
 						strHtml += "Topic: " + item.object.title;
 						strHtml += "</span><span class='mobi-summary'>";
 						strHtml += GetSummary(item);
 						strHtml += "</span>";
 					} else if (item.object.objectType === "exam-submission") {
-						strHtml += '<li><a class="listitem-activity exam-submission_' + item.object.courseId + '_'  + item.object.referenceId + '" href="#pageActivityDetail">';
+						strHtml += '<li><a class="listitem-activity exam-submission_' + item.object.courseId + '_'  + item.object.referenceId + '" href="/activitydetail.html">';
 						strHtml += '<span class="mobi-title">';
 						strHtml += "Exam: " + item.target.title;
 						strHtml += "</span><span class='mobi-summary'>";
 						strHtml += GetSummary(item);
 						strHtml += "</span>";
 					} else if (item.object.objectType === "thread-post") {
-						strHtml += '<li><a class="listitem-activity thread-post_' + item.object.courseId + '_'  + item.object.referenceId + '" href="#pageDiscussionThreadDetail">';
+						strHtml += '<li><a class="listitem-activity thread-post_' + item.object.courseId + '_'  + item.object.referenceId + '" href="/discussiontopicdetail.html">';
 						strHtml += '<span class="mobi-title">';
 						strHtml += "Re: " + item.object.title;
 						strHtml += "</span><span class='mobi-summary'>";

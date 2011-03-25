@@ -42,7 +42,7 @@ boolClicked = true;
 			$().mobyCourseManager();
 			
 		
-			$(".layout-header .button-menu").bind("click", function() {
+			$(".layout-header .button-menu").live("click", function() {
 				$(this).siblings("ul").slideToggle(0);
 				$(this).toggleClass("menu-active");
 				return false;
@@ -206,7 +206,7 @@ boolClicked = true;
 			
 			
 			// Initialize handler for discussions tab 
-			$("#pageDiscuss").bind("pageshow", function() {
+			$("#pageDiscuss").live("pageshow", function() {
 				
 				// We are showing the Discussion tab.
 				// First, show the loading spinner
@@ -278,7 +278,7 @@ boolClicked = true;
 			});
 			
 			//Page show event for an activity feed detail page
-			$("#pageActivityDetail").bind("pageshow", function(event, ui){
+			$("#pageActivityDetail").live("pageshow", function(event, ui){
 				var $thisView = $(this), url, details, 
 					$contMessage = $thisView.find('.container-message'),
 					//activityType = arrGlobalActivity[0].split('_')[0],
@@ -328,7 +328,7 @@ boolClicked = true;
 		
 			
 			// Page show event for a discussion topic detail page
-			$("#pageDiscussionTopicDetail").bind("pageshow", function(event, ui) {
+			$("#pageDiscussionTopicDetail").live("pageshow", function(event, ui) {
 				// We are showing the Discussion tab.
 				// First, show the loading spinner
 				$.mobile.pageLoading();
@@ -466,7 +466,7 @@ boolClicked = true;
 			});
 			
 			// Page show event for the thread detail page
-			$("#pageDiscussionThreadDetail").bind("pageshow", function(event, ui) {
+			$("#pageDiscussionThreadDetail").live("pageshow", function(event, ui) {
 				$.mobile.pageLoading();
 				// What thread should we show?  This information should be contained in the
 				// arrGlobalThreads array.  If it isn't, we should go back.
@@ -519,7 +519,7 @@ boolClicked = true;
 						if (jsonResponse.userResponses.length > 0) {
 							$().mobyDiscussionManager("userResponsesToHtml", {
 								objUserResponses: jsonResponse,
-								strUrl: "#pageDiscussionThreadDetail2",
+								strUrl: "/discussionthreaddetail2.html",
 								callbackSuccess: function(strReturnHtml) {
 									var strHtml = '<ul data-role="listview" data-inset="true" class="mobi-listview">';
 									strHtml += strReturnHtml;
@@ -579,7 +579,7 @@ boolClicked = true;
 			
 			
 			// Page show event for the 
-			$("#pageDiscussionThreadDetail2").bind("pageshow", function(event, ui) {
+			$("#pageDiscussionThreadDetail2").live("pageshow", function(event, ui) {
 				$.mobile.pageLoading();
 				// What thread should we show?  This information should be contained in the
 				// arrGlobalThreads array.  If it isn't, we should go back.
@@ -631,7 +631,7 @@ boolClicked = true;
 						if (jsonResponse.userResponses.length > 0) {
 							$().mobyDiscussionManager("userResponsesToHtml", {
 								objUserResponses: jsonResponse,
-								strUrl: "#pageDiscussionThreadDetail",
+								strUrl: "/discussionthreaddetail.html",
 								callbackSuccess: function(strReturnHtml) {
 									var strHtml = '<ul data-role="listview" data-inset="true" class="mobi-listview">';
 									strHtml += strReturnHtml;

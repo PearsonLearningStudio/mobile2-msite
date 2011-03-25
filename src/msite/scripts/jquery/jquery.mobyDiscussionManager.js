@@ -61,7 +61,7 @@ var arrGlobalThreads = [];
 		userResponsesToHtml : function(options) {
 			var settings = {
 				objUserResponses: "",
-				strUrl: "#pageDiscussionThreadDetail",
+				strUrl: "/discussionthreaddetail.html",
 				callbackSuccess: function(strHtml) {
 					return strHtml;
 				},
@@ -166,7 +166,7 @@ var arrGlobalThreads = [];
 							var tempHtml = '<li data-role="list-divider" class="course-'+strCurrentCourse+'">'+arrCourses[i].title+'</li>';
 							boolDiscussions = false;
 							for (var j = 0; j < objUserTopics.userTopics.length; j++) {
-								console.log ("Object topic number"+j+": " + objUserTopics.userTopics[j].topic.containerInfo.courseID);
+								// ("Object topic number"+j+": " + objUserTopics.userTopics[j].topic.containerInfo.courseID);
 								if (objUserTopics.userTopics[j].topic.containerInfo.courseID === strCurrentCourse) {
 									boolDiscussions = true;
 									// Build the text for "total responses"
@@ -180,7 +180,7 @@ var arrGlobalThreads = [];
 									}
 									tempHtml += '<li class="course-'+objUserTopics.userTopics[j].topic.containerInfo.courseID+'">';
 									// To do: Link this off to a detail page.
-									tempHtml += '<a href="#pageDiscussionTopicDetail" class="listitem-topic" id="topic_'+objUserTopics.userTopics[j].id+'">';
+									tempHtml += '<a href="/discussiontopicdetail.html" class="listitem-topic" id="topic_'+objUserTopics.userTopics[j].id+'">';
 									
 									tempHtml += '<span class="mobi-title">'+objUserTopics.userTopics[j].topic.title+'</span>';
 									tempHtml += '<span class="mobi-response-count">'+strTotalResponsesText+'</span>';
