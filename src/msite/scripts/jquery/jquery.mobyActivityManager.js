@@ -119,6 +119,7 @@ var arrGlobalActivity = [],
 					
 					// "Friendly dates": Yesterday, Today, nice formatted dates.
 					strHtml += '<span class="mobi-date">';
+					var strFriendlyDate = friendlyDate(dateActivity);
 					if (dateActivity.between(dateToday, dateNow)) {
 						strHtml += time = dateActivity.toString("h:mm") + strSuffix;
 					} else if (dateActivity.between(dateYesterday, dateNow)) {
@@ -131,7 +132,7 @@ var arrGlobalActivity = [],
 					objGlobalResources[item.object.referenceId] = item;
 					objGlobalResources[item.object.referenceId]['courseTitle'] = strTitle;
 					objGlobalResources[item.object.referenceId]['time']  = time;
-					 objGlobalResources[item.object.referenceId]['grade'] = grade;
+					objGlobalResources[item.object.referenceId]['grade'] = grade;
 				}
 				strHtml += strEndHtml;
 				var objReturn = {

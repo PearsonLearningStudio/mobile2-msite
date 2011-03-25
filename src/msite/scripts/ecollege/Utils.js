@@ -453,6 +453,42 @@ var stripTags = function(strHtml) {
 	return strReturn;
 }
 
+var friendlyDate = function(myDate) {
+	// friendlyDate: return a standard formatted date for items
+	// myDate:  An ISO-standard date string, or a date object
+	// Returns: a formatted string.
+	
+	var dateNow = Date.today(),
+	dateToday = Date.today().add({days: -1}),
+	dateYesterday = Date.today().add({days: -2}),
+	dateActivity = myDate,
+	strSuffix = " AM",
+	strReturn = "";
+	
+	// AM or PM?
+	if (parseInt(dateActivity.toString("HH")) > 12) {
+		strSuffix = " PM";
+	}
+	
+	// If myDate isn't a date object we need to make it one.
+	if (typeof(myDate) != "object") {
+		dateActivity = Date.parseExact(myDate, "yyyy-MM-ddTHH:mm:ssZ");
+	}
+	
+	// Yesterday, Today, etc?
+	if (dateActivity.between(dateToday, dateNow)) {
+		// If the date is today, return "Today h:mm am/pm"
+		strReturn = "Today " + dateActivity.toString("h:mm") + strSuffix;
+	} else if (dateActivity.between(dateYesterday, dateNow)) {
+		// If the date is yesterday, return "h:mm am/pm Yesterday"
+		strReturn = dateActivity.toString("h:mm") + strSuffix + " Yesterday";
+	} else {
+		// Otherwise return "MMM d" (e.g., "Mar 12" or "Sep 20")
+		strReturn = dateActivity.toString("MMM d");
+	}
+	return strReturn;
+}
+
 
 
 

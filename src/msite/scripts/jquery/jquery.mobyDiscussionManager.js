@@ -94,7 +94,7 @@ var arrGlobalThreads = [];
 				} else if (settings.objUserResponses.userResponses[i].childResponseCounts.totalResponseCount === 1) {
 					strTotalResponsesText = "1 response";
 				} else {
-					strTotalResponsesText = settings.objUserResponses.userResponses[i].childResponseCounts.totalResponseCount + " responses";
+					strTotalResponsesText = settings.objUserResponses.userResponses[i].childResponseCounts.totalResponseCount + " total responses";
 				}
 				tempHtml += '<li class="response-'+settings.objUserResponses.userResponses[i].response.id+'">';
 
@@ -111,6 +111,8 @@ var arrGlobalThreads = [];
 				if (intNumberOfUnreadResponses > 0) {
 					tempHtml += '<span class="mobi-icon-response-count">'+intNumberOfUnreadResponses+'</span>';
 				}
+				var strDate = settings.objUserResponses.userResponses[i].response.postedDate;
+				tempHtml += '<span class="mobi-date">'+friendlyDate(strDate)+'</span>';
 				tempHtml += '<span class="mobi-icon-arrow-r">&gt;</span>';
 				tempHtml += '</a></li>\n';
 				strHtml += tempHtml;
@@ -164,6 +166,7 @@ var arrGlobalThreads = [];
 							var tempHtml = '<li data-role="list-divider" class="course-'+strCurrentCourse+'">'+arrCourses[i].title+'</li>';
 							boolDiscussions = false;
 							for (var j = 0; j < objUserTopics.userTopics.length; j++) {
+								console.log ("Object topic number"+j+": " + objUserTopics.userTopics[j].topic.containerInfo.courseID);
 								if (objUserTopics.userTopics[j].topic.containerInfo.courseID === strCurrentCourse) {
 									boolDiscussions = true;
 									// Build the text for "total responses"
@@ -173,15 +176,16 @@ var arrGlobalThreads = [];
 									} else if (objUserTopics.userTopics[j].childResponseCounts.totalResponseCount === 1) {
 										strTotalResponsesText = "1 response";
 									} else {
-										strTotalResponsestext = objUserTopics.userTopics[j].childResponseCounts.totalResponseCount + " responses";
+										strTotalResponsesText = objUserTopics.userTopics[j].childResponseCounts.totalResponseCount + " total responses";
 									}
 									tempHtml += '<li class="course-'+objUserTopics.userTopics[j].topic.containerInfo.courseID+'">';
 									// To do: Link this off to a detail page.
 									tempHtml += '<a href="#pageDiscussionTopicDetail" class="listitem-topic" id="topic_'+objUserTopics.userTopics[j].id+'">';
 									
-									tempHtml += '<span class="mobi-title">'+objUserTopics.userTopics[j].topic.containerInfo.contentItemTitle+'</span>';
+									tempHtml += '<span class="mobi-title">'+objUserTopics.userTopics[j].topic.title+'</span>';
 									tempHtml += '<span class="mobi-response-count">'+strTotalResponsesText+'</span>';
 									// Build the "your responses" string
+									
 									if (objUserTopics.userTopics[j].childResponseCounts.personalResponseCount === 1) {
 										tempHtml += '<span class="mobi-your-responses">'+objUserTopics.userTopics[j].childResponseCounts.personalResponseCount+' response by you</span>';
 									
@@ -190,6 +194,7 @@ var arrGlobalThreads = [];
 									
 									}
 									// Only show the number of unread items if there are any.
+									var intUnreadResponseCount = objUserTopics.userTopics[j].childResponseCounts.unreadResponseCount;
 									if (objUserTopics.userTopics[j].childResponseCounts.unreadResponseCount > 0 ) {
 										tempHtml += '<span class="mobi-icon-response-count">'+objUserTopics.userTopics[j].childResponseCounts.unreadResponseCount+'</span>';
 									}
