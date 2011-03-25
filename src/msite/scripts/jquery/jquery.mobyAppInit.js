@@ -93,8 +93,24 @@ boolClicked = true;
 							$(".listitem-activity").live('click',  function(){
 								arrGlobalActivity =  this.className.match(/\w+[-]*\w+\d+/ig);
 								activityType = arrGlobalActivity[0].split('_')[0];
-								if(activityType === 'thread-topic' || activityType === 'thread-post'){
-									
+								if(activityType === 'thread-topic'){									
+									arrGlobalTopics.push(strCurrentTopic);
+								} else if(activityType === 'thread-post'){						
+									// The user has tapped on a thread.  We need
+									// to display the thread detail page.
+									//$.mobile.pageLoading();
+									var $this = $(this);
+									var objInfo = {
+										strNewId: refId,
+										strOldId: -1,
+										strAuthorName: $this.find(".mobi-author").text(),
+										strTitle: $this.find(".mobi-title").text(),									
+										strTotalResponseString: $this.find(".mobi-total-responses").text(),
+										strUnreadResponseString: $this.find(".mobi-unread-responses").text(),
+										strDescription: $this.find(".mobi-description").data("description")
+									}
+									arrGlobalThreads.push(objInfo);
+									//console.log(arrGlobalThreads);
 								}
 							} );
 						}
@@ -283,9 +299,11 @@ boolClicked = true;
 				$thisView.find(".mobi-activity-type").html(activity.object.objectType);
 				
 				//get the details
-				if(activity.object.objectType === 'grade'){
+				if(activityType === 'grade'){
 					url = '/me/courses/' + activity.target.courseId + '/gradebookItems/' + activity.target.referenceId +'/grade';
-				} 
+				} else if(activityType === 'dropbox-submission'){
+					url = '/courses/' + activity.object.courseId + '/dropboxBaskets/' + activity.target.referenceId + '/messages/' + activity.object.referenceId; 
+				}
 				$().mobiQueryApi("get", { 
 					strUrl: configSettings.apiproxy + url,
 					successHandler: function(jsonResponse, intTransactionId){
@@ -672,18 +690,6 @@ boolClicked = true;
 					arrGlobalThreads.pop();
 				})
 			});
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			
 		
 			$("body").removeClass("ui-loading");

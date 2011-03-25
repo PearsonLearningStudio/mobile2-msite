@@ -34,7 +34,7 @@ var arrGlobalActivity = [],
 				$.extend( settings, options );
 			}
 			// Internal function to create the HTML from an Activity Feed json object
-			var createHtml = function (objFeed, arrCourses) {
+			var createHtml = function (objFeed, arrCourses) { console.log(objFeed);
 				// Create the HTML from the data
 				var strHtml = "",
 					dateNow = Date.today(),
@@ -85,7 +85,7 @@ var arrGlobalActivity = [],
 						strHtml += GetSummary(item);
 						strHtml += "</span>";
 					} else if (item.object.objectType === "thread-topic") {
-						strHtml += '<li><a class="listitem-activity thread-topic_' + item.object.courseId + '_'  + item.object.referenceId + ' topic_" href="#pageDiscussionTopicDetail">';
+						strHtml += '<li><a class="listitem-activity thread-topic_' + item.object.courseId + '_'  + item.object.referenceId + '" href="#pageDiscussionTopicDetail">';
 						strHtml += '<span class="mobi-title">';
 						strHtml += "Topic: " + item.object.title;
 						strHtml += "</span><span class='mobi-summary'>";
@@ -99,7 +99,7 @@ var arrGlobalActivity = [],
 						strHtml += GetSummary(item);
 						strHtml += "</span>";
 					} else if (item.object.objectType === "thread-post") {
-						strHtml += '<li><a class="listitem-activity thread-post_' + item.object.courseId + '_'  + item.object.referenceId + ' response_" href="#pageDiscussionThreadDetail">';
+						strHtml += '<li><a class="listitem-activity thread-post_' + item.object.courseId + '_'  + item.object.referenceId + '" href="#pageDiscussionThreadDetail">';
 						strHtml += '<span class="mobi-title">';
 						strHtml += "Re: " + item.object.title;
 						strHtml += "</span><span class='mobi-summary'>";
