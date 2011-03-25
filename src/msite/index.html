@@ -62,34 +62,32 @@ $(document).ready(function() {
 		<div data-role="page" id="pageHome">
 
 			<div class="layout-header">
-				<p class="branding-header-logo">Pearson</p>
+				<p class="branding-header-logo">Strata University</p>
 				<a class="button-menu">Menu</a>
 				<div class="clear"></div>
 				<ul data-role="listview" data-inset="true">
-					<li><a href="#">Home</a></li>
-					<li><a href="#pageProfile" data-transition="slide">My Profile</a></li>
-					<li><a href="#">Settings</a></li>
-					<li><a href="#" class="menu-logout">Logout</a></li>
+					<li class="home"><a href="#">Home</a></li>
+					<li class="my_profile"><a href="#pageProfile" data-transition="slide">My Profile</a></li>
+					<li class="settings"><a href="#">Settings</a></li>
+					<li class="signout"><a href="#" class="menu-logout">Logout</a></li>
 				</ul>
 				<div class="clear"></div>
 			</div>
+			<div data-role="navbar" class="container-navbar">
+				<ul>
+					<li><a href="#" data-transition="slide" class="ui-btn-active" id="home" data-icon="custom">Home</a></li>
+					<!-- <li><a href="#pageDiscuss" data-transition="slide">Discuss</a></li> -->
+					<li><a href="/discuss.html" data-transition="slide" id="discussions" data-icon="custom">Discussions</a></li>
+					<li><a href="/classes.html" data-transition="slide" id="courses" data-icon="custom">Courses</a></li>
+<!--					<li><a href="/people.html" data-transition="slide">People</a></li>-->
+					<li><a href="/profile.html" data-transition="slide" id="my_profile" data-icon="custom">My Profile</a></li>
+				</ul>
+			</div>
+			<div data-role="controlgroup" data-type="horizontal" class="ui-fluid ui-even-2 subnav">
+				<a href="#" data-role="button" class="btn-whatsdue">What's Due</a>
+				<a href="#" data-role="button" class="btn-activity">Activity</a>
+			</div>
 			<div data-role="content">
-				
-				<div data-role="navbar" class="container-navbar">
-					<ul>
-						<li><a href="#" data-transition="slide" class="ui-btn-active">Home</a></li>
-						<!-- <li><a href="#pageDiscuss" data-transition="slide">Discuss</a></li> -->
-						<li><a href="/discuss.html" data-transition="slide">Discuss</a></li>
-						<li><a href="/classes.html" data-transition="slide">Classes</a></li>
-						<li><a href="/people.html" data-transition="slide">People</a></li>
-						<li><a href="/profile.html" data-transition="slide">Profile</a></li>
-					</ul>
-				</div>
-
-				<div data-role="controlgroup" data-type="horizontal" class="ui-fluid ui-even-2 subnav">
-					<a href="#" data-role="button" class="btn-whatsdue">What's Due</a>
-					<a href="#" data-role="button" class="btn-activity">Activity</a>
-				</div>
 
 				<div class="view-activity">
 					
