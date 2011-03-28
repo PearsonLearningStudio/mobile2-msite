@@ -279,7 +279,7 @@ boolClicked = true;
 			
 			//Page show event for an activity feed detail page
 			$("#pageActivityDetail").live("pageshow", function(event, ui){
-				var $thisView = $(this), url, details, 
+				var $thisView = $(this), url, details = '', comments,
 					$contMessage = $thisView.find('.container-message'),
 					//activityType = arrGlobalActivity[0].split('_')[0],
 					//courseId = arrGlobalActivity[0].split('_')[1],
@@ -295,7 +295,7 @@ boolClicked = true;
 				$contMessage.html("");
 				
 				//initial data passed via objGlobalResources
-				$thisView.find(".mobi-course-title").html(activity.courseTitle);
+				$thisView.find(".mobi-course-title").html(activity.courseTitle.replace('-', ' '));
 				$thisView.find(".mobi-activity-type").html(activity.object.objectType);
 				
 				//get the details
@@ -308,13 +308,16 @@ boolClicked = true;
 					strUrl: configSettings.apiproxy + url,
 					successHandler: function(jsonResponse, intTransactionId){
 						//console.log(jsonResponse, intTransactionId);
-						if(activityType === 'grade'){ 
-							details = '<p class="mobi-course-grade">Grade: ' + activity.grade + '</p>';
-							details += '<p class="mobi-course-title">' + activity.courseTitle + '</p>';
-							//if(jsonResponse.grade.comments){
-								details += '<p class="mobi-grade-comments">Comments: ' + jsonResponse.grade.comments + '</p>';
-							//}
-							details += '<p class="mobi-activity-time">' + activity.courseTitle + ' <span>'+ activity.time + '</span></p>';
+						if(activityType === 'grade' || activityType === 'dropbox-submission'){ 
+							if(activityType === 'grade'){
+								details += '<p class="mobi-course-grade">Grade: ' + activity.grade + '</p>';
+								comments = jsonResponse.grade.comments;
+							} else if(activityType === 'dropbox-submission'){
+								details += '<p class="mobi-activity-author">Posted by:' + jsonResponse.messages[0].author.firstName + ' ' +jsonResponse.messages[0].author.lastName + '</p>';
+								comments = jsonResponse.messages[0].comments;
+							}
+							details += '<p class="mobi-grade-comments">Comments: '+ comments + '</p>';
+							details += '<p class="mobi-activity-time">' + activity.time + '</p>';
 							details += '<a id="btn-viewall-activity" class="ui-btn ui-btn-up-c" data-transition="slide" data-direction="reverse" data-role="button" data-theme="c" href="#pageActivitiesViewAll"><span class="ui-btn-inner">View all course ' + activity.object.objectType.replace('-', ' ') + 's</span></a>';
 							$contMessage.html(details);	
 						} 
