@@ -78,7 +78,7 @@ var arrGlobalActivity = [],
 						strHtml += GetSummary(item);
 						strHtml += "</span>";
 					} else if (item.object.objectType === "thread-topic") {
-						strHtml += '<li><a class="listitem-activity thread-topic_' + item.object.courseId + '_'  + item.object.referenceId + '" href="/discussiontopicdetail.html">';
+						strHtml += '<li><a class="listitem-activity thread-topic_' + item.object.courseId + '_'  + item.object.referenceId + '" href="discussiontopicdetail.html">';
 						strHtml += '<span class="mobi-title">';
 						strHtml += "Topic: " + item.object.title;
 						strHtml += "</span><span class='mobi-summary'>";

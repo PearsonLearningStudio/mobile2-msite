@@ -401,6 +401,27 @@ div.layout-header .menu-active {
   font-size: .9em;
 }
 
+.subnav .ui-select .ui-btn {
+  background: none;
+  border: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+.subnav .ui-select .ui-btn-inner {
+  background: none;
+  border: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  padding: 4px 0;
+}
+
+.subnav .ui-select .ui-btn-text {
+  float: left;
+}
+
 
 /* List View */
 .mobi-listview li {
@@ -441,4 +462,13 @@ div.layout-header .menu-active {
 
 .mobi-listview li .mobi-title {
   color:  #306CA0;
+}
+
+.topic-header {
+  background: url(../images/background_content.png);
+  padding: 10px 0;
+}
+
+#textarea-response {
+  width: 95%;
 }
