@@ -299,28 +299,26 @@ boolClicked = true;
 				$thisView.find(".mobi-activity-type").html(activity.object.objectType.replace('-', ' '));
 				
 				//get the details
-				if(activityType === 'grade'){
+				if(activityType === 'grade') {
 					url = '/me/courses/' + activity.target.courseId + '/gradebookItems/' + activity.target.referenceId +'/grade';
-				} else if(activityType === 'dropbox-submission'){
+				} else if(activityType === 'dropbox-submission') {
 					url = '/courses/' + activity.object.courseId + '/dropboxBaskets/' + activity.target.referenceId + '/messages/' + activity.object.referenceId; 
 				}
 				$().mobiQueryApi("get", { 
 					strUrl: configSettings.apiproxy + url,
-					successHandler: function(jsonResponse, intTransactionId){
+					successHandler: function(jsonResponse, intTransactionId) {
 						//console.log(jsonResponse, intTransactionId);
-						if(activityType === 'grade' || activityType === 'dropbox-submission'){ 
-							if(activityType === 'grade'){
-								details += '<p class="mobi-course-grade">Grade: ' + activity.grade + '</p>';
-								comments = jsonResponse.grade.comments;
-							} else if(activityType === 'dropbox-submission'){
-								details += '<p class="mobi-activity-author">Posted by:' + jsonResponse.messages[0].author.firstName + ' ' +jsonResponse.messages[0].author.lastName + '</p>';
-								comments = jsonResponse.messages[0].comments;
-							}
-							details += '<p class="mobi-grade-comments">Comments: '+ comments + '</p>';
-							details += '<p class="mobi-activity-time">' + activity.time + '</p>';
-							details += '<a id="btn-viewall-activity" class="ui-btn ui-btn-up-c" data-transition="slide" data-direction="reverse" data-role="button" data-theme="c" href="#pageActivitiesViewAll"><span class="ui-btn-inner">View All Course ' + activity.object.objectType.replace('-', ' ') + 's</span></a>';
-							$contMessage.html(details);	
-						} 
+						if(activityType === 'grade') { 
+							details += '<p class="mobi-activity-title">Grade: ' + activity.grade + '</p>';
+							details += '<p class="mobi-activity-comments">Comments: '+ jsonResponse.grade.comments + '</p>';
+						} else if(activityType === 'dropbox-submission') {
+							details += '<p class="mobi-activity-title">' + activity.object.objectType.replace('-', ' ') + '</p>';
+							details += '<p class="mobi-activity-author">Posted by: ' + jsonResponse.messages[0].author.firstName + ' ' +jsonResponse.messages[0].author.lastName + '</p>';
+							details += '<p class="mobi-activity-comments">Comments: '+ jsonResponse.messages[0].comments + '</p>';
+						}
+						details += '<p class="mobi-activity-time">' + activity.time + '</p>';
+						details += '<a id="btn-viewall-activity" class="ui-btn ui-btn-up-c" data-transition="slide" data-direction="reverse" data-role="button" data-theme="c" href="#pageActivitiesViewAll"><span class="ui-btn-inner">View All Course ' + activity.object.objectType.replace('-', ' ') + 's</span></a>';	
+						$contMessage.html(details);	
 						$.mobile.pageLoading(true);
 					},
 					errorHandler: function() {

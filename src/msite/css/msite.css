@@ -268,7 +268,7 @@ div.layout-header .menu-active {
 
 #pageActivityDetail .container-topicinfo {
 	float: left;
-	margin: .5em 10px 0;
+	margin: .5em 0 0;
 	width: 200px;
 }
 
@@ -301,9 +301,11 @@ div.layout-header .menu-active {
    	 padding: 0 0 0.2em;
 }
 
-#container-activity-detail .mobi-course-grade {
+#container-activity-detail .mobi-activity-title {
+	color: #347BAD;
 	font-weight: bold;
 	margin-bottom: 5px;
+	text-transform: capitalize;
 }
 
 #container-activity-detail .mobi-activity-time {
