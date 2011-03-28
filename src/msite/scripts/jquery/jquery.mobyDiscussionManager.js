@@ -113,7 +113,7 @@ var arrGlobalThreads = [];
 				}
 				var strDate = settings.objUserResponses.userResponses[i].response.postedDate;
 				tempHtml += '<span class="mobi-date">'+friendlyDate(strDate)+'</span>';
-				tempHtml += '<span class="mobi-icon-arrow-r">&gt;</span>';
+				//tempHtml += '<span class="mobi-icon-arrow-r">&gt;</span>';
 				tempHtml += '</a></li>\n';
 				strHtml += tempHtml;
 			}
@@ -198,7 +198,7 @@ var arrGlobalThreads = [];
 									if (objUserTopics.userTopics[j].childResponseCounts.unreadResponseCount > 0 ) {
 										tempHtml += '<span class="mobi-icon-response-count">'+objUserTopics.userTopics[j].childResponseCounts.unreadResponseCount+'</span>';
 									}
-									tempHtml += '<span class="mobi-icon-arrow-r">&gt;</span>';
+									//tempHtml += '<span class="mobi-icon-arrow-r">&gt;</span>';
 									tempHtml += '</a></li>';
 								}
 							}

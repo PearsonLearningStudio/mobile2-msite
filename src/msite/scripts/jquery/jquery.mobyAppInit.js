@@ -221,7 +221,7 @@ boolClicked = true;
 				// This is all of the discussions for the user, grouped by class.
 				$().mobyDiscussionManager("userTopicsToHtml",  {
 					callbackSuccess : function(strDiscussionHtml) {
-						var strHtml = '<ul data-role="listview" data-inset="true" class="mobi-listview">';
+						var strHtml = '<ul data-role="listview" class="mobi-listview">';
 						strHtml += strDiscussionHtml;
 						strHtml += "</ul>";
 						$("#pageDiscuss .view-discussion").html(strHtml);

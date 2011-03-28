@@ -305,7 +305,7 @@ div.layout-header .menu-active {
 }
 
 .container-navbar ul li #discussions.ui-btn-active .ui-icon {
-  background: url(../images/icon_discussions.png) 0px -25px no-repeat;
+  background: url(../images/icon_discussions.png) 0px 0px no-repeat;
   width: 34px;
   height: 25px;
 }
@@ -355,6 +355,15 @@ div.layout-header .menu-active {
   line-height: 10px;
 }
 
+.subnav .ui-select {
+  width: 100%;
+  text-align: left;
+}
+
+.subnav .ui-select span.ui-btn-text {
+  text-align: left;
+}
+
 .subnav a {
   background: #72A7C9;
   background-image: -moz-linear-gradient(top, 
@@ -396,6 +405,22 @@ div.layout-header .menu-active {
 /* List View */
 .mobi-listview li {
   background: #FFF;
+}
+
+.mobi-listview li:hover {
+  background: #EEE;
+  border-top: solid 1px #CCC;
+}
+
+.mobi-listview li:hover {
+  text-shadow: none;
+}
+
+.mobi-listview li:hover .mobi-course-title,
+.mobi-listview li:hover .mobi-summary,
+.mobi-listview li:hover .mobi-date,
+.mobi-listview li:hover .mobi-response-count {
+  color: #333;
 }
 
 .mobi-listview li.ui-li-divider {
