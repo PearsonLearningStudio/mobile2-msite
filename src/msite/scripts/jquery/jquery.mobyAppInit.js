@@ -16,8 +16,8 @@ boolClicked = true;
 	var methods = {
 		initIndex : function(options) {
 			var settings = {
-				callback: function() {}
-			};
+					callback: function() {}
+				};
 			if ( options ) {
 				$.extend( settings, options );
 			}
@@ -327,7 +327,20 @@ boolClicked = true;
 					}
 				});   
 			} );
-		
+			
+			//discussion topic and detail response
+			function discussionReply( $thisView, topic) {
+				var $this, 
+					$buttons = $thisView.find(".container-response-buttons"),
+					$responseInput = $thisView.find(".textarea-response");
+				$responseInput.html("Post a response to " + topic);
+				$responseInput.bind( 'focus', function() { 
+					$this = $(this);
+					$this.html(''); 
+					$this.addClass('expanded');
+					$buttons.show();
+				} );
+			}			
 			
 			// Page show event for a discussion topic detail page
 			$("#pageDiscussionTopicDetail").live("pageshow", function(event, ui) {
@@ -392,8 +405,8 @@ boolClicked = true;
 							})
 							$thisMessage.toggleClass("container-message-open");
 						}
-						$thisView.find("#textarea-response").html("Post a response to " + strTitle);
-						
+						//insert the discussion reply input and add event handling
+						discussionReply( $thisView, strTitle );
 						// if there are responses, we need to get them.
 						var $theseThreads = $thisView.find(".container-threads");
 
@@ -465,14 +478,15 @@ boolClicked = true;
 			$(".container-discussion-detail .container-message div.layout-button-expand").click(function() {
 				var $this = $(this);
 				$this.parents(".container-message").toggleClass("container-message-open");
-			});
-			
+			});		
 			
 			//remove duplication from pageDiscussionThreadDetail and pageDiscussionThreadDetail2
-			function discussionThreadDetail($thisView){  console.log($thisView);
-				var $this, intLast = arrGlobalThreads.length -1, objThread = arrGlobalThreads[intLast],
+			function discussionThreadDetail($thisView) {  
+				var $this, intMinHeight, $button, $theseThreads, strCurrentUrl, strHtml, objInfo,
+					intLast = arrGlobalThreads.length -1, 
+					objThread = arrGlobalThreads[intLast],
 					$thisMessage = $thisView.find(".container-discussion-detail .container-message"),
-					intMinHeight, $button, $theseThreads, strCurrentUrl, strHtml, objInfo;
+					$responseInput = $thisView.find("#textarea-response");					
 					
 				$.mobile.pageLoading();
 				// What thread should we show?  This information should be contained in the
@@ -497,8 +511,7 @@ boolClicked = true;
 				// Quickly add 4 lines of text to the div to get the height.
 				intMinHeight = $thisMessage.addClass("container-message-open").html("<p>Lorem<br>Ipsum<br>dolor<br>sit</p>").height();
 				$thisMessage.empty().html(objThread.strDescription);
-				// if the message is higher than 4 lines, we must add the button, attach the click listener, and collapse the 
-				// div
+				// if the message is higher than 4 lines, we must add the button, attach the click listener, and collapse the div
 				if ($thisMessage.height() > intMinHeight) {
 					$button = $('<div class="layout-button-expand">&nbsp;</div>');
 					$thisMessage.prepend($button);
@@ -509,8 +522,9 @@ boolClicked = true;
 					$thisMessage.toggleClass("container-message-open");
 				}
 				
-				$thisView.find("#textarea-response").html("Post a response to " + $thisView.find(".container-discussion-detail .container-topicinfo .mobi-title").text());
-											
+				//insert the discussion reply input and add event handling
+				discussionReply( $thisView, $thisView.find(".container-discussion-detail .container-topicinfo .mobi-title").text() );
+										
 				// Get any responses in the thread
 				$theseThreads = $thisView.find(".container-threads");
 

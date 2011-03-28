@@ -250,6 +250,27 @@ div.layout-header .menu-active {
 	padding-left: 3px;
 }
 
+.container-response textarea {
+	height: 1.5em;
+}
+
+.container-response textarea.expanded {
+	height: 6em;
+}
+
+.container-response .container-response-buttons {
+	display: none;
+}
+
+.container-response .ui-btn {
+	float: left;
+	width: 46%;
+}
+
+.container-response .response-cancel {
+	margin-right: 2%;
+}
+
 .container-discussion-detail .container-threads {
 	font-size: 80%;
 }
