@@ -85,6 +85,7 @@ div.layout-header .menu-active {
 
 /* Discussion list view */
 .view-discussion .mobi-title {
+  
 }
 .view-discussion .mobi-response-count {
 	font-size: 70%;
@@ -124,7 +125,7 @@ div.layout-header .menu-active {
 
 /* Discussion detail view */
 .header-discussion-detail {
-	min-height: 45px;
+	min-height: 40px;
 }
 
 .header-discussion-detail .mobi-title {
@@ -135,6 +136,9 @@ div.layout-header .menu-active {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	width: 60%;
+	line-height: 16px;
+	text-shadow: rgba(0,0,0,.8) 0 -1px 0;
+	font-weight: bold;
 }
 .header-discussion-detail .icon-thread {
 	position: absolute;
@@ -157,8 +161,6 @@ div.layout-header .menu-active {
 }
 .container-discussion-detail .container-topicinfo {
 	padding-left: 30px;
-	margin-top: 5px;
-	padding-bottom: 5px;
 	font-size: 90%;
 	border-bottom: 1px solid black;
 	position: relative;
