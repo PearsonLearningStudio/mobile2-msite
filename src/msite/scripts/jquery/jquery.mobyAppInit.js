@@ -55,7 +55,7 @@ boolClicked = true;
 			});
 			
 			// Initialize click listener for what's due button
-			$(".btn-whatsdue").click(function() {
+			$(".btn-whatsdue").live('click', function() {
 				$("div.subnav a").removeClass("ui-btn-active");
 				$(this).addClass("ui-btn-active");
 				$(".view-activity").hide();
@@ -65,7 +65,7 @@ boolClicked = true;
 			}).click(); // default view for page, set on load.
 			
 			// Initialize click listener for Activity button
-			$(".btn-activity").click(function() {
+			$(".btn-activity").live('click', function() {
 				$(".btn-whatsdue").removeClass("ui-btn-active");
 				$(this).addClass("ui-btn-active");
 				$(".view-whatsdue").hide();

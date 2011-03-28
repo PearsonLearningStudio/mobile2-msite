@@ -180,7 +180,7 @@ var arrGlobalThreads = [];
 									}
 									tempHtml += '<li class="course-'+objUserTopics.userTopics[j].topic.containerInfo.courseID+'">';
 									// To do: Link this off to a detail page.
-									tempHtml += '<a href="discussiontopicdetail.html" class="listitem-topic" id="topic_'+objUserTopics.userTopics[j].id+'">';
+									tempHtml += '<a href="/discussiontopicdetail.html" class="listitem-topic" id="topic_'+objUserTopics.userTopics[j].id+'">';
 									
 									tempHtml += '<span class="mobi-title">'+objUserTopics.userTopics[j].topic.title+'</span>';
 									tempHtml += '<span class="mobi-response-count">'+strTotalResponsesText+'</span>';
