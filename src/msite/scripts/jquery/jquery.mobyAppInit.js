@@ -331,14 +331,23 @@ boolClicked = true;
 			//discussion topic and detail response
 			function discussionReply( $thisView, topic) {
 				var $this, 
+					responseText = "Post a response to " + topic,
 					$buttons = $thisView.find(".container-response-buttons"),
 					$responseInput = $thisView.find(".textarea-response");
-				$responseInput.html("Post a response to " + topic);
+				$responseInput.html( responseText );
 				$responseInput.bind( 'focus', function() { 
 					$this = $(this);
 					$this.html(''); 
 					$this.addClass('expanded');
 					$buttons.show();
+				} );
+				$buttons.find('.response-cancel').click( function() {
+					$responseInput.html( responseText );
+					$buttons.hide();
+					$responseInput.removeClass('expanded');
+				} );
+				$buttons.find('.response-submit').click( function() {
+					//submit response using ecollege api
 				} );
 			}			
 			

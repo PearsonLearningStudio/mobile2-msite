@@ -252,6 +252,8 @@ div.layout-header .menu-active {
 
 .container-response textarea {
 	height: 1.5em;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .container-response textarea.expanded {
