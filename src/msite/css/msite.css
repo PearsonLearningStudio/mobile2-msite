@@ -1,7 +1,7 @@
-.ui-btn-corner-none {
-	border-radius: 0;
+.ui-btn-corner-none {	
 	-moz-border-radius: 0;
 	-webkit-border-radius: 0;
+	border-radius: 0;
 }
 
 div.layout-header {
@@ -31,9 +31,9 @@ div.layout-header .menu-active {
 	background-color: #fff;
 }
 .layout-header li {
-	border-radius: 0px;
 	-moz-border-radius: 0px;
-	-webkit-border-radius: 0px;
+	-webkit-border-radius: 0;
+	border-radius: 0px;
 }
 /* Mobile List View base classes*/
 .mobi-listview li a {
@@ -97,10 +97,10 @@ div.layout-header .menu-active {
 .view-discussion .mobi-icon-response-count {
 	position: absolute;
 	color: #fff;
-	background-color: #666;
-	border-radius: 8px;
+	background-color: #666;	
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
+	border-radius: 8px;
 	right: 26px;
 	top: 30%;
 	padding-left: 4px;
@@ -187,10 +187,10 @@ div.layout-header .menu-active {
 .container-discussion-detail .mobi-unread-responses {
 	position: absolute;
 	color: #fff;
-	background-color: #666;
-	border-radius: 8px;
+	background-color: #666;	
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
+	border-radius: 8px;
 	right: 15px;
 	top: 26px;
 	padding-left: 4px;
@@ -233,9 +233,9 @@ div.layout-header .menu-active {
 	height: 20px;
 	color: #fff;
 	background-color: #666;
-	border-radius: 10px;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
+	border-radius: 10px;
 	overflow: hidden;
 	text-align: center;
 	line-height: 20px;
@@ -289,7 +289,6 @@ div.layout-header .menu-active {
 	background-color: #fff;
 	border: 1px solid #fff;
 	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
 	border-radius: 5px;
 	-webkit-box-shadow: #7c7e79 5px 5px 5px;
 	-moz-box-shadow: #7c7e79 5px 5px 5px;
@@ -330,14 +329,14 @@ div.layout-header .menu-active {
 	margin: 0px;
 }
 .container-navbar .ui-btn-corner-all {
-	border-radius: 0;
 	-moz-border-radius: 0;
 	-webkit-border-radius: 0;
+	border-radius: 0;
 }
-.container-navbar .ui-shadow {
-	-moz-box-shadow: 0px 0px 0px 			rgba(0,0,0,.3);
-	-webkit-box-shadow: 0px 0px 0px 		rgba(0,0,0,.3);
-	box-shadow: 0px 0px 0px 				rgba(0,0,0,.3);
+.container-navbar .ui-shadow {	
+	box-shadow: 0px 0px 0px 	rgba(0,0,0,.3);
+	-moz-box-shadow: 0px 0px 0px rgba(0,0,0,.3);
+	-webkit-box-shadow: 0px 0px 0px 	rgba(0,0,0,.3);
 }
 .container-navbar .ui-icon {
 	margin-top: -10px;
