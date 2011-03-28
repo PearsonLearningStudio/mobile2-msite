@@ -75,11 +75,12 @@ div.layout-header .menu-active {
 	font-size: 80%;
 	margin-top: 0.3em;
 	padding-bottom: 5px;
+	font-style: italic;
 }
 .view-activity .mobi-summary {
 	text-overflow: ellipsis;
 	overflow: hidden;
-	font-style: italic;
+	font-size: 105%;
 }
 
 /* Discussion list view */

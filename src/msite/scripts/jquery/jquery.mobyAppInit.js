@@ -83,7 +83,7 @@ boolClicked = true;
 							var strFeedHtml = objReturn.strFeedHtml;
 							var strHtml = "", activityType;
 							
-							strHtml += '<ul data-role="listview" data-inset="true" class="mobi-listview">';
+							strHtml += '<ul data-role="listview" class="mobi-listview">';
 							strHtml += '<li data-role="list-divider">All Activity</li>';
 							strHtml += strFeedHtml;
 							
