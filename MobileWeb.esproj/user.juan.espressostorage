@@ -23,6 +23,8 @@
 		<array>
 			<string>file://localhost/Users/juan/Desktop/projects/EffectiveUI/eCollege/Development/MobileWeb/src/msite/css</string>
 			<string>file://localhost/Users/juan/Desktop/projects/EffectiveUI/eCollege/Development/MobileWeb/src/msite/images</string>
+			<string>file://localhost/Users/juan/Desktop/projects/EffectiveUI/eCollege/Development/MobileWeb/src/msite/scripts/ecollege</string>
+			<string>file://localhost/Users/juan/Desktop/projects/EffectiveUI/eCollege/Development/MobileWeb/src/msite/scripts/jquery</string>
 		</array>
 	</dict>
 	<key>com.macrabbit.Espresso.Publisher.DisclosureCollapsed</key>
@@ -33,37 +35,49 @@
 		<array>
 			<dict>
 				<key>DocumentURL</key>
-				<string>file://localhost/Users/juan/Desktop/projects/EffectiveUI/eCollege/Development/MobileWeb/src/msite/login.html</string>
+				<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/index.html</string>
 				<key>StateType</key>
 				<string>DefaultTab</string>
 			</dict>
 			<dict>
 				<key>DocumentURL</key>
-				<string>file://localhost/Users/juan/Desktop/projects/EffectiveUI/eCollege/Development/MobileWeb/src/msite/css/branding.css</string>
+				<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/discuss.html</string>
 				<key>StateType</key>
 				<string>DefaultTab</string>
 			</dict>
 			<dict>
 				<key>DocumentURL</key>
-				<string>file://localhost/Users/juan/Desktop/projects/EffectiveUI/eCollege/Development/MobileWeb/src/msite/css/jquery.mobile-1.0a3.css</string>
+				<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/scripts/jquery/jquery.mobyAppInit.js</string>
 				<key>StateType</key>
 				<string>DefaultTab</string>
 			</dict>
 			<dict>
 				<key>DocumentURL</key>
-				<string>file://localhost/Users/juan/Desktop/projects/EffectiveUI/eCollege/Development/MobileWeb/src/msite/css/msite.css</string>
+				<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/css/branding.css</string>
 				<key>StateType</key>
 				<string>DefaultTab</string>
 			</dict>
 			<dict>
 				<key>DocumentURL</key>
-				<string>file://localhost/Users/juan/Desktop/projects/EffectiveUI/eCollege/Development/MobileWeb/src/msite/index.html</string>
+				<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/scripts/jquery/jquery.mobyDiscussionManager.js</string>
 				<key>StateType</key>
 				<string>DefaultTab</string>
 			</dict>
 			<dict>
 				<key>DocumentURL</key>
-				<string>file://localhost/Users/juan/Desktop/projects/EffectiveUI/eCollege/Development/MobileWeb/src/msite/scripts/jquery/jquery.mobyAppInit.js</string>
+				<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/discussionthreaddetail.html</string>
+				<key>StateType</key>
+				<string>DefaultTab</string>
+			</dict>
+			<dict>
+				<key>DocumentURL</key>
+				<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/discussionthreaddetail2.html</string>
+				<key>StateType</key>
+				<string>DefaultTab</string>
+			</dict>
+			<dict>
+				<key>DocumentURL</key>
+				<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/discussiontopicdetail.html</string>
 				<key>StateType</key>
 				<string>DefaultTab</string>
 			</dict>
