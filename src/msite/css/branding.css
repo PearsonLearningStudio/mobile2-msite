@@ -278,8 +278,12 @@ div.layout-header .menu-active {
   -webkit-border-radius: 0px;
   -moz-border-radius: 0px;
   border-radius: 0px;
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
+}
+
+.container-navbar ul li .ui-btn-text {
+  display: none;
 }
 
 .container-navbar ul li #home .ui-icon {
@@ -386,4 +390,30 @@ div.layout-header .menu-active {
   text-shadow: rgba(0,0,0,.8) 0 -1px 0;
   color: #FFF;
   font-size: .9em;
+}
+
+
+/* List View */
+.mobi-listview li {
+  background: #FFF;
+}
+
+.mobi-listview li.ui-li-divider {
+  background: #666;
+  background-image: -moz-linear-gradient(top, 
+  						#666666, 
+  						#999999);
+  background-image: -webkit-gradient(linear,left top,left bottom,
+  	color-stop(0, 		#666666),
+  	color-stop(1, 		#999999));
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#666666', EndColorStr='#999999')";
+  -webkit-box-shadow: inset rgba(0,0,0,.6) 0 1px 0, inset rgba(255,255,244,.3) 0 2px 0, inset rgba(0,0,0,.3) 0 -1px 0;
+  -moz-box-shadow: inset rgba(0,0,0,.6) 0 1px 0, inset rgba(255,255,244,.3) 0 2px 0, inset rgba(0,0,0,.3) 0 -1px 0;
+  box-shadow: inset rgba(0,0,0,.6) 0 1px 0, inset rgba(255,255,244,.3) 0 2px 0, inset rgba(0,0,0,.3) 0 -1px 0;
+  border: none;
+  text-shadow: rgba(0,0,0,.8) 0 -1px 0;
+}
+
+.mobi-listview li .mobi-title {
+  color:  #306CA0;
 }
