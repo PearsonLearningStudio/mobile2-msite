@@ -233,10 +233,11 @@ boolClicked = true;
 								strHtml += '<option value="all">All</option>';
 									
 								for (var i = 0; i < arrCourses.length; i++) {
-									var strClass = ".course-" + arrCourses[i].id;
-									if ($(strClass).length > 0) {
+									//don't filter out courses with no discussions.
+									//var strClass = ".course-" + arrCourses[i].id;
+									//if ($(strClass).length > 0) {
 										strHtml += '<option value="'+arrCourses[i].id+'">' +arrCourses[i].title+ '</option>';
-									}
+									//}
 								}
 								
 								strHtml += "</select>";
@@ -252,12 +253,12 @@ boolClicked = true;
 									} else {
 										var strClass = ".course-" + strValue;
 										var $items = $(strClass);
-										if ($items.length > 0) {
+										//if ($items.length > 0) {
 											$(".view-discussion .mobi-listview .ui-corner-top").removeClass("ui-corner-top");
 											$(".view-discussion .mobi-listview li").hide();
 											$items.show();
 											$(".view-discussion .mobi-listview .ui-li-divider:visible:first").addClass("ui-corner-top");
-										}
+										//}
 										
 									}
 								})
