@@ -263,12 +263,13 @@ div.layout-header .menu-active {
 
 #pageActivityDetail .ui-btn-left {
 	float: left;	
+	width: 85px;
 }
 
 #pageActivityDetail .container-topicinfo {
 	float: left;
 	margin: .5em 10px 0;
-	width: 160px;
+	width: 200px;
 }
 
 .container-topicinfo .mobi-course-title,
@@ -280,7 +281,7 @@ div.layout-header .menu-active {
 }
 
 .container-topicinfo .mobi-activity-type {
-	font-size: 21px;
+	font-size: 20px;
 	color: #2e3a81;
 }
 
@@ -308,11 +309,11 @@ div.layout-header .menu-active {
 
 #container-activity-detail .mobi-activity-time {
 	font-style: italic;
-	margin-top: 20px;
 }
 
 #btn-viewall-activity {
-	margin-left: 35px;
+	margin-left: 0;
+	text-transform: capitalize;
 }
 
 /* activity detail view */

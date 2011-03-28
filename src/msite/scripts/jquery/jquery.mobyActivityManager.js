@@ -106,6 +106,7 @@ var arrGlobalActivity = [],
 					for (var j = 0; j < arrCourses.length; j++) {
 						if (arrCourses[j].id === courseId) {
 							strTitle = arrCourses[j].number + ": " + arrCourses[j].title;
+							strTitle = arrCourses[j].title;
 						}
 					}
 					strHtml += '<span class="mobi-course-title">' +strTitle+ '</span>';

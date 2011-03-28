@@ -295,8 +295,8 @@ boolClicked = true;
 				$contMessage.html("");
 				
 				//initial data passed via objGlobalResources
-				$thisView.find(".mobi-course-title").html(activity.courseTitle.replace('-', ' '));
-				$thisView.find(".mobi-activity-type").html(activity.object.objectType);
+				$thisView.find(".mobi-course-title").html(activity.courseTitle);
+				$thisView.find(".mobi-activity-type").html(activity.object.objectType.replace('-', ' '));
 				
 				//get the details
 				if(activityType === 'grade'){
@@ -318,7 +318,7 @@ boolClicked = true;
 							}
 							details += '<p class="mobi-grade-comments">Comments: '+ comments + '</p>';
 							details += '<p class="mobi-activity-time">' + activity.time + '</p>';
-							details += '<a id="btn-viewall-activity" class="ui-btn ui-btn-up-c" data-transition="slide" data-direction="reverse" data-role="button" data-theme="c" href="#pageActivitiesViewAll"><span class="ui-btn-inner">View all course ' + activity.object.objectType.replace('-', ' ') + 's</span></a>';
+							details += '<a id="btn-viewall-activity" class="ui-btn ui-btn-up-c" data-transition="slide" data-direction="reverse" data-role="button" data-theme="c" href="#pageActivitiesViewAll"><span class="ui-btn-inner">View All Course ' + activity.object.objectType.replace('-', ' ') + 's</span></a>';
 							$contMessage.html(details);	
 						} 
 						$.mobile.pageLoading(true);
