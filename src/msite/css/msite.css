@@ -7,7 +7,6 @@
 div.layout-header {
 	position: relative;
 	min-height: 40px;
-	background-color: #333;
 }
 div.layout-header .branding-header-logo {
 	position: absolute;
@@ -15,8 +14,6 @@ div.layout-header .branding-header-logo {
 	left: 5px;
 	margin: 0px;
 	padding: 0px;
-	height: 40px;
-	line-height: 40px;
 	color: #fff;
 }
 div.layout-header ul {
@@ -26,16 +23,12 @@ div.layout-header ul {
 }
 div.layout-header .button-menu {
 	float: right;
-	color: #ccc;
-	text-shadow: none;
 	height: 40px;
 	line-height: 40px;
-	padding-left: 8px;
-	padding-right: 8px;
+	padding: 0 8px;
 }
 div.layout-header .menu-active {
 	background-color: #fff;
-	color: #666;
 }
 .layout-header li {
 	border-radius: 0px;

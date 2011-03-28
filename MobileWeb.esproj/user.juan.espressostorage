@@ -26,6 +26,18 @@
 				<key>StateType</key>
 				<string>DefaultTab</string>
 			</dict>
+			<dict>
+				<key>DocumentURL</key>
+				<string>file://localhost/Users/juan/Desktop/projects/EffectiveUI/eCollege/Development/MobileWeb/src/msite/css/msite.css</string>
+				<key>StateType</key>
+				<string>DefaultTab</string>
+			</dict>
+			<dict>
+				<key>DocumentURL</key>
+				<string>file://localhost/Users/juan/Desktop/projects/EffectiveUI/eCollege/Development/MobileWeb/src/msite/index.html</string>
+				<key>StateType</key>
+				<string>DefaultTab</string>
+			</dict>
 		</array>
 	</dict>
 </dict>
