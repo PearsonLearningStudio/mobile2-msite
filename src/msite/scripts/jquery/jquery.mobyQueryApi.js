@@ -60,8 +60,8 @@
 				ajaxManager.post(settings.strUrl, 
 								 settings.strData, 
 								 [authorizationHeader], 
-								 function() {
-								 	options.successHandler();
+								 function(jsonResponse) {
+								 	options.successHandler(jsonResponse);
 								 }, 
 								 function() {
 								 	options.errorHandler();
