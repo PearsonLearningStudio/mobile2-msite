@@ -429,7 +429,7 @@ div.layout-header .menu-active {
 }
 
 .mobi-listview li:hover {
-  background: #EEE;
+  background-color: #EEE;
   border-top: solid 1px #CCC;
 }
 
@@ -440,7 +440,9 @@ div.layout-header .menu-active {
 .mobi-listview li:hover .mobi-course-title,
 .mobi-listview li:hover .mobi-summary,
 .mobi-listview li:hover .mobi-date,
-.mobi-listview li:hover .mobi-response-count {
+.mobi-listview li:hover .mobi-response-count,
+.mobi-listview li:hover .mobi-response-count,
+.mobi-listview li:hover .mobi-your-responses {
   color: #333;
 }
 
