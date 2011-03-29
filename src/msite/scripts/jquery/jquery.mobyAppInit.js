@@ -331,37 +331,41 @@ boolClicked = true;
 			//discussion topic and detail response
 			function discussionReply( $thisView, topic, responseType, id) {
 				var $this, responseStr = {},
-					responseText = "Post a response to " + topic,
+					titleText = "Post a response to " + topic,
 					$buttons = $thisView.find(".container-response-buttons"),
-					$responseInput = $thisView.find(".textarea-response");
-				$responseInput.html( responseText );
-				$responseInput.bind( 'focus', function() { 
+					$responseInputTitle = $thisView.find(".textarea-response-title"),
+					$responseInputBody = $thisView.find(".textarea-response-body");
+				$responseInputTitle.html( titleText );
+				function reset() {
+					$responseInputTitle.val( titleText );
+					$responseInputBody.val('');
+					$responseInputBody.hide();
+					$buttons.hide();
+				}
+				$responseInputTitle.bind( 'focus', function() { 
 					$this = $(this);
-					$this.html(''); 
-					$this.addClass('expanded');
+					$this.val(''); 
+					$responseInputBody.show();
 					$buttons.show();
 				} );
 				$buttons.find('.response-cancel').click( function() {
-					$responseInput.html( responseText );
-					$buttons.hide();
-					$responseInput.removeClass('expanded');
+					reset();
 				} );				
 				$buttons.find('.response-post').click( function() {
-					if($responseInput.val() != '') { console.log($responseInput.val());
+					if($responseInputBody.val() != '') { 
 						//submit response using ecollege api
 						responseStr.responses = {
-							title: 'foo',
-							description: $responseInput.val()
+							title: $responseInputTitle.val(),
+							description: $responseInputBody.val()
 						};
 						$().mobiQueryApi('post', {
-							//configSettings.apiproxy  + "/me/" + responseType + "/" + p_responseId + "/responses"
 							strUrl: configSettings.apiproxy  + "/me/" + responseType + "/" + id + "/responses",
 							strData: JSON.stringify(responseStr),
-							successHandler: function(jsonResponse, intTransactionId) {
-								console.log('worked');
+							successHandler: function() {
+								reset();
 							},
 							errorHandler: function() {
-								console.log("didn't work");
+								alert("There was an error posting your response. Please try again");
 							}
 						} ); 
 					}
