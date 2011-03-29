@@ -329,8 +329,8 @@ boolClicked = true;
 			} );
 			
 			//discussion topic and detail response
-			function discussionReply( $thisView, topic) {
-				var $this, 
+			function discussionReply( $thisView, topic, responseType, id) {
+				var $this, responseStr = {},
 					responseText = "Post a response to " + topic,
 					$buttons = $thisView.find(".container-response-buttons"),
 					$responseInput = $thisView.find(".textarea-response");
@@ -345,10 +345,27 @@ boolClicked = true;
 					$responseInput.html( responseText );
 					$buttons.hide();
 					$responseInput.removeClass('expanded');
-				} );
-				$buttons.find('.response-submit').click( function() {
-					//submit response using ecollege api
-				} );
+				} );				
+				$buttons.find('.response-post').click( function() {
+					if($responseInput.val() != '') { console.log($responseInput.val());
+						//submit response using ecollege api
+						responseStr.responses = {
+							title: 'foo',
+							description: $responseInput.val()
+						};
+						$().mobiQueryApi('post', {
+							//configSettings.apiproxy  + "/me/" + responseType + "/" + p_responseId + "/responses"
+							strUrl: configSettings.apiproxy  + "/me/" + responseType + "/" + id + "/responses",
+							strData: JSON.stringify(responseStr),
+							successHandler: function(jsonResponse, intTransactionId) {
+								console.log('worked');
+							},
+							errorHandler: function() {
+								console.log("didn't work");
+							}
+						} ); 
+					}
+				} );				
 			}			
 			
 			// Page show event for a discussion topic detail page
@@ -366,10 +383,10 @@ boolClicked = true;
 					alert('There is no topic to display.  Please try again.');
 					$(location).attr("href", "index.html");
 				}
-				var $thisView = $("#" + event.currentTarget.id);
+				var $thisView = $("#" + event.currentTarget.id),
+					 intLast = arrGlobalTopics.length -1,
+					 strCurrentUrl = configSettings.apiproxy + "/me/usertopics/" + arrGlobalTopics[intLast];
 				$thisView.find(".container-discussion-detail .container-message").html("");
-				var intLast = arrGlobalTopics.length -1;
-				var strCurrentUrl = configSettings.apiproxy + "/me/usertopics/" + arrGlobalTopics[intLast];
 				$().mobiQueryApi("get", {
 					strUrl: strCurrentUrl,
 					successHandler: function(jsonResponse, intTransactionId) {
@@ -415,7 +432,7 @@ boolClicked = true;
 							$thisMessage.toggleClass("container-message-open");
 						}
 						//insert the discussion reply input and add event handling
-						discussionReply( $thisView, strTitle );
+						discussionReply( $thisView, strTitle, 'topics',  jsonResponse.userTopics[0].topic.id  );
 						// if there are responses, we need to get them.
 						var $theseThreads = $thisView.find(".container-threads");
 
@@ -494,6 +511,7 @@ boolClicked = true;
 				var $this, intMinHeight, $button, $theseThreads, strCurrentUrl, strHtml, objInfo,
 					intLast = arrGlobalThreads.length -1, 
 					objThread = arrGlobalThreads[intLast],
+					objThreadId = objThread.strNewId.split("-")[1] ,
 					$thisMessage = $thisView.find(".container-discussion-detail .container-message"),
 					$responseInput = $thisView.find("#textarea-response");					
 					
@@ -530,15 +548,14 @@ boolClicked = true;
 					})
 					$thisMessage.toggleClass("container-message-open");
 				}
-				
-				//insert the discussion reply input and add event handling
-				discussionReply( $thisView, $thisView.find(".container-discussion-detail .container-topicinfo .mobi-title").text() );
 										
 				// Get any responses in the thread
-				$theseThreads = $thisView.find(".container-threads");
-
+				$theseThreads = $thisView.find(".container-threads");				
 				$theseThreads.empty();
-				strCurrentUrl = configSettings.apiproxy + "/me/responses/" + objThread.strNewId.split("-")[1] + "/userresponses";
+				
+				//insert the discussion reply input and add event handling
+				discussionReply( $thisView, $thisView.find(".container-discussion-detail .container-topicinfo .mobi-title").text(), 'responses', objThreadId );
+				strCurrentUrl = configSettings.apiproxy + "/me/responses/" + objThreadId + "/userresponses";
 				$().mobiQueryApi("get", {
 					strUrl: strCurrentUrl,
 					successHandler: function(jsonResponse, intTransactionId) {
@@ -557,7 +574,7 @@ boolClicked = true;
 										strHtml = $(this).html();
 										$this.data("description", strHtml);
 										$this.empty();
-									})
+									} );
 									$theseThreads.find(".mobi-listview").listview();
 									$.mobile.pageLoading(true);
 									// Tap event listener
@@ -577,7 +594,7 @@ boolClicked = true;
 											strDescription: $this.find(".mobi-description").data("description")
 										}
 										arrGlobalThreads.push(objInfo);
-									})
+									} );
 								},
 								callbackError: function() {
 									alert("Unable to create HTML for response list.");
@@ -593,7 +610,7 @@ boolClicked = true;
 						alert('unable to get the thread information');
 						$.mobile.pageLoading(true);
 					}		
-				})
+				});
 			}	
 				
 				
