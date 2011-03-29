@@ -252,6 +252,31 @@ div.layout-header .menu-active {
 	padding-left: 3px;
 }
 
+textarea.textarea-response-title {
+	height: 1.5em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.min-width-480px textarea.textarea-response-body {
+	display: none;
+	height: 6em;
+	margin-top: 10px;
+}
+
+.container-response .container-response-buttons {
+	display: none;
+}
+
+.container-response .ui-btn {
+	float: left;
+	width: 46%;
+}
+
+.container-response .response-cancel {
+	margin-right: 2%;
+}
+
 .container-discussion-detail .container-threads {
 	font-size: 80%;
 }

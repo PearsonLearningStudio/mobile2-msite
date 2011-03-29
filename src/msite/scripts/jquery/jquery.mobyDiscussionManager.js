@@ -68,7 +68,8 @@ var arrGlobalThreads = [];
 				callbackError: function() {
 					alert('Unable to get topics.');
 				}
-			}
+			}, uResponses, strHml, tempHtml, 
+			strTotalResponsesText, iconClass = '';
 			if (options) {
 				$.extend(settings, options);
 			}
@@ -79,39 +80,47 @@ var arrGlobalThreads = [];
 			}
 			
 			// Given a userresponses object, return the HTML necessary for a formatted list.
-			var strHtml = "";
+			strHtml = "";
 			if (settings.objUserResponses === "") {
 				// Abort
 				strHtml = "<h3>No responses.</h3>";
 				callbackSuccess(strHtml);
 			}
-			for (var i = 0; i < settings.objUserResponses.userResponses.length; i++) {
+			uResponses = settings.objUserResponses.userResponses;
+			for (var i = 0; i < uResponses.length; i++) {
 				// Build the text for "total responses"
-				var strTotalResponsesText = "";
-				var tempHtml = "";
-				if (settings.objUserResponses.userResponses[i].childResponseCounts.totalResponseCount === 0) {
+				strTotalResponsesText = "";
+				tempHtml = "";
+				if (uResponses[i].childResponseCounts.totalResponseCount === 0) {
 					strTotalResponsesText = "No responses";
-				} else if (settings.objUserResponses.userResponses[i].childResponseCounts.totalResponseCount === 1) {
+					iconClass = 'no-responses';
+				} else if (uResponses[i].childResponseCounts.totalResponseCount === 1) {
 					strTotalResponsesText = "1 response";
+					iconClass = 'responses';
 				} else {
-					strTotalResponsesText = settings.objUserResponses.userResponses[i].childResponseCounts.totalResponseCount + " total responses";
+					strTotalResponsesText = uResponses[i].childResponseCounts.totalResponseCount + " total responses";
+					if(uResponses[i].childResponseCounts.last24HourResponseCount >= 10){
+						iconClass = 'hot-topic';
+					} else {
+						iconClass = 'responses';
+					}
 				}
-				tempHtml += '<li class="response-'+settings.objUserResponses.userResponses[i].response.id+'">';
+				tempHtml += '<li class="' + iconClass + ' response-'+uResponses[i].response.id+'">';
 
-				tempHtml += '<a href="'+settings.strUrl+'" class="listitem-response" id="response_'+settings.objUserResponses.userResponses[i].id+'">';
+				tempHtml += '<a href="'+settings.strUrl+'" class="listitem-response" id="response_'+uResponses[i].id+'">';
 				
-				tempHtml += '<span class="mobi-title">'+settings.objUserResponses.userResponses[i].response.title+'</span>';
-				tempHtml += '<span class="mobi-author">' +settings.objUserResponses.userResponses[i].response.author.firstName + " " + settings.objUserResponses.userResponses[i].response.author.lastName+ '</span>';
+				tempHtml += '<span class="mobi-title">'+uResponses[i].response.title+'</span>';
+				tempHtml += '<span class="mobi-author">' +uResponses[i].response.author.firstName + " " + uResponses[i].response.author.lastName+ '</span>';
 				tempHtml += '<span class="mobi-total-responses">' + strTotalResponsesText + '</span>';
 
-				tempHtml += '<span class="mobi-summary">' +stripTags(settings.objUserResponses.userResponses[i].response.description)+ '</span>';
-				tempHtml += '<span class="mobi-description" style="display: block">' + settings.objUserResponses.userResponses[i].response.description + '</span>';
+				tempHtml += '<span class="mobi-summary">' +stripTags(uResponses[i].response.description)+ '</span>';
+				tempHtml += '<span class="mobi-description" style="display: block">' + uResponses[i].response.description + '</span>';
 				
-				var intNumberOfUnreadResponses = settings.objUserResponses.userResponses[i].childResponseCounts.unreadResponseCount;
+				var intNumberOfUnreadResponses = uResponses[i].childResponseCounts.unreadResponseCount;
 				if (intNumberOfUnreadResponses > 0) {
 					tempHtml += '<span class="mobi-icon-response-count">'+intNumberOfUnreadResponses+'</span>';
 				}
-				var strDate = settings.objUserResponses.userResponses[i].response.postedDate;
+				var strDate = uResponses[i].response.postedDate;
 				tempHtml += '<span class="mobi-date">'+friendlyDate(strDate)+'</span>';
 				//tempHtml += '<span class="mobi-icon-arrow-r">&gt;</span>';
 				tempHtml += '</a></li>\n';
@@ -160,43 +169,52 @@ var arrGlobalThreads = [];
 						// For each course, build a list-divider + list items.  Only include a course if
 						// it has one or more list items.
 						for (var i = 0; i < arrCourses.length; i++) {
-							var strCurrentCourse = arrCourses[i].id;
+							var strCurrentCourse = arrCourses[i].id,
+							iconClass = '', uTopics = objUserTopics.userTopics;
 							// build a temporary html string with the divider and the list items.  We will only append it to the full
 							// html if the course has one or more discussions.
 							var tempHtml = '<li data-role="list-divider" class="course-'+strCurrentCourse+'">'+arrCourses[i].title+'</li>';
 							boolDiscussions = false;
-							for (var j = 0; j < objUserTopics.userTopics.length; j++) {
-								// ("Object topic number"+j+": " + objUserTopics.userTopics[j].topic.containerInfo.courseID);
-								if (objUserTopics.userTopics[j].topic.containerInfo.courseID === strCurrentCourse) {
+							for (var j = 0; j < uTopics.length; j++) {
+								// ("Object topic number"+j+": " + uTopics[j].topic.containerInfo.courseID);
+								if (uTopics[j].topic.containerInfo.courseID === strCurrentCourse) {
 									boolDiscussions = true;
 									// Build the text for "total responses"
 									var strTotalResponsesText = "";
-									if (objUserTopics.userTopics[j].childResponseCounts.totalResponseCount === 0) {
+									if (uTopics[j].childResponseCounts.totalResponseCount === 0) {
 										strTotalResponsesText = "No responses";
-									} else if (objUserTopics.userTopics[j].childResponseCounts.totalResponseCount === 1) {
+										iconClass = 'no-responses';
+									} else if (uTopics[j].childResponseCounts.totalResponseCount === 1) {
 										strTotalResponsesText = "1 response";
+										iconClass = 'responses';
 									} else {
-										strTotalResponsesText = objUserTopics.userTopics[j].childResponseCounts.totalResponseCount + " total responses";
+										strTotalResponsesText = uTopics[j].childResponseCounts.totalResponseCount + " total responses";
+										if(uTopics[j].childResponseCounts.last24HourResponseCount >= 10) {
+											iconClass = 'hot-topic';
+										} else {
+											iconClass = 'responses'
+										}
 									}
-									tempHtml += '<li class="course-'+objUserTopics.userTopics[j].topic.containerInfo.courseID+'">';
-									// To do: Link this off to a detail page.
-									tempHtml += '<a href="discussiontopicdetail.html" class="listitem-topic" id="topic_'+objUserTopics.userTopics[j].id+'">';
 									
-									tempHtml += '<span class="mobi-title">'+objUserTopics.userTopics[j].topic.title+'</span>';
+									tempHtml += '<li class="' + iconClass + ' course-'+uTopics[j].topic.containerInfo.courseID+'">';
+									// To do: Link this off to a detail page.
+									tempHtml += '<a href="/discussiontopicdetail.html" class="listitem-topic" id="topic_'+uTopics[j].id+'">';
+									
+									tempHtml += '<span class="mobi-title">'+uTopics[j].topic.title+'</span>';
 									tempHtml += '<span class="mobi-response-count">'+strTotalResponsesText+'</span>';
 									// Build the "your responses" string
 									
-									if (objUserTopics.userTopics[j].childResponseCounts.personalResponseCount === 1) {
-										tempHtml += '<span class="mobi-your-responses">'+objUserTopics.userTopics[j].childResponseCounts.personalResponseCount+' response by you</span>';
+									if (uTopics[j].childResponseCounts.personalResponseCount === 1) {
+										tempHtml += '<span class="mobi-your-responses">'+uTopics[j].childResponseCounts.personalResponseCount+' response by you</span>';
 									
-									} else if (objUserTopics.userTopics[j].childResponseCounts.personalResponseCount>1) {
-										tempHtml += '<span class="mobi-your-responses">'+objUserTopics.userTopics[j].childResponseCounts.personalResponseCount+' responses by you</span>';
+									} else if (uTopics[j].childResponseCounts.personalResponseCount>1) {
+										tempHtml += '<span class="mobi-your-responses">'+uTopics[j].childResponseCounts.personalResponseCount+' responses by you</span>';
 									
 									}
 									// Only show the number of unread items if there are any.
-									var intUnreadResponseCount = objUserTopics.userTopics[j].childResponseCounts.unreadResponseCount;
-									if (objUserTopics.userTopics[j].childResponseCounts.unreadResponseCount > 0 ) {
-										tempHtml += '<span class="mobi-icon-response-count">'+objUserTopics.userTopics[j].childResponseCounts.unreadResponseCount+'</span>';
+									var intUnreadResponseCount = uTopics[j].childResponseCounts.unreadResponseCount;
+									if (uTopics[j].childResponseCounts.unreadResponseCount > 0 ) {
+										tempHtml += '<span class="mobi-icon-response-count">'+uTopics[j].childResponseCounts.unreadResponseCount+'</span>';
 									}
 									//tempHtml += '<span class="mobi-icon-arrow-r">&gt;</span>';
 									tempHtml += '</a></li>';
