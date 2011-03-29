@@ -57,7 +57,7 @@ var arrGlobalActivity = [],
 					item = objFeedItems[i];
 					
 					if (item.object.objectType === "grade") {
-						strHtml += '<li><a class="listitem-activity grade_' + item.object.courseId + '_' + item.object.referenceId + '" href="/activitydetail.html">';
+						strHtml += '<li><a class="listitem-activity grade_' + item.object.courseId + '_' + item.object.referenceId + '" href="activitydetail.html">';
 						strHtml += '<span class="mobi-title">';
 						strHtml += "Grade: " + item.target.title;
 						strHtml += "</span><span class='mobi-summary'>";

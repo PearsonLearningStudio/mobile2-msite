@@ -293,7 +293,7 @@ div.layout-header .menu-active {
 	border: 1px solid #fff;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
-	-webkit-box-shadow: #7c7e79 5px 5px 5px;
+	-webkit-box-shadow: rgba(0,0,0,.3) 0 0 5px;
 	-moz-box-shadow: #7c7e79 5px 5px 5px;
 	box-shadow: #7c7e79 5px 5px 5px;
 	clear: left;

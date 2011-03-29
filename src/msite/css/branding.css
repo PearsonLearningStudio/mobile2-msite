@@ -472,3 +472,7 @@ div.layout-header .menu-active {
 #textarea-response {
   width: 95%;
 }
+
+.activity-detail {
+  background: url(../images/background_content.png);
+}
