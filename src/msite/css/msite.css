@@ -61,6 +61,27 @@ div.layout-header .menu-active {
 	margin-bottom: 0.1em;
 }
 
+.mobi-listview li.responses,
+.mobi-listview li.no-responses,
+.mobi-listview li.hot-topic {
+  padding: 0 0 0 30px;
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+}
+
+
+.mobi-listview li.responses {
+	background-image: url(../images/icon_responses.png);
+}
+
+.mobi-listview li.no-responses {
+	background-image: url(../images/icon_no_responses.png);
+}
+
+.mobi-listview li.hot-topic {
+	background-image: url(../images/icon_hot_topic.png);
+}
+
 /* Activity list view */
 .mobi-listview .mobi-activity-title {
 	font-weight: bold;
@@ -99,7 +120,7 @@ div.layout-header .menu-active {
 .view-discussion .mobi-icon-response-count {
 	position: absolute;
 	color: #fff;
-	background-color: #666;	
+	background-color: #333884;	
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
 	border-radius: 8px;
@@ -190,7 +211,7 @@ div.layout-header .menu-active {
 .container-discussion-detail .mobi-unread-responses {
 	position: absolute;
 	color: #fff;
-	background-color: #666;	
+	background-color: #333884;	
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
 	border-radius: 8px;
@@ -318,7 +339,7 @@ textarea.textarea-response-title {
 	border: 1px solid #fff;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
-	-webkit-box-shadow: #7c7e79 5px 5px 5px;
+	-webkit-box-shadow: rgba(0,0,0,.3) 0 0 5px;
 	-moz-box-shadow: #7c7e79 5px 5px 5px;
 	box-shadow: #7c7e79 5px 5px 5px;
 	clear: left;
