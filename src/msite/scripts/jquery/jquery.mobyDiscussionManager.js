@@ -68,7 +68,7 @@ var arrGlobalThreads = [];
 				callbackError: function() {
 					alert('Unable to get topics.');
 				}
-			}, uResponses, strHml, tempHtml, 
+			}, uResponses, strHml, tempHtml, read,
 			strTotalResponsesText, iconClass = '';
 			if (options) {
 				$.extend(settings, options);
@@ -105,14 +105,12 @@ var arrGlobalThreads = [];
 						iconClass = 'responses';
 					}
 				}
+				read = uResponses[i].markedAsRead ? 'read' : 'not-read';
 				tempHtml += '<li class="' + iconClass + ' response-'+uResponses[i].response.id+'">';
-
-				tempHtml += '<a href="'+settings.strUrl+'" class="listitem-response" id="response_'+uResponses[i].id+'">';
-				
+				tempHtml += '<a href="'+settings.strUrl+'" class="listitem-response ' + read  + '" id="response_'+uResponses[i].id+'">';				
 				tempHtml += '<span class="mobi-title">'+uResponses[i].response.title+'</span>';
 				tempHtml += '<span class="mobi-author">' +uResponses[i].response.author.firstName + " " + uResponses[i].response.author.lastName+ '</span>';
 				tempHtml += '<span class="mobi-total-responses">' + strTotalResponsesText + '</span>';
-
 				tempHtml += '<span class="mobi-summary">' +stripTags(uResponses[i].response.description)+ '</span>';
 				tempHtml += '<span class="mobi-description" style="display: block">' + uResponses[i].response.description + '</span>';
 				

@@ -427,7 +427,7 @@ boolClicked = true;
 					$(location).attr("href", "index.html");
 				}
 				var $thisView = $("#" + event.currentTarget.id),
-					 intLast = arrGlobalTopics.length -1, userTopicId,
+					 intLast = arrGlobalTopics.length -1, userTopicId, responseId, $this,
 					 strCurrentUrl = configSettings.apiproxy + "/me/usertopics/" + arrGlobalTopics[intLast],
 					 $contTopicInfo = $thisView.find('.container-topicinfo'), totResponses;
 				$thisView.find(".container-discussion-detail .container-message").html("");
@@ -514,9 +514,25 @@ boolClicked = true;
 												// The user has tapped on a thread.  We need
 												// to display the thread detail page.
 												$.mobile.pageLoading();
-												var $this = $(this);
+												$this = $(this);
+												responseId = $this.attr("id").split("_")[1];
+												//if response about to be viewed is unread...mark as read
+												if( $(this).hasClass('not-read') ) {
+													$().mobiQueryApi( 'post', {
+														strUrl: configSettings.apiproxy + '/me/responses/'  + responseId.split('-')[1] + '/readStatus',
+														strData: JSON.stringify( {
+															"readStatus": {
+																"markedAsRead": true
+															}
+														} ),
+														successHandler: function(){
+															console.log(jsonResponse);
+														},
+														errorHandler: function(){}
+													} );
+												}
 												var objInfo = {
-													strNewId: $this.attr("id").split("_")[1],
+													strNewId: responseId,
 													strOldId: -1,
 													strAuthorName: $this.find(".mobi-author").text(),
 													strTitle: $this.find(".mobi-title").text(),
