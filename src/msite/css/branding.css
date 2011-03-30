@@ -470,6 +470,14 @@ div.layout-header .menu-active {
   border-radius: 10px;
 }
 
+.mobi-listview li span.grade {
+  position: absolute;
+  right: 40px;
+  top: 12px;
+  color: #666;
+  font-weight: bold;
+}
+
 .mobi-listview li .mobi-response-count {
 	background: url(../images/icon_response_small.png) left top no-repeat;
 	padding-left: 16px;
