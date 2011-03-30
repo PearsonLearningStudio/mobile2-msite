@@ -333,12 +333,14 @@ boolClicked = true;
 				var $this, responseStr = {}, newResponse,
 					$listView = $thisView.find('.mobi-listview'),
 					titleText = "Post a response to " + topic,
-					response, $container, href, match,
+					response, $container, href, match, 
 					$totResponses = $( $thisView.find('.mobi-total-responses')[0] ),
+					numResponses = $totResponses.html(),
 					$buttons = $thisView.find(".container-response-buttons"),
 					$responseInputTitle = $thisView.find(".textarea-response-title"),
 					$responseInputBody = $thisView.find(".textarea-response-body");
 				$responseInputTitle.html( titleText );
+				$responseInputBody.hide();
 				function reset() {
 					$responseInputTitle.val( titleText );
 					$responseInputBody.val('');
@@ -393,13 +395,13 @@ boolClicked = true;
 									$container.empty().append(newResponse);
 									$container.find('.mobi-listview').listview();
 								}
-								match = $totResponses.html().match(/\d+/);
-								$totResponses.html( $totResponses.html().replace( match, +match + 1 ) );
-								
-								/*} else if ( $thisView[0].id.match(/pageDiscussionThreadDetail/i) ) {
-									history.back();
-									return false;
-								}*/
+								//update number of responses
+								if( numResponses.match( /no responses/i ) ) {
+									$totResponses.html( '1 response' );
+								} else {
+									match = numResponses.match(/\d+/);
+									$totResponses.html( numResponses.replace( match, +match + 1 ) );
+								}
 							},
 							errorHandler: function() {
 								alert("There was an error posting your response. Please try again");
