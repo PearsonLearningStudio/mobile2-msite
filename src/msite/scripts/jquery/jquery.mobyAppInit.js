@@ -428,7 +428,8 @@ boolClicked = true;
 				}
 				var $thisView = $("#" + event.currentTarget.id),
 					 intLast = arrGlobalTopics.length -1, userTopicId,
-					 strCurrentUrl = configSettings.apiproxy + "/me/usertopics/" + arrGlobalTopics[intLast];
+					 strCurrentUrl = configSettings.apiproxy + "/me/usertopics/" + arrGlobalTopics[intLast],
+					 $contTopicInfo = $thisView.find('.container-topicinfo'), totResponses;
 				$thisView.find(".container-discussion-detail .container-message").html("");
 				$().mobiQueryApi("get", {
 					strUrl: strCurrentUrl,
@@ -442,22 +443,30 @@ boolClicked = true;
 						$thisView.find(".mobi-title").html(strTitle);
 						if (strAuthor != undefined) {
 							if (strAuthor != "") {
-								$thisView.find(".container-topicinfo .mobi-author").html(strAuthor);
+								 $contTopicInfo.find(".mobi-author").html(strAuthor);
 							} 
 						} else {
-							$thisView.find(".container-topicinfo .mobi-author").remove();
+							 $contTopicInfo.find(".mobi-author").remove();
 						}
 						if (intTotalResponses === 0) {
-							$thisView.find(".container-topicinfo .mobi-total-responses").text("No responses");
+							totResponses = "No responses";
+							$contTopicInfo.addClass('no-responses');
 						} else if (intTotalResponses === 1) {
-							$thisView.find(".container-topicinfo .mobi-total-responses").text("1 response");
+							totResponses = "1 response";
+							$contTopicInfo.addClass('responses');
 						} else {
-							$thisView.find(".container-topicinfo .mobi-total-responses").text(intTotalResponses + " total responses");
+							totResponses = intTotalResponses + " total responses";
+							if(jsonResponse.userTopics[0].childResponseCounts.last24HourResponseCounts >= 10){
+								$contTopicInfo.addClass('hot-topic');
+							} else {
+								$contTopicInfo.addClass('responses');
+							}
 						}
+						$contTopicInfo.find(".mobi-total-responses").text(totResponses);
 						if (intUnreadResponses === 0) {
-							$thisView.find(".container-topicinfo .mobi-unread-responses").text("none").hide();
+							 $contTopicInfo.find(".mobi-unread-responses").text("none").hide();
 						} else {
-							$thisView.find(".container-topicinfo .mobi-unread-responses").text(intUnreadResponses);
+							 $contTopicInfo.find(".mobi-unread-responses").text(intUnreadResponses);
 						}
 						
 						var $thisMessage = $thisView.find(".container-message");
@@ -553,9 +562,11 @@ boolClicked = true;
 			
 			//remove duplication from pageDiscussionThreadDetail and pageDiscussionThreadDetail2
 			function discussionThreadDetail($thisView) {  
-				var $this, intMinHeight, $button, $theseThreads, strCurrentUrl, strHtml, objInfo,
+				var $this, intMinHeight, $button, $theseThreads, 
+					iconClass, strCurrentUrl, strHtml, objInfo,
 					intLast = arrGlobalThreads.length -1, 
 					objThread = arrGlobalThreads[intLast],
+					numResponses = objThread.strTotalResponseString,
 					objThreadId = objThread.strNewId.split("-")[1] ,
 					$thisMessage = $thisView.find(".container-discussion-detail .container-message"),
 					$responseInput = $thisView.find("#textarea-response");					
@@ -569,6 +580,18 @@ boolClicked = true;
 				}
 				$thisView.find(".container-discussion-detail .container-message").html("");
 				
+				//set number of responses class
+				if( numResponses.match( /no responses/i ) ) {
+					iconClass = 'no-responses';
+				} else {
+					match = numResponses.match(/\d+/);
+					if( match >= 10){
+						iconClass = 'hot-topic';
+					} else {
+						iconClass = 'responses';
+					}
+				}					
+				$thisView.find('.container-topicinfo').addClass(iconClass);
 				// Fill in the thread detail information
 				$thisView.find(".container-discussion-detail .container-topicinfo .mobi-title").text(objThread.strTitle);
 				$thisView.find(".container-discussion-detail .container-topicinfo .mobi-author").text(objThread.strAuthorName);
