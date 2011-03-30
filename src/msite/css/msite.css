@@ -72,7 +72,8 @@ div.layout-header .menu-active {
 
 .mobi-listview li.responses,
 .mobi-listview li.no-responses,
-.mobi-listview li.hot-topic {
+.mobi-listview li.hot-topic,
+.mobi-listview li.course {
   padding: 0 0 0 30px;
   background-position: 10px 10px;
   background-repeat: no-repeat;
@@ -89,6 +90,10 @@ div.layout-header .menu-active {
 
 .mobi-listview li.hot-topic {
 	background-image: url(../images/icon_hot_topic.png);
+}
+
+.mobi-listview li.course {
+	background-image: url(../images/icon_course.png);
 }
 
 /* Activity list view */
@@ -124,7 +129,8 @@ div.layout-header .menu-active {
 	font-weight: bold;
 	color: #333;
 }
-.view-discussion .mobi-your-responses {
+.view-discussion .mobi-your-responses,
+.mobi-your-responses {
 	font-size: 70%;
 	font-style: italic;
 	margin-top: 0.2em;

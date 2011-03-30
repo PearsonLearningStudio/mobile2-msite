@@ -1618,7 +1618,7 @@ textarea.ui-input-text { height: 50px; -webkit-transition: height 200ms linear; 
 ol.ui-listview .ui-link-inherit:before, .ui-li-dec { font-size: .8em; display: inline-block; padding-right: .3em; font-weight: normal;counter-increment: listnumbering; content: counter(listnumbering) ". "; }
 ol.ui-listview .ui-li-jsnumbering:before { content: "" !important; } /* to avoid chance of duplication */
 .ui-listview-inset .ui-li { border-right-width: 1px; border-left-width: 1px; }
-.ui-li:last-child { border-bottom-width: 1px; }
+.ui-li:last-child { border-bottom: solid 1px #CCC; }
 .ui-li .ui-btn-inner { display: block; position: relative; padding: .7em 75px .7em 15px; }
 .ui-li-has-thumb .ui-btn-inner { min-height: 60px; padding-left: 100px; }
 .ui-li-has-icon .ui-btn-inner {  min-height: 20px; padding-left: 40px; }
