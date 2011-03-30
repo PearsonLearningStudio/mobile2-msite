@@ -304,7 +304,8 @@ textarea.textarea-response-title {
 	text-overflow: ellipsis;
 }
 
-.min-width-480px textarea.textarea-response-body {
+.min-width-480px textarea.textarea-response-body,
+.container-response textarea.textarea-response-body { 
 	display: none;
 	height: 6em;
 	margin-top: 10px;
