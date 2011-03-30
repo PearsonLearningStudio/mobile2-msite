@@ -36,6 +36,10 @@ div.layout-header .menu-active {
 	border-radius: 0px;
 }
 /* Mobile List View base classes*/
+.mobi-listview li {
+	border-top: solid 1px #CCC;
+}
+
 .mobi-listview li a {
 	display: block;
 	width: 100%;
@@ -51,6 +55,11 @@ div.layout-header .menu-active {
 	top: 4px;
 	right: 10px;
 	font-size: 80%;
+	color: #333;
+}
+
+.mobi-listview .ui-btn-text {
+  text-shadow: none;
 }
 
 .mobi-listview .mobi-title {
@@ -93,15 +102,17 @@ div.layout-header .menu-active {
 .view-activity .mobi-course-title {
 	text-overflow: ellipsis;
 	overflow: hidden;
-	font-size: 80%;
-	margin-top: 0.3em;
+	font-size: 70%;
+	margin-top: 0.2em;
 	padding-bottom: 5px;
 	font-style: italic;
+	color: #333;
 }
 .view-activity .mobi-summary {
 	text-overflow: ellipsis;
 	overflow: hidden;
-	font-size: 105%;
+	font-size: 100%;
+	color: #333;
 }
 
 /* Discussion list view */
@@ -111,11 +122,13 @@ div.layout-header .menu-active {
 .view-discussion .mobi-response-count {
 	font-size: 70%;
 	font-weight: bold;
+	color: #333;
 }
 .view-discussion .mobi-your-responses {
 	font-size: 70%;
 	font-style: italic;
 	margin-top: 0.2em;
+	color: #333;
 }
 .view-discussion .mobi-icon-response-count {
 	position: absolute;
@@ -182,9 +195,13 @@ div.layout-header .menu-active {
 }
 .container-discussion-detail .container-topicinfo {
 	padding-left: 30px;
+	padding-bottom: 10px;
 	font-size: 90%;
-	border-bottom: 1px solid black;
+	border-bottom: 1px solid #C2BFB5;
 	position: relative;
+	-webkit-box-shadow: rgba(255,255,255,.8) 0 1px 0;
+	-moz-box-shadow: rgba(255,255,255,.8) 0 1px 0;
+	box-shadow: rgba(255,255,255,.8) 0 1px 0;
 }
 .container-discussion-detail p {
 	margin: 0px;
@@ -229,13 +246,14 @@ div.layout-header .menu-active {
 }
 
 .container-discussion-detail .container-message {
-	border-bottom: 1px solid black;
-	padding-left: 10px;
-	padding-right: 30px;
-	font-size: 90%;
-	padding-top: 5px;
+	border-bottom: 1px solid #C2BFB5;
 	position: relative;
-	padding-bottom: 5px;
+	-webkit-box-shadow: rgba(255,255,255,.8) 0 1px 0;
+	-moz-box-shadow: rgba(255,255,255,.8) 0 1px 0;
+	box-shadow: rgba(255,255,255,.8) 0 1px 0;
+	padding: 10px 30px 10px 10px;
+	font-size: 90%;
+	position: relative;
 	height: 4.4em;
 	overflow: hidden;
 }
@@ -256,21 +274,28 @@ div.layout-header .menu-active {
 	width: 20px;
 	height: 20px;
 	color: #fff;
-	background-color: #666;
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;
-	border-radius: 10px;
+	background: url(../images/icon_expand_up.png) 0px 0px no-repeat;
 	overflow: hidden;
 	text-align: center;
-	line-height: 20px;
+	line-height: 24px;
 	cursor: pointer;
 }
 
 .container-discussion-detail .container-response {
-	border-bottom: 1px solid black;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	padding-left: 3px;
+	background-image: -moz-linear-gradient(top, 
+							rgba(0,0,0,.1), 
+							rgba(0,0,0,.6));
+	background-image: -webkit-gradient(linear,left top,left bottom,
+		color-stop(0, 		rgba(0,0,0,.1)),
+		color-stop(1, 		rgba(0,0,0,.6)));
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='rgba(0,0,0,.1)', EndColorStr='rgba(0,0,0,.6)')";
+	padding: 6px 6px 16px 6px;
+}
+
+.container-discussion-detail .container-response textarea{
+	width: 98%;
+	color: #999;
+	padding: 6px 10px 2px 10px;
 }
 
 textarea.textarea-response-title {
@@ -319,6 +344,11 @@ textarea.textarea-response-title {
 	float: left;
 	margin: .5em 0 0;
 	width: 200px;
+	padding-left: 4px;
+}
+
+.container-topicinfo .mobi-course-title {
+	font-size: .8em;
 }
 
 .container-topicinfo .mobi-course-title,
@@ -343,11 +373,11 @@ textarea.textarea-response-title {
 	-moz-box-shadow: #7c7e79 5px 5px 5px;
 	box-shadow: #7c7e79 5px 5px 5px;
 	clear: left;
+	padding: 10px;
 }
 
 #container-activity-detail p {
-	 margin: 0 0 0 35px;
-   	 padding: 0 0 0.2em;
+	 margin: 0 0 0 0;
 }
 
 #container-activity-detail .mobi-activity-title {

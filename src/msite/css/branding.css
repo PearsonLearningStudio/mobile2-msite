@@ -1,3 +1,7 @@
+/*body {
+  background: url(../images/background_content.png);
+}*/
+
 #loginFormSection h1.signon_logo {
   background: url(../images/logo_signon.png) left top no-repeat;
   width: 201px;
@@ -441,9 +445,14 @@ div.layout-header .menu-active {
 .mobi-listview li:hover .mobi-summary,
 .mobi-listview li:hover .mobi-date,
 .mobi-listview li:hover .mobi-response-count,
-.mobi-listview li:hover .mobi-response-count,
 .mobi-listview li:hover .mobi-your-responses {
   color: #333;
+}
+
+.mobi-listview li .mobi-response-count {
+	background: url(../images/icon_response_small.png) left top no-repeat;
+	padding-left: 16px;
+	display: block;
 }
 
 .mobi-listview li.ui-li-divider {
@@ -477,4 +486,26 @@ div.layout-header .menu-active {
 
 .activity-detail {
   background: url(../images/background_content.png);
+}
+
+/* Detail Header */
+
+.ui-content {
+  clear: both;
+}
+
+.detail-header {
+  width: 100%;
+  padding: 0px;
+}
+
+#pageActivityDetail .detail-header .ui-btn-left {
+  width: 60px;
+}
+
+#pageActivityDetail .detail-header .ui-btn-left {
+  font-size: .9em;
+  -webkit-box-shadow: #FFF 0 1px 0;
+  -moz-box-shadow: #FFF 0 1px 0;
+  box-shadow: #FFF 0 1px 0;
 }

@@ -7,13 +7,13 @@
 	<key>ESProjectWindowState</key>
 	<dict>
 		<key>ContentSize</key>
-		<string>{1920, 1113}</string>
+		<string>{1920, 813}</string>
 		<key>ProjectURL</key>
-		<string>file://localhost/Users/juan/Desktop/projects/EffectiveUI/eCollege/Development/MobileWeb/MobileWeb.esproj/</string>
+		<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/MobileWeb.esproj/</string>
 		<key>StateType</key>
 		<string>ProjectWindow</string>
 		<key>TopLeftPoint</key>
-		<string>{0, 1178}</string>
+		<string>{0, 878}</string>
 	</dict>
 	<key>com.macrabbit.Espresso.FileManager.DisclosureCollapsed</key>
 	<false/>
@@ -21,10 +21,8 @@
 	<dict>
 		<key>ExpandedURLs</key>
 		<array>
-			<string>file://localhost/Users/juan/Desktop/projects/EffectiveUI/eCollege/Development/MobileWeb/src/msite/css</string>
-			<string>file://localhost/Users/juan/Desktop/projects/EffectiveUI/eCollege/Development/MobileWeb/src/msite/images</string>
-			<string>file://localhost/Users/juan/Desktop/projects/EffectiveUI/eCollege/Development/MobileWeb/src/msite/scripts/ecollege</string>
-			<string>file://localhost/Users/juan/Desktop/projects/EffectiveUI/eCollege/Development/MobileWeb/src/msite/scripts/jquery</string>
+			<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/css</string>
+			<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/scripts/jquery</string>
 		</array>
 	</dict>
 	<key>com.macrabbit.Espresso.Publisher.DisclosureCollapsed</key>
@@ -106,8 +104,10 @@
 				<string>DefaultTab</string>
 			</dict>
 			<dict>
+				<key>DocumentURL</key>
+				<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/classes.html</string>
 				<key>StateType</key>
-				<string>PreviewTab</string>
+				<string>DefaultTab</string>
 			</dict>
 		</array>
 	</dict>
