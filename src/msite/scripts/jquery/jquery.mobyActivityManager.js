@@ -43,7 +43,7 @@ var arrGlobalActivity = [],
 					intEnd = settings.intEndIndex,
 					boolItems = false,
 					//short cut
-					objFeedItems = objFeed.activityStream.items, item, time, grade,
+					objFeedItems = objFeed.activityStream.items, item, time, grade, type,
 					strEndHtml = '<li data-role="list-divider" class="activity-scroll-indicator">Loading more...</li>\n';
 					
 				if ((intEnd > objFeedItems.length)|| (intEnd === -1)) {
@@ -55,44 +55,44 @@ var arrGlobalActivity = [],
 				for (var i = settings.intStartIndex; i < intEnd; i++) {
 					//short cut for objFeedItems[i]
 					item = objFeedItems[i];
-					
-					if (item.object.objectType === "grade") {
-						strHtml += '<li><a class="listitem-activity grade_' + item.object.courseId + '_' + item.object.referenceId + '" href="activitydetail.html">';
+					type = item.object.objectType;
+					if (type === "grade") {
+						strHtml += '<li class="' + type +'"><a class="listitem-activity grade_' + item.object.courseId + '_' + item.object.referenceId + '" href="activitydetail.html">';
 						strHtml += '<span class="mobi-title">';
 						strHtml += "Grade: " + item.target.title;
 						strHtml += "</span><span class='mobi-summary'>";
 						strHtml += grade  = GetGrade(item);
 						strHtml += "</span>";
-					} else if (item.object.objectType === "dropbox-submission") {
-						strHtml += '<li><a class="listitem-activity dropbox-submission_' + item.object.courseId + '_'  + item.object.referenceId + '" href="/activitydetail.html">';
+					} else if (type === "dropbox-submission") {
+						strHtml += '<li class="' + type +'"><a class="listitem-activity dropbox-submission_' + item.object.courseId + '_'  + item.object.referenceId + '" href="/activitydetail.html">';
 						strHtml += '<span class="mobi-title">';
 						strHtml += "Dropbox: " + item.target.title;
 						strHtml += "</span><span class='mobi-summary'>";
 						strHtml += GetSummary(item);
 						strHtml += "</span>";
-					} else if (item.object.objectType === "remark") {
-						strHtml += '<li><a class="listitem-activity remark_' + item.object.courseId + '_'  + item.object.referenceId + '" href="/activitydetail.html">';
+					} else if (type === "remark") {
+						strHtml += '<li class="' + type +'"><a class="listitem-activity remark_' + item.object.courseId + '_'  + item.object.referenceId + '" href="/activitydetail.html">';
 						strHtml += '<span class="mobi-title">';
 						strHtml += "Remark: " + item.object.title;
 						strHtml += "</span><span class='mobi-summary'>";
 						strHtml += GetSummary(item);
 						strHtml += "</span>";
-					} else if (item.object.objectType === "thread-topic") {
-						strHtml += '<li><a class="listitem-activity thread-topic_' + item.object.courseId + '_'  + item.object.referenceId + '" href="discussiontopicdetail.html">';
+					} else if (type === "thread-topic") {
+						strHtml += '<li class="' + type +'"><a class="listitem-activity thread-topic_' + item.object.courseId + '_'  + item.object.referenceId + '" href="discussiontopicdetail.html">';
 						strHtml += '<span class="mobi-title">';
 						strHtml += "Topic: " + item.object.title;
 						strHtml += "</span><span class='mobi-summary'>";
 						strHtml += GetSummary(item);
 						strHtml += "</span>";
-					} else if (item.object.objectType === "exam-submission") {
-						strHtml += '<li><a class="listitem-activity exam-submission_' + item.object.courseId + '_'  + item.object.referenceId + '" href="/activitydetail.html">';
+					} else if (type === "exam-submission") {
+						strHtml += '<li class="' + type +'"><a class="listitem-activity exam-submission_' + item.object.courseId + '_'  + item.object.referenceId + '" href="/activitydetail.html">';
 						strHtml += '<span class="mobi-title">';
 						strHtml += "Exam: " + item.target.title;
 						strHtml += "</span><span class='mobi-summary'>";
 						strHtml += GetSummary(item);
 						strHtml += "</span>";
-					} else if (item.object.objectType === "thread-post") {
-						strHtml += '<li><a class="listitem-activity thread-post_' + item.object.courseId + '_'  + item.object.referenceId + '" href="/discussionthreaddetail.html">';
+					} else if (type === "thread-post") {
+						strHtml += '<li class="' + type +'"><a class="listitem-activity thread-post_' + item.object.courseId + '_'  + item.object.referenceId + '" href="/discussionthreaddetail.html">';
 						strHtml += '<span class="mobi-title">';
 						strHtml += "Re: " + item.object.title;
 						strHtml += "</span><span class='mobi-summary'>";
