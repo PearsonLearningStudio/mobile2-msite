@@ -495,6 +495,15 @@ div.layout-header .menu-active {
 	padding-bottom: 10px;
 }
 
+.mobi-student-role{
+	display: block;
+	font-size: 70%;
+	font-weight: bold;
+	color: #333;
+	margin: 0;
+	padding-bottom: 10px;
+}
+
 .mobi-listview li.ui-li-divider {
   background: #666;
   background-image: -moz-linear-gradient(top, 
@@ -534,6 +543,35 @@ div.layout-header .menu-active {
   clear: both;
 }
 
+.item-icon {
+  background: #FFF;
+  border: #CCC;
+  width: 60px;
+  height: 60px;
+}
+
+.my-profile-item-icon {
+  background: #FFF;
+  border: solid 1px #CCC;
+  width: 36px;
+  height: 36px;
+  background: #FFF url(../images/icon_profile_avatar.png) 4px 4px no-repeat;
+  float: left;
+  padding: 0;
+  margin: 0 10px 0 0;
+}
+
+.my-profile-item-icon .you-banner {
+  background: url(../images/icon_you_banner.png) 4px 4px no-repeat;
+  width: 34px;
+  height: 34px;
+  display: block;
+  text-indent: -9999px;
+  position: relative;
+  top: -6px;
+  left: -6px;
+}
+
 .detail-header {
   width: 100%;
   padding: 0px;
@@ -548,4 +586,10 @@ div.layout-header .menu-active {
   -webkit-box-shadow: #FFF 0 1px 0;
   -moz-box-shadow: #FFF 0 1px 0;
   box-shadow: #FFF 0 1px 0;
+}
+
+/* View Profile */
+.view-profile {
+   background: url(../images/background_content.png);
+   padding: 20px;
 }
