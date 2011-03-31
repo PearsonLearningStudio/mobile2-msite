@@ -64,6 +64,44 @@ boolClicked = true;
 				$(window).unbind("scroll");
 			}).click(); // default view for page, set on load.
 			
+			//response click handler for clicking on any response	
+			function responseClickHandler($this, objectInfo) { 
+				// The user has tapped on a thread.  We need
+				// to display the thread detail page.
+				$.mobile.pageLoading();
+				var responseId = $this.attr("id").split("_")[1],
+					objInfo = {};
+				//if response about to be viewed is unread...mark as read
+				if( $this.hasClass('not-read') ) {
+					$().mobiQueryApi( 'post', {
+						strUrl: configSettings.apiproxy + '/me/responses/'  + responseId.split('-')[1] + '/readStatus',
+						strData: JSON.stringify( {
+							"readStatus": {
+								"markedAsRead": true
+							}
+						} ),
+						successHandler: function(){
+						},
+						errorHandler: function(){}
+					} );
+				}
+				objInfo = {
+					strNewId: responseId,
+					strOldId: -1,
+					strAuthorName: $this.find(".mobi-author").text(),
+					strTitle: $this.find(".mobi-title").text(),
+					strTotalResponseString: $this.find(".mobi-total-responses").text(),
+					strUnreadResponseString: $this.find(".mobi-unread-responses").text(),
+					strDescription: $this.find(".mobi-description").data("description"),
+					strDate: $this.find(".mobi-date").text()
+				}
+				if (objectInfo) {
+					$.extend(objInfo, objectInfo);
+				}
+				arrGlobalThreads.push(objInfo);
+				console.log(objInfo);
+			}
+			
 			// Initialize click listener for Activity button
 			$(".btn-activity").live('click', function() {
 				$(".btn-whatsdue").removeClass("ui-btn-active");
@@ -80,8 +118,8 @@ boolClicked = true;
 					// Fetch the feed and insert into DOM.
 					$().mobyActivityManager("toHtml", {
 						callbackSuccess: function(objReturn){
-							var strFeedHtml = objReturn.strFeedHtml;
-							var strHtml = "", activityType;
+							var strFeedHtml = objReturn.strFeedHtml,
+								strHtml = "", activityType, objInfo = {};
 							
 							strHtml += '<ul data-role="listview" class="mobi-listview">';
 							strHtml += '<li data-role="list-divider">All Activity</li>';
@@ -99,18 +137,18 @@ boolClicked = true;
 									// The user has tapped on a thread.  We need
 									// to display the thread detail page.
 									//$.mobile.pageLoading();
-									var $this = $(this);
 									var objInfo = {
-										strNewId: refId,
+										strNewId: arrGlobalActivity[0].split('_')[2] + '-' + arrGlobalActivity[0].split('_')[2],
 										strOldId: -1,
-										strAuthorName: $this.find(".mobi-author").text(),
-										strTitle: $this.find(".mobi-title").text(),									
-										strTotalResponseString: $this.find(".mobi-total-responses").text(),
-										strUnreadResponseString: $this.find(".mobi-unread-responses").text(),
-										strDescription: $this.find(".mobi-description").data("description")
+									//	strAuthorName: $this.find(".mobi-author").text(),
+									//	strTitle: $this.find(".mobi-title").text(),									
+									//	strTotalResponseString: $this.find(".mobi-total-responses").text(),
+									//	strUnreadResponseString: $this.find(".mobi-unread-responses").text(),
+									//	strDescription: $this.find(".mobi-description").data("description")
 									}
-									arrGlobalThreads.push(objInfo);
-									//console.log(arrGlobalThreads);
+									//responseClickHandler($(this), objInfo);
+									//arrGlobalThreads.push(objInfo);
+									console.log(objInfo);
 								}
 							} );
 						}
@@ -409,38 +447,6 @@ boolClicked = true;
 						} ); 
 					}
 				} );				
-			}
-			
-			function responseClickHandler($this) {
-				// The user has tapped on a thread.  We need
-				// to display the thread detail page.
-				$.mobile.pageLoading();
-				var responseId = $this.attr("id").split("_")[1];
-				//if response about to be viewed is unread...mark as read
-				if( $this.hasClass('not-read') ) {
-					$().mobiQueryApi( 'post', {
-						strUrl: configSettings.apiproxy + '/me/responses/'  + responseId.split('-')[1] + '/readStatus',
-						strData: JSON.stringify( {
-							"readStatus": {
-								"markedAsRead": true
-							}
-						} ),
-						successHandler: function(){
-						},
-						errorHandler: function(){}
-					} );
-				}
-				var objInfo = {
-					strNewId: responseId,
-					strOldId: -1,
-					strAuthorName: $this.find(".mobi-author").text(),
-					strTitle: $this.find(".mobi-title").text(),
-					strTotalResponseString: $this.find(".mobi-total-responses").text(),
-					strUnreadResponseString: $this.find(".mobi-unread-responses").text(),
-					strDescription: $this.find(".mobi-description").data("description"),
-					strDate: $this.find(".mobi-date").text()
-				}
-				arrGlobalThreads.push(objInfo);
 			}
 			
 			// Page show event for a discussion topic detail page
