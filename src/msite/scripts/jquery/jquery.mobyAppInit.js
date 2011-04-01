@@ -398,10 +398,14 @@ boolClicked = true;
 					$buttons.hide();
 				}
 				$responseInputTitle.bind( 'focus', function() { 
-					$this = $(this);		
-					$responseInputTitle.setHintText('subject');
-					$responseInputTitle.val('');
-					$responseInputBody.setHintText('message');
+					$this = $(this);	
+					if($responseInputTitle.val() === titleText) {	
+						$responseInputTitle.setHintText('subject');
+						$responseInputTitle.val('');
+					}
+					if($responseInputBody.val() === ''){
+						$responseInputBody.setHintText('message');
+					}					
 					$responseInputBody.show();
 					$buttons.show();
 				} );
@@ -917,15 +921,19 @@ boolClicked = true;
 
 (function($){
 	$.fn.extend( {
-		setHintText: function(hintText){
+		setHintText: function(hintText) {
 			var $this = $(this),
 				ht = hintText; 
 			$this.val(ht);
 			$this.bind('focus', function() {
-				$this.val('');
+				if($this.val() === ht) {
+					$this.val('');
+				}
 			} );
 			$this.bind('blur', function(){
-				$this.val(ht);	
+				if($this.val() === '') {
+					$this.val(ht);
+				}	
 			} );
 		},
 		positionBottomOfViewport: function(options) {
