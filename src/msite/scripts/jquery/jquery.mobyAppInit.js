@@ -119,7 +119,8 @@ boolClicked = true;
 					$().mobyActivityManager("toHtml", {
 						callbackSuccess: function(objReturn){
 							var strFeedHtml = objReturn.strFeedHtml,
-								strHtml = "", activityType, objInfo = {};
+								strHtml = "", activityType, objInfo = {},
+								activityArray = [];
 							
 							strHtml += '<ul data-role="listview" class="mobi-listview">';
 							strHtml += '<li data-role="list-divider">All Activity</li>';
@@ -130,15 +131,26 @@ boolClicked = true;
 							$.mobile.pageLoading(true);
 							$(".listitem-activity").live('click',  function(){
 								arrGlobalActivity =  this.className.match(/\w+[-]*\w+\d+/ig);
-								activityType = arrGlobalActivity[0].split('_')[0];
+								activityArray = arrGlobalActivity[0].split('_');
+								activityType = activityArray[0];
 								if(activityType === 'thread-topic'){									
 									arrGlobalTopics.push(strCurrentTopic);
 								} else if(activityType === 'thread-post'){						
 									// The user has tapped on a thread.  We need
 									// to display the thread detail page.
+									//First get the discussion response
+									/*$().mobiQueryApi('get', {
+										strUrl: configSettings.apiproxy + '/courses/' + activityArray[1] + '/threadeddiscussions/' +  + '/topics/' + activityArray[2],
+										successHandler: function(jsonResponse){
+											console.log(jsonResponse);
+										},
+										errorHandler: function(){
+											
+										}
+									} ); */
 									//$.mobile.pageLoading();
-									var objInfo = {
-										strNewId: arrGlobalActivity[0].split('_')[2] + '-' + arrGlobalActivity[0].split('_')[2],
+									objInfo = {
+										strNewId: activityArray[1] + '-' + activityArray[2],
 										strOldId: -1,
 									//	strAuthorName: $this.find(".mobi-author").text(),
 									//	strTitle: $this.find(".mobi-title").text(),									
@@ -377,7 +389,7 @@ boolClicked = true;
 					$buttons = $thisView.find(".container-response-buttons"),
 					$responseInputTitle = $thisView.find(".textarea-response-title"),
 					$responseInputBody = $thisView.find(".textarea-response-body");
-				$responseInputTitle.html( titleText );
+				$responseInputTitle.val( titleText );		
 				$responseInputBody.hide();
 				function reset() {
 					$responseInputTitle.val( titleText );
@@ -386,8 +398,10 @@ boolClicked = true;
 					$buttons.hide();
 				}
 				$responseInputTitle.bind( 'focus', function() { 
-					$this = $(this);
-					$this.val(''); 
+					$this = $(this);		
+					$responseInputTitle.setHintText('subject');
+					$responseInputTitle.val('');
+					$responseInputBody.setHintText('message');
 					$responseInputBody.show();
 					$buttons.show();
 				} );
@@ -396,7 +410,7 @@ boolClicked = true;
 					reset();
 				} );				
 				$buttons.find('.response-post').click( function() {
-					if($responseInputBody.val() != '') { 
+					if($responseInputBody.val() != '' || $responseInputBody.val() != 'message') { 
 						//submit response using ecollege api
 						responseStr.responses = {
 							title: $responseInputTitle.val(),
@@ -902,27 +916,40 @@ boolClicked = true;
 
 
 (function($){
-	$.fn.positionBottomOfViewport = function(options) {
-		var pos = {
-			sTop : function() {
-				return window.pageYOffset || document.documentElement && document.documentElement.scrollTop ||	document.body.scrollTop;
-			},
-			wHeight : function() {
-				return window.innerHeight || document.documentElement && document.documentElement.clientHeight || document.body.clientHeight;
-			}
-		};
-	    return this.each(function(index) {
-			if (index == 0) {
-				var $this = $(this);
-				var elHeight = $this.outerHeight();
-				var elTop = pos.sTop() + (pos.wHeight()) - (elHeight);
-		        $this.css({
-					position: 'absolute',
-					margin: '0',
-					top: elTop,
-					left: (($(window).width() - $this.outerWidth()) / 2) + 'px'
-				});
-			}
-		});
-	};
+	$.fn.extend( {
+		setHintText: function(hintText){
+			var $this = $(this),
+				ht = hintText; 
+			$this.val(ht);
+			$this.bind('focus', function() {
+				$this.val('');
+			} );
+			$this.bind('blur', function(){
+				$this.val(ht);	
+			} );
+		},
+		positionBottomOfViewport: function(options) {
+			var pos = {
+				sTop : function() {
+					return window.pageYOffset || document.documentElement && document.documentElement.scrollTop ||	document.body.scrollTop;
+				},
+				wHeight : function() {
+					return window.innerHeight || document.documentElement && document.documentElement.clientHeight || document.body.clientHeight;
+				}
+			};
+		    return this.each(function(index) {
+				if (index == 0) {
+					var $this = $(this);
+					var elHeight = $this.outerHeight();
+					var elTop = pos.sTop() + (pos.wHeight()) - (elHeight);
+			        $this.css({
+						position: 'absolute',
+						margin: '0',
+						top: elTop,
+						left: (($(window).width() - $this.outerWidth()) / 2) + 'px'
+					});
+				}
+			});
+		}
+	} );
 })(jQuery);
