@@ -520,7 +520,8 @@ div.layout-header .menu-active {
   text-shadow: rgba(0,0,0,.8) 0 -1px 0;
 }
 
-.mobi-listview li .mobi-title {
+.mobi-listview li .mobi-title,
+.activity-info-header .mobi-title {
   color:  #306CA0;
 }
 
@@ -575,6 +576,32 @@ div.layout-header .menu-active {
 .detail-header {
   width: 100%;
   padding: 0px;
+}
+
+.activity-detail-links {
+  clear: both;
+  padding: 16px 0 0 0;
+}
+
+.activity-detail-links .ui-link {
+  color: #666;
+  display: block;
+  font-size: .9em;
+  text-decoration: none;
+  margin: 0 0 8px 0;
+  background-color: #EEE;
+  border: solid 1px #CCC;
+  color: #666;
+  -webkit-border-radius: 4px;
+}
+
+.detail-link-file {
+  padding: 8px 8px 8px 40px;
+  background: url(../images/icon_attachment.png) 10px 5px no-repeat;
+}
+
+.detail-link {
+  padding: 8px;
 }
 
 #pageActivityDetail .detail-header .ui-btn-left {

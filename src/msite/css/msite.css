@@ -58,11 +58,17 @@ div.layout-header .menu-active {
 	color: #333;
 }
 
+.activity-info-header .mobi-date {
+  font-size: .8em;
+  font-style: italic;
+}
+
 .mobi-listview .ui-btn-text {
   text-shadow: none;
 }
 
-.mobi-listview .mobi-title {
+.mobi-listview .mobi-title,
+.activity-info-header .mobi-title {
 	font-weight: bold;
 	font-size: 90%;
 	text-overflow: ellipsis;
@@ -85,6 +91,14 @@ div.layout-header .menu-active {
   background-repeat: no-repeat;
 }
 
+.dropbox-submission .activity-info-header,
+.grade .activity-info-header,
+.exam-submission .activity-info-header,
+.assignment-submission .activity-info-header {
+  padding: 0 0 0 40px;
+  background-position: 0 0;
+  background-repeat: no-repeat;
+}
 
 .mobi-listview li.responses,
 .mobi-listview li.thread-topic {
@@ -104,11 +118,13 @@ div.layout-header .menu-active {
 	background-image: url(../images/icon_course.png);
 }
 
-.mobi-listview li.grade {
+.mobi-listview li.grade,
+.grade .activity-info-header {
 	background-image: url(../images/icon_grade.png);
 }
 
-.mobi-listview li.dropbox-submission {
+.mobi-listview li.dropbox-submission,
+.dropbox-submission .activity-info-header {
 	background-image: url(../images/icon_dropbox.png);  
 }
 
@@ -137,10 +153,11 @@ div.layout-header .menu-active {
 	font-style: italic;
 	color: #333;
 }
-.view-activity .mobi-summary {
+.view-activity .mobi-summary,
+.activity-info-header .mobi-summary {
 	text-overflow: ellipsis;
 	overflow: hidden;
-	font-size: 100%;
+	font-size: 95%;
 	color: #333;
 }
 
