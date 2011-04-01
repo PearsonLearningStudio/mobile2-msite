@@ -347,8 +347,8 @@ boolClicked = true;
 				
 				//initial data passed via objGlobalResources
 				$thisView.find(".mobi-course-title").html(activity.courseTitle);
-				$thisView.find(".mobi-activity-type").html(activity.object.objectType.replace('-', ' '));
-				
+				//$thisView.find(".mobi-activity-type").html(activity.object.objectType.replace('-', ' '));
+				$thisView.find(".mobi-activity-type").html(activity.target.title);
 				//get the details
 				if(activityType === 'grade') {
 					url = '/me/courses/' + activity.target.courseId + '/gradebookItems/' + activity.target.referenceId +'/grade';
