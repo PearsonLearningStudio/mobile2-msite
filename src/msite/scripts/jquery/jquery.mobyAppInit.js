@@ -102,6 +102,28 @@ boolClicked = true;
 				console.log(objInfo);
 			}
 			
+			function getActivities() {
+				$().mobyActivityManager("toHtml", {
+					callbackSuccess: function(objReturn){
+						var strFeedHtml = objReturn.strFeedHtml,
+							strHtml = "", activityType, objInfo = {},
+							activityArray = [];
+						
+						strHtml += '<ul data-role="listview" class="mobi-listview">';
+						strHtml += '<li data-role="list-divider">All Activity</li>';
+						strHtml += strFeedHtml;
+						
+						$("#pageHome .view-activity").html(strHtml);
+						$("#pageHome .view-activity .mobi-listview").listview();
+						$.mobile.pageLoading(true);
+					}
+				});
+			}
+			
+			$('.btn-activity-refresh').live('click', function() {
+				// Fetch the feed and insert into DOM.
+				getActivities();
+			} );
 			// Initialize click listener for Activity button
 			$(".btn-activity").live('click', function() {
 				$(".btn-whatsdue").removeClass("ui-btn-active");
@@ -116,57 +138,45 @@ boolClicked = true;
 					$.mobile.pageLoading();
 					
 					// Fetch the feed and insert into DOM.
-					$().mobyActivityManager("toHtml", {
-						callbackSuccess: function(objReturn){
-							var strFeedHtml = objReturn.strFeedHtml,
-								strHtml = "", activityType, objInfo = {},
-								activityArray = [];
-							
-							strHtml += '<ul data-role="listview" class="mobi-listview">';
-							strHtml += '<li data-role="list-divider">All Activity</li>';
-							strHtml += strFeedHtml;
-							
-							$("#pageHome .view-activity").html(strHtml);
-							$("#pageHome .view-activity .mobi-listview").listview();
-							$.mobile.pageLoading(true);
-							$(".listitem-activity").live('click',  function(){
-								arrGlobalActivity =  this.className.match(/\w+[-]*\w+\d+/ig);
-								activityArray = arrGlobalActivity[0].split('_');
-								activityType = activityArray[0];
-								if(activityType === 'thread-topic'){									
-									arrGlobalTopics.push(strCurrentTopic);
-								} else if(activityType === 'thread-post'){						
-									// The user has tapped on a thread.  We need
-									// to display the thread detail page.
-									//First get the discussion response
-									/*$().mobiQueryApi('get', {
-										strUrl: configSettings.apiproxy + '/courses/' + activityArray[1] + '/threadeddiscussions/' +  + '/topics/' + activityArray[2],
-										successHandler: function(jsonResponse){
-											console.log(jsonResponse);
-										},
-										errorHandler: function(){
-											
-										}
-									} ); */
-									//$.mobile.pageLoading();
-									objInfo = {
-										strNewId: activityArray[1] + '-' + activityArray[2],
-										strOldId: -1,
-									//	strAuthorName: $this.find(".mobi-author").text(),
-									//	strTitle: $this.find(".mobi-title").text(),									
-									//	strTotalResponseString: $this.find(".mobi-total-responses").text(),
-									//	strUnreadResponseString: $this.find(".mobi-unread-responses").text(),
-									//	strDescription: $this.find(".mobi-description").data("description")
-									}
-									//responseClickHandler($(this), objInfo);
-									//arrGlobalThreads.push(objInfo);
-									console.log(objInfo);
-								}
-							} );
-						}
-					});
+					getActivities();
 				}
 		
+				//when a user taps on an activity
+				$(".listitem-activity").live('click',  function(){
+					arrGlobalActivity =  this.className.match(/\w+[-]*\w+\d+/ig);
+					activityArray = arrGlobalActivity[0].split('_');
+					activityType = activityArray[0];
+					if(activityType === 'thread-topic'){									
+						arrGlobalTopics.push(strCurrentTopic);
+					} else if(activityType === 'thread-post'){						
+						// The user has tapped on a thread.  We need
+						// to display the thread detail page.
+						//First get the discussion response
+						/*$().mobiQueryApi('get', {
+							strUrl: configSettings.apiproxy + '/courses/' + activityArray[1] + '/threadeddiscussions/' +  + '/topics/' + activityArray[2],
+							successHandler: function(jsonResponse){
+								console.log(jsonResponse);
+							},
+							errorHandler: function(){
+								
+							}
+						} ); */
+						//$.mobile.pageLoading();
+						objInfo = {
+							strNewId: activityArray[1] + '-' + activityArray[2],
+							strOldId: -1,
+						//	strAuthorName: $this.find(".mobi-author").text(),
+						//	strTitle: $this.find(".mobi-title").text(),									
+						//	strTotalResponseString: $this.find(".mobi-total-responses").text(),
+						//	strUnreadResponseString: $this.find(".mobi-unread-responses").text(),
+						//	strDescription: $this.find(".mobi-description").data("description")
+						}
+						//responseClickHandler($(this), objInfo);
+						//arrGlobalThreads.push(objInfo);
+						console.log(objInfo);
+					}
+				} );
+				
 				// Add scroll event for infinite scroll and positioning bookmark alert div
 				$(window).scroll(function() {
 					
@@ -343,12 +353,13 @@ boolClicked = true;
 				// First, show the loading spinner
 				$.mobile.pageLoading();
 				
+				$contMessage.addClass(activityType);
 				$contMessage.html("");
 				
 				//initial data passed via objGlobalResources
 				$thisView.find(".mobi-course-title").html(activity.courseTitle);
-				$thisView.find(".mobi-activity-type").html(activity.object.objectType.replace('-', ' '));
-				
+				//$thisView.find(".mobi-activity-type").html(activity.object.objectType.replace('-', ' '));
+				$thisView.find(".mobi-activity-type").html(activity.target.title);
 				//get the details
 				if(activityType === 'grade') {
 					url = '/me/courses/' + activity.target.courseId + '/gradebookItems/' + activity.target.referenceId +'/grade';
@@ -744,6 +755,44 @@ boolClicked = true;
 					arrGlobalThreads.pop();
 				})
 			});
+			
+			$("#pageClasses").live("pageshow", function(event, ui) { 
+				$().mobyCourseManager( {
+					callbackSuccess: function(arrCourses) {
+						var strHtml = '<select name="select-filter-discussions" id="select-filter-discussions">';
+						strHtml += '<option value="all">All</option>';
+							
+						for (var i = 0; i < arrCourses.length; i++) {
+							//don't filter out courses with no discussions.
+							//var strClass = ".course-" + arrCourses[i].id;
+							//if ($(strClass).length > 0) {
+								strHtml += '<option value="'+arrCourses[i].id+'">' +arrCourses[i].title+ '</option>';
+							//}
+						}
+						
+						strHtml += "</select>";
+						
+						$("#container-filter-discussions").html(strHtml);
+						$("select").selectmenu();
+						$("#select-filter-discussions").change(function() {
+							var strValue = $(this).val();
+							if (strValue === "all") {
+								$(".view-discussion .mobi-listview li").show();
+								$(".view-discussion .mobi-listview .ui-corner-top").removeClass("ui-corner-top");
+								$(".view-discussion .mobi-listview .ui-li-divider:visible:first").addClass("ui-corner-top");
+							} else {
+								var strClass = ".course-" + strValue;
+								var $items = $(strClass);
+									$(".view-discussion .mobi-listview .ui-corner-top").removeClass("ui-corner-top");
+									$(".view-discussion .mobi-listview li").hide();
+									$items.show();
+									$(".view-discussion .mobi-listview .ui-li-divider:visible:first").addClass("ui-corner-top");
+								
+							}
+						})
+					}
+				} );
+			} );
 			
 		
 			$("body").removeClass("ui-loading");
