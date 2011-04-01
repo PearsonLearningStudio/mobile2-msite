@@ -127,6 +127,14 @@
 				<key>StateType</key>
 				<string>DefaultTab</string>
 			</dict>
+			<dict>
+				<key>StateType</key>
+				<string>PreviewTab</string>
+				<key>Title</key>
+				<string>eCollege</string>
+				<key>URL</key>
+				<string>http://localhost/~juan/eCollege/MobileWeb/src/msite/index.html</string>
+			</dict>
 		</array>
 	</dict>
 	<key>com.macrabbit.Espresso.WorkspaceTabs.DisclosureCollapsed</key>
