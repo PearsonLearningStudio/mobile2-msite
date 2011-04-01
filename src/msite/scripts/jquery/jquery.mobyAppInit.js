@@ -101,8 +101,8 @@ boolClicked = true;
 				arrGlobalThreads.push(objInfo);
 				console.log(objInfo);
 			}
-			$('.btn-activity-refresh').live('click', function() {
-				// Fetch the feed and insert into DOM.
+			
+			function getActivities() {
 				$().mobyActivityManager("toHtml", {
 					callbackSuccess: function(objReturn){
 						var strFeedHtml = objReturn.strFeedHtml,
@@ -118,6 +118,11 @@ boolClicked = true;
 						$.mobile.pageLoading(true);
 					}
 				});
+			}
+			
+			$('.btn-activity-refresh').live('click', function() {
+				// Fetch the feed and insert into DOM.
+				getActivities();
 			} );
 			// Initialize click listener for Activity button
 			$(".btn-activity").live('click', function() {
@@ -133,21 +138,7 @@ boolClicked = true;
 					$.mobile.pageLoading();
 					
 					// Fetch the feed and insert into DOM.
-					$().mobyActivityManager("toHtml", {
-						callbackSuccess: function(objReturn){
-							var strFeedHtml = objReturn.strFeedHtml,
-								strHtml = "", activityType, objInfo = {},
-								activityArray = [];
-							
-							strHtml += '<ul data-role="listview" class="mobi-listview">';
-							strHtml += '<li data-role="list-divider">All Activity</li>';
-							strHtml += strFeedHtml;
-							
-							$("#pageHome .view-activity").html(strHtml);
-							$("#pageHome .view-activity .mobi-listview").listview();
-							$.mobile.pageLoading(true);
-						}
-					});
+					getActivities();
 				}
 		
 				//when a user taps on an activity
@@ -362,6 +353,7 @@ boolClicked = true;
 				// First, show the loading spinner
 				$.mobile.pageLoading();
 				
+				$contMessage.addClass(activityType);
 				$contMessage.html("");
 				
 				//initial data passed via objGlobalResources
@@ -763,6 +755,44 @@ boolClicked = true;
 					arrGlobalThreads.pop();
 				})
 			});
+			
+			$("#pageClasses").live("pageshow", function(event, ui) { 
+				$().mobyCourseManager( {
+					callbackSuccess: function(arrCourses) {
+						var strHtml = '<select name="select-filter-discussions" id="select-filter-discussions">';
+						strHtml += '<option value="all">All</option>';
+							
+						for (var i = 0; i < arrCourses.length; i++) {
+							//don't filter out courses with no discussions.
+							//var strClass = ".course-" + arrCourses[i].id;
+							//if ($(strClass).length > 0) {
+								strHtml += '<option value="'+arrCourses[i].id+'">' +arrCourses[i].title+ '</option>';
+							//}
+						}
+						
+						strHtml += "</select>";
+						
+						$("#container-filter-discussions").html(strHtml);
+						$("select").selectmenu();
+						$("#select-filter-discussions").change(function() {
+							var strValue = $(this).val();
+							if (strValue === "all") {
+								$(".view-discussion .mobi-listview li").show();
+								$(".view-discussion .mobi-listview .ui-corner-top").removeClass("ui-corner-top");
+								$(".view-discussion .mobi-listview .ui-li-divider:visible:first").addClass("ui-corner-top");
+							} else {
+								var strClass = ".course-" + strValue;
+								var $items = $(strClass);
+									$(".view-discussion .mobi-listview .ui-corner-top").removeClass("ui-corner-top");
+									$(".view-discussion .mobi-listview li").hide();
+									$items.show();
+									$(".view-discussion .mobi-listview .ui-li-divider:visible:first").addClass("ui-corner-top");
+								
+							}
+						})
+					}
+				} );
+			} );
 			
 		
 			$("body").removeClass("ui-loading");
