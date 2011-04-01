@@ -757,6 +757,7 @@ boolClicked = true;
 			});
 			
 			$("#pageClasses").live("pageshow", function() {
+				$.mobile.pageLoading();
 				var courses = '';
 				$().mobyCourseManager( {
 					callbackSuccess: function(arrCourses) {
@@ -770,9 +771,11 @@ boolClicked = true;
 						} );
 						$('#classes-list').html(courses)
 						$('#classes-list').listview('refresh');
+						$.mobile.pageLoading(true);
 					},
 					callbackError: function(){
 						alert('No courses found');
+						$.mobile.pageLoading(true);
 					}
 				} );
 			} );
