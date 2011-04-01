@@ -101,7 +101,24 @@ boolClicked = true;
 				arrGlobalThreads.push(objInfo);
 				console.log(objInfo);
 			}
-			
+			$('.btn-activity-refresh').live('click', function() {
+				// Fetch the feed and insert into DOM.
+				$().mobyActivityManager("toHtml", {
+					callbackSuccess: function(objReturn){
+						var strFeedHtml = objReturn.strFeedHtml,
+							strHtml = "", activityType, objInfo = {},
+							activityArray = [];
+						
+						strHtml += '<ul data-role="listview" class="mobi-listview">';
+						strHtml += '<li data-role="list-divider">All Activity</li>';
+						strHtml += strFeedHtml;
+						
+						$("#pageHome .view-activity").html(strHtml);
+						$("#pageHome .view-activity .mobi-listview").listview();
+						$.mobile.pageLoading(true);
+					}
+				});
+			} );
 			// Initialize click listener for Activity button
 			$(".btn-activity").live('click', function() {
 				$(".btn-whatsdue").removeClass("ui-btn-active");
@@ -129,44 +146,46 @@ boolClicked = true;
 							$("#pageHome .view-activity").html(strHtml);
 							$("#pageHome .view-activity .mobi-listview").listview();
 							$.mobile.pageLoading(true);
-							$(".listitem-activity").live('click',  function(){
-								arrGlobalActivity =  this.className.match(/\w+[-]*\w+\d+/ig);
-								activityArray = arrGlobalActivity[0].split('_');
-								activityType = activityArray[0];
-								if(activityType === 'thread-topic'){									
-									arrGlobalTopics.push(strCurrentTopic);
-								} else if(activityType === 'thread-post'){						
-									// The user has tapped on a thread.  We need
-									// to display the thread detail page.
-									//First get the discussion response
-									/*$().mobiQueryApi('get', {
-										strUrl: configSettings.apiproxy + '/courses/' + activityArray[1] + '/threadeddiscussions/' +  + '/topics/' + activityArray[2],
-										successHandler: function(jsonResponse){
-											console.log(jsonResponse);
-										},
-										errorHandler: function(){
-											
-										}
-									} ); */
-									//$.mobile.pageLoading();
-									objInfo = {
-										strNewId: activityArray[1] + '-' + activityArray[2],
-										strOldId: -1,
-									//	strAuthorName: $this.find(".mobi-author").text(),
-									//	strTitle: $this.find(".mobi-title").text(),									
-									//	strTotalResponseString: $this.find(".mobi-total-responses").text(),
-									//	strUnreadResponseString: $this.find(".mobi-unread-responses").text(),
-									//	strDescription: $this.find(".mobi-description").data("description")
-									}
-									//responseClickHandler($(this), objInfo);
-									//arrGlobalThreads.push(objInfo);
-									console.log(objInfo);
-								}
-							} );
 						}
 					});
 				}
 		
+				//when a user taps on an activity
+				$(".listitem-activity").live('click',  function(){
+					arrGlobalActivity =  this.className.match(/\w+[-]*\w+\d+/ig);
+					activityArray = arrGlobalActivity[0].split('_');
+					activityType = activityArray[0];
+					if(activityType === 'thread-topic'){									
+						arrGlobalTopics.push(strCurrentTopic);
+					} else if(activityType === 'thread-post'){						
+						// The user has tapped on a thread.  We need
+						// to display the thread detail page.
+						//First get the discussion response
+						/*$().mobiQueryApi('get', {
+							strUrl: configSettings.apiproxy + '/courses/' + activityArray[1] + '/threadeddiscussions/' +  + '/topics/' + activityArray[2],
+							successHandler: function(jsonResponse){
+								console.log(jsonResponse);
+							},
+							errorHandler: function(){
+								
+							}
+						} ); */
+						//$.mobile.pageLoading();
+						objInfo = {
+							strNewId: activityArray[1] + '-' + activityArray[2],
+							strOldId: -1,
+						//	strAuthorName: $this.find(".mobi-author").text(),
+						//	strTitle: $this.find(".mobi-title").text(),									
+						//	strTotalResponseString: $this.find(".mobi-total-responses").text(),
+						//	strUnreadResponseString: $this.find(".mobi-unread-responses").text(),
+						//	strDescription: $this.find(".mobi-description").data("description")
+						}
+						//responseClickHandler($(this), objInfo);
+						//arrGlobalThreads.push(objInfo);
+						console.log(objInfo);
+					}
+				} );
+				
 				// Add scroll event for infinite scroll and positioning bookmark alert div
 				$(window).scroll(function() {
 					
