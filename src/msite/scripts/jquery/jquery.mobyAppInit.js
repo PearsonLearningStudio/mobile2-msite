@@ -756,40 +756,23 @@ boolClicked = true;
 				})
 			});
 			
-			$("#pageClasses").live("pageshow", function(event, ui) { 
+			$("#pageClasses").live("pageshow", function() {
+				var courses = '';
 				$().mobyCourseManager( {
 					callbackSuccess: function(arrCourses) {
-						var strHtml = '<select name="select-filter-discussions" id="select-filter-discussions">';
-						strHtml += '<option value="all">All</option>';
-							
-						for (var i = 0; i < arrCourses.length; i++) {
-							//don't filter out courses with no discussions.
-							//var strClass = ".course-" + arrCourses[i].id;
-							//if ($(strClass).length > 0) {
-								strHtml += '<option value="'+arrCourses[i].id+'">' +arrCourses[i].title+ '</option>';
-							//}
-						}
-						
-						strHtml += "</select>";
-						
-						$("#container-filter-discussions").html(strHtml);
-						$("select").selectmenu();
-						$("#select-filter-discussions").change(function() {
-							var strValue = $(this).val();
-							if (strValue === "all") {
-								$(".view-discussion .mobi-listview li").show();
-								$(".view-discussion .mobi-listview .ui-corner-top").removeClass("ui-corner-top");
-								$(".view-discussion .mobi-listview .ui-li-divider:visible:first").addClass("ui-corner-top");
-							} else {
-								var strClass = ".course-" + strValue;
-								var $items = $(strClass);
-									$(".view-discussion .mobi-listview .ui-corner-top").removeClass("ui-corner-top");
-									$(".view-discussion .mobi-listview li").hide();
-									$items.show();
-									$(".view-discussion .mobi-listview .ui-li-divider:visible:first").addClass("ui-corner-top");
-								
-							}
-						})
+						$(arrCourses).each(function() { 
+							courses +='<li class="course">';
+							courses +='<a href="/course.html" class="listitem-topic">';
+							courses +='<span class="mobi-title">' + this.title + '</span>';
+							courses +='<span class="mobi-your-responses">' + this.number + '</span>';
+							courses +='</a>';
+							courses +='</li>';
+						} );
+						$('#classes-list').html(courses)
+						$('#classes-list').listview('refresh');
+					},
+					callbackError: function(){
+						alert('No courses found');
 					}
 				} );
 			} );
