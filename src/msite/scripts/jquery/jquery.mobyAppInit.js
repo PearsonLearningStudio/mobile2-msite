@@ -41,14 +41,17 @@ boolClicked = true;
 			// Force a refresh in case this is a new login
 			$().mobyCourseManager();
 			
-			$("#pageDiscuss .button-menu, #pageHome .button-menu").live("click", function() {
+			// old and busted
+			/*
+			$(".button-menu").bind("click", function() {
 				$(this).siblings("ul").slideToggle(0);
 				$(this).toggleClass("menu-active");
 				return false;
 			});
-		
-		
-			$(".button-menu").bind("click", function() {
+			*/
+			
+			// new hotness
+			$("#pageDiscuss .button-menu, #pageHome .button-menu, #pageDiscussionThreadDetail .button-menu, #pageCourseDetail .button-menu, #pageClasses .button-menu, #pageActivityDetail .button-menu, #pageActivitiesViewAll .button-menu, #pageDiscussionThreadDetail2 .button-menu, #pageDiscussionTopicDetail .button-menu, #pageActivityDetail .button-menu, #pageDropbox .button-menu, #pageGradeBook .button-menu, #pagePeople .button-menu, #pageProfile .button-menu").live("click", function() {
 				$(this).siblings("ul").slideToggle(0);
 				$(this).toggleClass("menu-active");
 				return false;
