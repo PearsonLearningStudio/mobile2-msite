@@ -756,7 +756,7 @@ boolClicked = true;
 				})
 			});
 			
-			$("#pageClasses").live("pageshow", function() { localStorage.removeItem('courses');
+			$("#pageClasses").live("pageshow", function() { //localStorage.removeItem('courses');
 				$.mobile.pageLoading();
 				var courses = '', i,
 					$classesList;
@@ -787,26 +787,42 @@ boolClicked = true;
 			} );
 			
 			$("#pageCourseDetail").live("pageshow", function() {
-				var $this = $(this), info, instructor,
-				$contInfo = $this.find('.container-topicinfo');
+				var $this = $(this), info, instructor, announcement, 
+				$contInfo = $this.find('.container-topicinfo'),
+				$contAnn = $this.find('.container-announcement');
 				$.mobile.pageLoading();
 				$contInfo.empty();
-				//console.log('foo', varGlobalCourse);
+				$contAnn.empty();
 				$().mobiQueryApi('get', {
 					strUrl: configSettings.apiproxy + '/courses/' + varGlobalCourse.id + '/instructors',
 					successHandler: function(jsonResponse){
-						//console.log(jsonResponse);
 						instructor = jsonResponse.instructors[0];
 						info = '<p class="mobi-course-title">' + varGlobalCourse.number + '</p>';
 						info += '<p class="mobi-activity-type">' + varGlobalCourse.title + '</p>';
-		  				info += '<p class="mobi-instructor-name">' + instructor.firstName + ' ' + instructor.lastName + '</p>';
+						if(instructor) {
+		  					info += '<p class="mobi-instructor-name">' + instructor.firstName + ' ' + instructor.lastName + '</p>';
+	  					}
 		  				$contInfo.html(info);
-						$.mobile.pageLoading(true);
 					},
 					errorHandler: function(){
 						$.mobile.pageLoading(true);
 					}
 				} ); 
+				$().mobiQueryApi('get', { 
+					strUrl: configSettings.apiproxy + '/courses/' + varGlobalCourse.id + '/announcements',
+					successHandler: function(jsonResponse){
+						announcement = jsonResponse.announcements[0];
+						if(announcement) {							
+							info = '<h5 class="announcement-subject">' + announcement.subject + '</h5>';
+							info += '<p class="announcement-message">' + announcement.text + '</p>';
+							$contAnn.html(info);
+						}
+						$.mobile.pageLoading(true);
+					},
+					errorHandler: function(){
+						$.mobile.pageLoading(true);
+					}
+				} );
 				
 				//remove the current course from the global var when clicking on the back button
 				$("#pageCourseDetail #back-classes").unbind(".myclick").bind("click.myclick", function() {
