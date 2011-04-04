@@ -29,7 +29,7 @@ boolClicked = true;
 			});
 			
 			// Logout button
-			$(".menu-logout").bind("click", function() {
+			$(".menu-logout").live("click", function() {
 				$.mobile.pageLoading();
 				sessionManager.logOut();
 				createCookie("access_grant", "", -1);
