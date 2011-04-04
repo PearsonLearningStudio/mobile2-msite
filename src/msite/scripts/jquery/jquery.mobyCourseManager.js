@@ -56,7 +56,7 @@
 				if (boolRefresh || settings.boolForceRefresh) {
 					$().mobiQueryApi("get", {
 						strUrl: configSettings.apiproxy + "/me/courses",
-						successHandler: function(jsonResponse, intTransactionId){ console.log(jsonResponse);
+						successHandler: function(jsonResponse, intTransactionId){ 
 							// Go through the course list and get the course info for each
 							for (var i = 0; i < jsonResponse.courses.length; i ++) {
 								$().mobiQueryApi("get", {
