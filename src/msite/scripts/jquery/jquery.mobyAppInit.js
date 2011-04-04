@@ -29,7 +29,7 @@ boolClicked = true;
 			});
 			
 			// Logout button
-			$(".menu-logout").live("click", function() {
+			$(".menu-logout, #profile-logout").live("click", function() { 
 				$.mobile.pageLoading();
 				sessionManager.logOut();
 				createCookie("access_grant", "", -1);
@@ -834,7 +834,18 @@ boolClicked = true;
 			} ) ;
 			
 			$("#pageProfile").live("pageshow", function() {
+				var user, $contInfo = $(this).find('.container-topicinfo');
 				$.mobile.pageLoading();
+				$().mobiQueryApi('get', {
+					strUrl: configSettings.apiproxy + '/me',
+					successHandler: function(jsonResponse){
+		  				$contInfo.html('<p class="mobi-student-name">' + jsonResponse.me.firstName + ' ' + jsonResponse.me.lastName + '</p>');
+		  				$.mobile.pageLoading(true);
+					},
+					errorHandler: function(){
+						$.mobile.pageLoading(true);
+					}
+				} );
 				getClassList($(this));
 			} );
 			
