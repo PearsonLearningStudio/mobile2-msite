@@ -23,12 +23,16 @@ boolClicked = true;
 			}
 			
 			// Be sure the dropdown menu is hidden each time we change a page
-			$(document).live("pagebeforeshow", function() {
+			$(".container-page").live("pagebeforeshow pagebeforehide", function() {
+				$.mobile.pageLoading();
+			});
+			
+			$(".container-page").live("pagebeforeshow", function() {
 				$("div.layout-header ul").hide();
 				$(".layout-header .button-menu").removeClass("menu-active");
 			});
 			
-			// Logout button
+			// Bind event listener to logout menu item
 			$(".menu-logout, #profile-logout").live("click", function() { 
 				$.mobile.pageLoading();
 				sessionManager.logOut();
@@ -41,17 +45,8 @@ boolClicked = true;
 			// Force a refresh in case this is a new login
 			$().mobyCourseManager();
 			
-			// old and busted
-			/*
-			$(".button-menu").bind("click", function() {
-				$(this).siblings("ul").slideToggle(0);
-				$(this).toggleClass("menu-active");
-				return false;
-			});
-			*/
-			
-			// new hotness
-			$("#pageDiscuss .button-menu, #pageHome .button-menu, #pageDiscussionThreadDetail .button-menu, #pageCourseDetail .button-menu, #pageClasses .button-menu, #pageActivityDetail .button-menu, #pageActivitiesViewAll .button-menu, #pageDiscussionThreadDetail2 .button-menu, #pageDiscussionTopicDetail .button-menu, #pageActivityDetail .button-menu, #pageDropbox .button-menu, #pageGradeBook .button-menu, #pagePeople .button-menu, #pageProfile .button-menu").live("click", function() {
+			// bind listener to menu button
+			$(".container-page .button-menu").live("click", function() {
 				$(this).siblings("ul").slideToggle(0);
 				$(this).toggleClass("menu-active");
 				return false;
@@ -493,6 +488,9 @@ boolClicked = true;
 				// First, show the loading spinner
 				$.mobile.pageLoading();
 				
+				// Next, empty out the detail info
+				$(".header-disucssion-detail .mobi-title, .container-topicinfo .mobi-title, .container-topicinfo .mobi-author, .container-topicinfo .mobi-total-responses, .container-topicinfo .mobi-unread-responses, .container-message").html("");
+				
 				// What topic should we show?  This information should be contained in the
 				// arrGlobalTopics array.  If it isn't, we should go back.
 				if (arrGlobalTopics.length === 0) {
@@ -639,6 +637,9 @@ boolClicked = true;
 					$responseInput = $thisView.find("#textarea-response");					
 					
 				$.mobile.pageLoading();
+				// Next, empty out the detail info
+				$(".header-disucssion-detail .mobi-title, .container-topicinfo .mobi-title, .container-topicinfo .mobi-author, .container-topicinfo .mobi-total-responses, .container-topicinfo .mobi-unread-responses, .container-message").html("");
+				
 				// What thread should we show?  This information should be contained in the
 				// arrGlobalThreads array.  If it isn't, we should go back.
 				if (arrGlobalThreads.length === 0) {

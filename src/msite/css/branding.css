@@ -186,6 +186,11 @@ div.layout-header .menu-active {
 .layout-header li {
 	background: #FFF;
 	border: none;
+	text-shadow: none;
+	color: #333;
+}
+.layout-header ul li a {
+	text-shadow: none;
 }
 
 .layout-header li.home .ui-btn-text {
@@ -211,6 +216,9 @@ div.layout-header .menu-active {
 	line-height: 26px;
 	padding: 0 0 0 32px;
 }
+.layout-header ul.ui-listview li.ui-btn .ui-btn-inner .ui-btn-text .ui-link-inherit {
+	color: #000;
+}
 
 .layout-header li.ui-btn-hover-c,
 .layout-header li.ui-btn-up-c,
@@ -219,11 +227,11 @@ div.layout-header .menu-active {
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
 	box-shadow: none;
+	text-shadow: none;
 }
-
 .layout-header li.ui-btn-hover-c .ui-btn-text a,
 .layout-header li.ui-btn-down-c .ui-btn-text a {
-	color: #333;
+	color: #000;
 	text-shadow: none;
 }
 
@@ -523,6 +531,10 @@ div.layout-header .menu-active {
 .mobi-listview li .mobi-title,
 .activity-info-header .mobi-title {
   color:  #306CA0;
+}
+.mobi-listview li .mobi-author,
+.mobi-listview li .mobi-total-responses {
+	color: #222;
 }
 
 .topic-header {

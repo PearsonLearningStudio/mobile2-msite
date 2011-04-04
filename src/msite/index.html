@@ -22,7 +22,7 @@
 		<script type="text/javascript" src="scripts/jquery/jquery.mobyCacheManager.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.mobyCourseManager.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.mobyDiscussionManager.js"></script>
-		<script type="text/javascript" src="scripts/jquery/jquery.mobyAppInit.js?x=1"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery.mobyAppInit.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/AjaxManager.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/VariableValidator.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/AjaxRequestHeader.js"></script>
@@ -59,7 +59,7 @@ $(document).ready(function() {
 	</head>
 	<body class="ui-loading">
 		
-		<div data-role="page" id="pageHome">
+		<div data-role="page" id="pageHome" class="container-page">
 
 			<div class="layout-header">
 				<p class="branding-header-logo">Strata University</p>
@@ -67,8 +67,8 @@ $(document).ready(function() {
 				<div class="clear"></div>
 				<ul data-role="listview" data-inset="true">
 					<li class="home"><a href="#">Home</a></li>
-					<li class="my_profile"><a href="#pageProfile" data-transition="slide">My Profile</a></li>
-					<li class="settings"><a href="#">Settings</a></li>
+					<li class="my_profile"><a href="/profile.html" data-transition="slide">My Profile</a></li>
+					<li class="settings"><a href="/settings.html">Settings</a></li>
 					<li class="signout"><a href="#" class="menu-logout">Logout</a></li>
 				</ul>
 				<div class="clear"></div>
