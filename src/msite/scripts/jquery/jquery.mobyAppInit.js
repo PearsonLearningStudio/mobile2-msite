@@ -756,21 +756,18 @@ boolClicked = true;
 				})
 			});
 			
-			$("#pageClasses").live("pageshow", function() { //localStorage.removeItem('courses');
-				$.mobile.pageLoading();
-				var courses = '', i,
-					$classesList;
+			function getClassList($this) {
+				var courses = '', i, $classesList = $this.find('.view-courses .mobi-listview');
 				$().mobyCourseManager( {
 					callbackSuccess: function(arrCourses) { 
 						$(arrCourses).each(function(i) { 
 							courses +='<li class="course">';
 							courses +='<a id="' + i + '"  href="/course.html" class="listitem-course">';
 							courses +='<span class="mobi-title">' + this.title + '</span>';
-							courses +='<span class="mobi-your-responses">' + this.number + '</span>';
+							courses +='<span class="mobi-your-course">' + this.number + '</span>';
 							courses +='</a>';
 							courses +='</li>';
 						} );
-						$classesList = $('#classes-list');
 						$classesList.html(courses);
 						$classesList.listview('refresh');
 						$classesList.find('.listitem-course').click(function() {
@@ -784,6 +781,11 @@ boolClicked = true;
 						$.mobile.pageLoading(true);
 					}
 				} );
+			}
+			
+			$("#pageClasses").live("pageshow", function() { //localStorage.removeItem('courses');
+				$.mobile.pageLoading();
+				getClassList($(this));
 			} );
 			
 			$("#pageCourseDetail").live("pageshow", function() {
@@ -828,10 +830,14 @@ boolClicked = true;
 				$("#pageCourseDetail #back-classes").unbind(".myclick").bind("click.myclick", function() {
 					$.mobile.pageLoading();
 					varGlobalCourse = '';
-				})
+				} );
 			} ) ;
 			
-		
+			$("#pageProfile").live("pageshow", function() {
+				$.mobile.pageLoading();
+				getClassList($(this));
+			} );
+			
 			$("body").removeClass("ui-loading");
 
 		},
