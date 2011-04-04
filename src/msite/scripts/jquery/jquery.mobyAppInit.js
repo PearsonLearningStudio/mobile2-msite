@@ -23,7 +23,7 @@ boolClicked = true;
 			}
 			
 			// Be sure the dropdown menu is hidden each time we change a page
-			$(document).bind("pagebeforeshow", function() {
+			$(document).live("pagebeforeshow", function() {
 				$("div.layout-header ul").hide();
 				$(".layout-header .button-menu").removeClass("menu-active");
 			});
@@ -41,8 +41,14 @@ boolClicked = true;
 			// Force a refresh in case this is a new login
 			$().mobyCourseManager();
 			
+			$("#pageDiscuss .button-menu, #pageHome .button-menu").live("click", function() {
+				$(this).siblings("ul").slideToggle(0);
+				$(this).toggleClass("menu-active");
+				return false;
+			});
 		
-			$(".layout-header .button-menu").live("click", function() {
+		
+			$(".button-menu").bind("click", function() {
 				$(this).siblings("ul").slideToggle(0);
 				$(this).toggleClass("menu-active");
 				return false;
