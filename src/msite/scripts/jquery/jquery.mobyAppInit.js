@@ -173,7 +173,7 @@ boolClicked = true;
 						}
 						//responseClickHandler($(this), objInfo);
 						//arrGlobalThreads.push(objInfo);
-						console.log(objInfo);
+						//console.log(objInfo);
 					}
 				} );
 				
@@ -756,21 +756,27 @@ boolClicked = true;
 				})
 			});
 			
-			$("#pageClasses").live("pageshow", function() {
+			$("#pageClasses").live("pageshow", function() { localStorage.removeItem('courses');
 				$.mobile.pageLoading();
-				var courses = '';
+				var courses = '', i,
+					$classesList;
 				$().mobyCourseManager( {
-					callbackSuccess: function(arrCourses) {
-						$(arrCourses).each(function() { 
+					callbackSuccess: function(arrCourses) { 
+						$(arrCourses).each(function(i) { 
 							courses +='<li class="course">';
-							courses +='<a href="/course.html" class="listitem-topic">';
+							courses +='<a id="' + i + '"  href="/course.html" class="listitem-course">';
 							courses +='<span class="mobi-title">' + this.title + '</span>';
 							courses +='<span class="mobi-your-responses">' + this.number + '</span>';
 							courses +='</a>';
 							courses +='</li>';
 						} );
-						$('#classes-list').html(courses)
-						$('#classes-list').listview('refresh');
+						$classesList = $('#classes-list');
+						$classesList.html(courses);
+						$classesList.listview('refresh');
+						$classesList.find('.listitem-course').click(function() {
+							//add the current course data into the arrGlobalCourse array for #pageCourseDetail
+							varGlobalCourse = arrCourses[this.id];
+						} );
 						$.mobile.pageLoading(true);
 					},
 					callbackError: function(){
@@ -779,6 +785,35 @@ boolClicked = true;
 					}
 				} );
 			} );
+			
+			$("#pageCourseDetail").live("pageshow", function() {
+				var $this = $(this), info, instructor,
+				$contInfo = $this.find('.container-topicinfo');
+				$.mobile.pageLoading();
+				$contInfo.empty();
+				//console.log('foo', varGlobalCourse);
+				$().mobiQueryApi('get', {
+					strUrl: configSettings.apiproxy + '/courses/' + varGlobalCourse.id + '/instructors',
+					successHandler: function(jsonResponse){
+						//console.log(jsonResponse);
+						instructor = jsonResponse.instructors[0];
+						info = '<p class="mobi-course-title">' + varGlobalCourse.number + '</p>';
+						info += '<p class="mobi-activity-type">' + varGlobalCourse.title + '</p>';
+		  				info += '<p class="mobi-instructor-name">' + instructor.firstName + ' ' + instructor.lastName + '</p>';
+		  				$contInfo.html(info);
+						$.mobile.pageLoading(true);
+					},
+					errorHandler: function(){
+						$.mobile.pageLoading(true);
+					}
+				} ); 
+				
+				//remove the current course from the global var when clicking on the back button
+				$("#pageCourseDetail #back-classes").unbind(".myclick").bind("click.myclick", function() {
+					$.mobile.pageLoading();
+					varGlobalCourse = '';
+				})
+			} ) ;
 			
 		
 			$("body").removeClass("ui-loading");

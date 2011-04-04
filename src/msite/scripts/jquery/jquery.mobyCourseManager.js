@@ -13,6 +13,7 @@
  * 		callbackSuccess:  The callback to execute upon successful fetching of the course information array
  * 		callbackError:  The callback to execute if an error occurs.
  */
+ var varGlobalCourse;
 
 (function($) {
 	var methods = {
@@ -55,7 +56,7 @@
 				if (boolRefresh || settings.boolForceRefresh) {
 					$().mobiQueryApi("get", {
 						strUrl: configSettings.apiproxy + "/me/courses",
-						successHandler: function(jsonResponse, intTransactionId){
+						successHandler: function(jsonResponse, intTransactionId){ console.log(jsonResponse);
 							// Go through the course list and get the course info for each
 							for (var i = 0; i < jsonResponse.courses.length; i ++) {
 								$().mobiQueryApi("get", {
@@ -134,10 +135,6 @@
 			}
 		}
 	}
-	
-	
-
-	
 	
 	$.fn.mobyCourseManager = function(method) {
 		// Method calling logic
