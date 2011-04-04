@@ -99,7 +99,6 @@ boolClicked = true;
 					$.extend(objInfo, objectInfo);
 				}
 				arrGlobalThreads.push(objInfo);
-				console.log(objInfo);
 			}
 			
 			function getActivities() {
