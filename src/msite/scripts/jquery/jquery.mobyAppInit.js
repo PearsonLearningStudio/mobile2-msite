@@ -88,8 +88,7 @@ boolClicked = true;
 								"markedAsRead": true
 							}
 						} ),
-						successHandler: function(){
-						},
+						successHandler: function(){},
 						errorHandler: function(){}
 					} );
 				}
@@ -443,7 +442,8 @@ boolClicked = true;
 								reset();
 								//get a new set of data, or just add the message to the list...
 								response = jsonResponse.responses[0];
-								if( $thisView[0].id === 'pageDiscussionTopicDetail' || $thisView[0].id === 'pageDiscussionThreadDetail' ) { 
+								
+								if( $thisView[0].id === 'pageDiscussionTopicDetail' || $thisView[0].id === 'pageDiscussionThreadDetail2' ) { 
 									href = '/discussionthreaddetail.html';
 								} else {
 									href = '/discussionthreaddetail2.html';
@@ -592,7 +592,7 @@ boolClicked = true;
 											$theseThreads.find(".mobi-listview").listview();
 											
 											// Tap event listener
-											$(".listitem-response").live('click',function() {
+											$(".listitem-response").live('click', function() {
 												// The user has tapped on a thread.  We need
 												// to display the thread detail page.
 												//moved click handler to external function to remove 
