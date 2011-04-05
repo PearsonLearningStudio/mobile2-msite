@@ -34,7 +34,9 @@ var arrGlobalActivity = [],
 				$.extend( settings, options );
 			}
 			// Internal function to create the HTML from an Activity Feed json object
-			var createHtml = function (objFeed, arrCourses) { //(objFeed);
+			var createHtml = function (objFeed, arrCourses) {
+				// empty the global resource object
+				objGlobalResources = {};
 				// Create the HTML from the data
 				var strHtml = "",
 					dateNow = Date.today(),
