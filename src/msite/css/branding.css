@@ -10,11 +10,12 @@
   margin: 0 auto;
 }
 
-#loginPage {
+#loginPage, #registerPage {
   background: url(../images/background_signon.png) left top no-repeat;
 }
 
-#loginForm .authFields ul {
+#loginForm .authFields ul,
+#registerPage .authFields ul {
   background-image: -moz-linear-gradient(top, 
   						rgba(255,255,255,.9), 
   						rgba(255,255,255,.8));
@@ -24,27 +25,29 @@
   	-msfilter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='rgba(255,255,255,.9)', EndColorStr='rgba(255,255,255,.8)";
 }
 
-#loginForm .authFields ul li {
+#loginForm .authFields ul li,
+#registerPage .authFields ul li {
   background: transparent;
   border: none;
 }
 
-#loginForm .authFields ul li label {
+#loginForm .authFields ul li label,
+#registerPage .authFields ul li label {
   color: #354394;
+  margin: 0px;
+  padding: 0px;
+  padding-left: 2px;
   text-shadow: #FFFFFF 0 1px 0;
   font-weight: bold;
   float: left;
   line-height: 40px;
-  text-align: right;
-  width: 20%;
-  padding: 0 10px 0 0;
 }
 
 #loginForm .authFields ul li input[type=text],
-#loginForm .authFields ul li input[type=password] {
-  float: left;
+#loginForm .authFields ul li input[type=password],
+#registerPage .authFields ul li input[type=text],
+#registerPage .authFields ul li input[type=password] {
   border: solid 1px #CCC;
-  width: 60%;
 }
 
 #loginForm .authFields ul li .ui-checkbox input[type=checkbox] {
@@ -54,19 +57,14 @@
 #loginForm .authFields ul li .ui-checkbox label {
   background: transparent;
   border: none;
-  width: 50%;
   margin: -30px 0 0 0;
   color: #333;
 }
 
 #loginForm .authFields ul li .ui-checkbox label .ui-btn-text {
-  line-height: 48px;
-  height: 36px;
-  padding: 2px 0 0 10px;
-  width: 100%;
-  display: inline-block;
-  text-align: left;
-  float: left;
+    padding-left: 15px;
+    position: relative;
+    top: 7px;
 }
 
 #loginForm .authFields ul li .ui-checkbox label .ui-icon-checkbox-on,
@@ -86,7 +84,8 @@
 
 /* Sign On Button */
 
-#loginFormContainer .ui-btn-up-c {
+#loginFormContainer .ui-btn-up-c,
+#registerPage .ui-btn-up-c {
 	border: none;
 	background: 			#364395;
 	font-weight: bold;
@@ -103,7 +102,8 @@
 	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#364395', EndColorStr='#212B5E')";
 }
 
-#loginFormContainer a.ui-link-inherit {
+#loginFormContainer a.ui-link-inherit,
+#registerPage a.ui-link-inherit {
 	color: 					#FFFFFF;
 }
 
@@ -132,6 +132,21 @@
 
 #loginPage .container-footer .ui-link{
   color: #FFF;
+}
+
+/* Registration Page */
+#registerPage h2 {
+	color: #fff;
+	text-shadow: 0 -1px 0 #000;
+}
+#registerPage p {
+	text-shadow: none;
+	color: #fff;
+	font-weight: bold;
+}
+
+#registerPage ul.steps {
+	background-color: #ccc;
 }
 
 /* Header */
