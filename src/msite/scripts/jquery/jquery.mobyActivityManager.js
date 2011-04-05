@@ -92,7 +92,7 @@ var arrGlobalActivity = [],
 						strHtml += GetSummary(item);
 						strHtml += "</span>";
 					} else if (type === "thread-post") {
-						strHtml += '<li class="' + type +'"><a class="listitem-activity thread-post_' + item.object.courseId + '_'  + item.object.referenceId + '" href="/discussionthreaddetail.html">';
+						strHtml += '<li class="' + type +'"><a class="listitem-activity thread-post_' + item.object.courseId + '_'  + item.target.referenceId + '_' + item.object.referenceId + '" href="/discussionthreaddetail.html">';
 						strHtml += '<span class="mobi-title">';
 						strHtml += "Re: " + item.object.title;
 						strHtml += "</span><span class='mobi-summary'>";
