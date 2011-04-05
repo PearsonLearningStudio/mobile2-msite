@@ -19,6 +19,56 @@ var arrGlobalThreads = [];
 (function($) {
 	var methods = {
 		
+		getSingleResponse: function(responseId, objThread, options) {
+			var settings = {
+					callbackSuccess: function() {
+						
+					},
+					callbackError: function() {
+						
+					}
+				},
+				respObj, response, counts, author, objInfo = {};
+			if(options) {
+				$.extend(settings, options)
+			}
+			if(objThread.boolFromActivity) {
+				$.mobyProfileManager( {
+					callbackSuccess: function(user) { 
+						$().mobiQueryApi('get', {
+							strUrl: configSettings.apiproxy + "/me/userresponses/" + user.id + '-' + responseId,
+							successHandler: function(jsonResponse){
+								respObj = jsonResponse.userResponses[0];
+								response = respObj.response;
+								counts =respObj.childResponseCounts;
+								author = response.author;
+								
+								strTotalResponsesText = "";
+								if (uResponses[i].childResponseCounts.totalResponseCount === 0) {
+									strTotalResponsesText = "No responses";
+								} else if (uResponses[i].childResponseCounts.totalResponseCount === 1) {
+									strTotalResponsesText = "1 response";
+								} else {
+									strTotalResponsesText = uResponses[i].childResponseCounts.totalResponseCount + " total responses";
+								}
+								
+								objInfo = {
+									strAuthorName: author.firstName + ' ' + author.lastName,
+									strTitle: response.title,									
+									strTotalResponseString: counts.totalResponseCount,
+									strUnreadResponseString: counts.unreadResponseCount,
+									strDescription: response.description							
+								}
+								settings.callbackSuccess(objInfo);
+							}
+						} ); 
+					} 
+				} );
+			} else {
+				settings.callbackSuccess(objInfo);
+			}
+		},
+		
 		getUserTopics : function(options) {
 			var settings = {
 				callbackSuccess: function(objJson) {

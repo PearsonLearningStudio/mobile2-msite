@@ -113,7 +113,8 @@ boolClicked = true;
 					callbackSuccess: function(objReturn){
 						var strFeedHtml = objReturn.strFeedHtml,
 							strHtml = "", activityType, objInfo = {},
-							activityArray = [];
+							activityArray = [], userId, response, 
+							respObj, author, counts;
 						
 						strHtml += '<ul data-role="listview" class="mobi-listview">';
 						strHtml += '<li data-role="list-divider">All Activity</li>';
@@ -148,7 +149,8 @@ boolClicked = true;
 				}
 		
 				//when a user taps on an activity
-				$(".listitem-activity").live('click',  function(){
+				$(".listitem-activity").live('click',  function(e){
+					e.preventDefault();
 					arrGlobalActivity =  this.className.match(/\w+[-]*\w+\d+/ig);
 					activityArray = arrGlobalActivity[0].split('_');
 					activityType = activityArray[0];
@@ -157,30 +159,13 @@ boolClicked = true;
 					} else if(activityType === 'thread-post'){						
 						// The user has tapped on a thread.  We need
 						// to display the thread detail page.
-						//First get the discussion response
-						$().mobiQueryApi('get', {
-							//strUrl: configSettings.apiproxy + '/courses/' + activityArray[1] + '/threadeddiscussions/' +  + '/topics/' + activityArray[2] + '/responses/',
-							strUrl: configSettings.apiproxy + "/me/userresponses/" + activityArray[3],
-							successHandler: function(jsonResponse){
-								console.log(jsonResponse);
-							},
-							errorHandler: function(){
-								
-							}
-						} ); 
-						//$.mobile.pageLoading();
+						// pass the responseId 
 						objInfo = {
+							boolFromActivity: true,
 							strNewId: activityArray[1] + '-' + activityArray[2],
-							strOldId: -1,
-						//	strAuthorName: $this.find(".mobi-author").text(),
-						//	strTitle: $this.find(".mobi-title").text(),									
-						//	strTotalResponseString: $this.find(".mobi-total-responses").text(),
-						//	strUnreadResponseString: $this.find(".mobi-unread-responses").text(),
-						//	strDescription: $this.find(".mobi-description").data("description")
+							strOldId: -1
 						}
-						//responseClickHandler($(this), objInfo);
-						//arrGlobalThreads.push(objInfo);
-						//console.log(objInfo); 
+						arrGlobalThreads.push(objInfo);
 					} 
 				} ); 
 				
@@ -634,113 +619,124 @@ boolClicked = true;
 					iconClass, strCurrentUrl, strHtml, objInfo,
 					intLast = arrGlobalThreads.length -1, 
 					objThread = arrGlobalThreads[intLast],
-					numResponses = objThread.strTotalResponseString,
 					objThreadId = objThread.strNewId.split("-")[1] ,
+					numResponses,					
 					$thisMessage = $thisView.find(".container-discussion-detail .container-message"),
-					$responseInput = $thisView.find("#textarea-response");					
-					
+					$responseInput = $thisView.find("#textarea-response");	
 				$.mobile.pageLoading();
-				// Next, empty out the detail info
-				$(".header-disucssion-detail .mobi-title, .container-topicinfo .mobi-title, .container-topicinfo .mobi-author, .container-topicinfo .mobi-total-responses, .container-topicinfo .mobi-unread-responses, .container-message").html("");
-				
-				// What thread should we show?  This information should be contained in the
-				// arrGlobalThreads array.  If it isn't, we should go back.
-				if (arrGlobalThreads.length === 0) {
-					// Nothing left to show in the stack.  Go back to topic detail page.
-					$.mobile.changePage("#pageDiscussionTopicDetail");
-				}
-				$thisView.find(".container-discussion-detail .container-message").html("");
-				
-				//set number of responses class
-				if( numResponses.match( /no responses/i ) ) {
-					iconClass = 'no-responses';
-				} else {
-					match = numResponses.match(/\d+/);
-					if( match >= 10){
-						iconClass = 'hot-topic';
-					} else {
-						iconClass = 'responses';
-					}
-				}					
-				$thisView.find('.container-topicinfo').addClass(iconClass);
-				// Fill in the thread detail information
-				$thisView.find(".container-discussion-detail .container-topicinfo .mobi-title").text(objThread.strTitle);
-				$thisView.find(".container-discussion-detail .container-topicinfo .mobi-author").text(objThread.strAuthorName);
-				$thisView.find(".container-discussion-detail .container-topicinfo .mobi-total-responses").text(objThread.strTotalResponseString);
-				$thisView.find(".container-discussion-detail .container-topicinfo .mobi-date").text(objThread.strDate);
-
-				$thisView.find(".container-discussion-detail .container-topicinfo .mobi-unread-responses").text(objThread.strUnreadResponseString);
-				if (objThread.strUnreadResponseString === "") {
-					$thisView.find(".container-discussion-detail .container-topicinfo .mobi-unread-responses").hide();
-				}
-				
-				// Quickly add 4 lines of text to the div to get the height.
-				intMinHeight = $thisMessage.addClass("container-message-open").html("<p>Lorem<br>Ipsum<br>dolor<br>sit</p>").height();
-				$thisMessage.empty().html(objThread.strDescription);
-				// if the message is higher than 4 lines, we must add the button, attach the click listener, and collapse the div
-				if ($thisMessage.height() > intMinHeight) {
-					$button = $('<div class="layout-button-expand">&nbsp;</div>');
-					$thisMessage.prepend($button);
-					$("div.layout-button-expand").click(function() {
-						$this = $(this);
-						$this.parents(".container-message").toggleClass("container-message-open");
-					})
-					$thisMessage.toggleClass("container-message-open");
-				}
-										
-				// Get any responses in the thread
-				$theseThreads = $thisView.find(".container-threads");				
-				$theseThreads.empty();
-				
-				//insert the discussion reply input and add event handling
-				discussionReply( $thisView, $thisView.find(".container-discussion-detail .container-topicinfo .mobi-title").text(), 'responses', objThreadId );
-				strCurrentUrl = configSettings.apiproxy + "/me/responses/" + objThreadId + "/userresponses";
-				$().mobiQueryApi("get", {
-					strUrl: strCurrentUrl,
-					successHandler: function(jsonResponse, intTransactionId) {
-						if (jsonResponse.userResponses.length > 0) {
-							$().mobyDiscussionManager("userResponsesToHtml", {
-								objUserResponses: jsonResponse,
-								strUrl: $thisView[0].id === 'pageDiscussionThreadDetail' ? '/discussionthreaddetail2.html' : "/discussionthreaddetail.html",
-								callbackSuccess: function(strReturnHtml) {
-									strHtml = '<ul data-role="listview" data-inset="true" class="mobi-listview">';
-									strHtml += strReturnHtml;
-									strHtml += "</ul>"
-									$theseThreads.html(strHtml);
-									// Hide the full description HTML in a data object
-									$(".mobi-description").each(function() {
-										$this = $(this);
-										strHtml = $(this).html();
-										$this.data("description", strHtml);
-										$this.empty();
-									} );
-									$theseThreads.find(".mobi-listview").listview();
-									$.mobile.pageLoading(true);
-									// Tap event listener
-									$(".listitem-response").click(function() {
-										// The user has tapped on a thread.  We need
-										// to display the thread detail page.
-										//moved click handler to external function to remove 
-										//duplication from #pageDiscussionTopicDetail and 
-										//discussionThreadDetail
-										responseClickHandler($(this));
-									} );
-								},
-								callbackError: function() {
-									alert("Unable to create HTML for response list.");
+				// get a single response. will simply return if single response is from the 
+				// discussion page where all the info was already passed in
+				$().mobyDiscussionManager('getSingleResponse', objThreadId, objThread, {
+					callbackSuccess: function(objInfo) {
+						$.extend(objThread, objInfo);
+						console.log('foo', objThread);
+						numResponses = objThread.strTotalResponseString;
+						// Next, empty out the detail info
+						$(".header-disucssion-detail .mobi-title, .container-topicinfo .mobi-title, .container-topicinfo .mobi-author, .container-topicinfo .mobi-total-responses, .container-topicinfo .mobi-unread-responses, .container-message").html("");
+						
+						// What thread should we show?  This information should be contained in the
+						// arrGlobalThreads array.  If it isn't, we should go back.
+						if (arrGlobalThreads.length === 0) {
+							// Nothing left to show in the stack.  Go back to topic detail page.
+							$.mobile.changePage("#pageDiscussionTopicDetail");
+						}
+						$thisView.find(".container-discussion-detail .container-message").html("");
+						
+						//set number of responses class
+						if( typeof numResponses === 'number' ) {
+							
+						}
+						if( numResponses.match( /no responses/i ) ) {
+							iconClass = 'no-responses';
+						} else {
+							match = numResponses.match(/\d+/);
+							if( match >= 10){
+								iconClass = 'hot-topic';
+							} else {
+								iconClass = 'responses';
+							}
+						}					
+						$thisView.find('.container-topicinfo').addClass(iconClass);
+						// Fill in the thread detail information
+						$thisView.find(".container-discussion-detail .container-topicinfo .mobi-title").text(objThread.strTitle);
+						$thisView.find(".container-discussion-detail .container-topicinfo .mobi-author").text(objThread.strAuthorName);
+						$thisView.find(".container-discussion-detail .container-topicinfo .mobi-total-responses").text(objThread.strTotalResponseString);
+						$thisView.find(".container-discussion-detail .container-topicinfo .mobi-date").text(objThread.strDate);
+		
+						$thisView.find(".container-discussion-detail .container-topicinfo .mobi-unread-responses").text(objThread.strUnreadResponseString);
+						if (objThread.strUnreadResponseString === "") {
+							$thisView.find(".container-discussion-detail .container-topicinfo .mobi-unread-responses").hide();
+						}
+						
+						// Quickly add 4 lines of text to the div to get the height.
+						intMinHeight = $thisMessage.addClass("container-message-open").html("<p>Lorem<br>Ipsum<br>dolor<br>sit</p>").height();
+						$thisMessage.empty().html(objThread.strDescription);
+						// if the message is higher than 4 lines, we must add the button, attach the click listener, and collapse the div
+						if ($thisMessage.height() > intMinHeight) {
+							$button = $('<div class="layout-button-expand">&nbsp;</div>');
+							$thisMessage.prepend($button);
+							$("div.layout-button-expand").click(function() {
+								$this = $(this);
+								$this.parents(".container-message").toggleClass("container-message-open");
+							})
+							$thisMessage.toggleClass("container-message-open");
+						}
+												
+						// Get any responses in the thread
+						$theseThreads = $thisView.find(".container-threads");				
+						$theseThreads.empty();
+						
+						//insert the discussion reply input and add event handling
+						discussionReply( $thisView, $thisView.find(".container-discussion-detail .container-topicinfo .mobi-title").text(), 'responses', objThreadId );
+						strCurrentUrl = configSettings.apiproxy + "/me/responses/" + objThreadId + "/userresponses";
+						$().mobiQueryApi("get", {
+							strUrl: strCurrentUrl,
+							successHandler: function(jsonResponse, intTransactionId) {
+								if (jsonResponse.userResponses.length > 0) {
+									$().mobyDiscussionManager("userResponsesToHtml", {
+										objUserResponses: jsonResponse,
+										strUrl: $thisView[0].id === 'pageDiscussionThreadDetail' ? '/discussionthreaddetail2.html' : "/discussionthreaddetail.html",
+										callbackSuccess: function(strReturnHtml) {
+											strHtml = '<ul data-role="listview" data-inset="true" class="mobi-listview">';
+											strHtml += strReturnHtml;
+											strHtml += "</ul>"
+											$theseThreads.html(strHtml);
+											// Hide the full description HTML in a data object
+											$(".mobi-description").each(function() {
+												$this = $(this);
+												strHtml = $(this).html();
+												$this.data("description", strHtml);
+												$this.empty();
+											} );
+											$theseThreads.find(".mobi-listview").listview();
+											$.mobile.pageLoading(true);
+											// Tap event listener
+											$(".listitem-response").click(function() {
+												// The user has tapped on a thread.  We need
+												// to display the thread detail page.
+												//moved click handler to external function to remove 
+												//duplication from #pageDiscussionTopicDetail and 
+												//discussionThreadDetail
+												responseClickHandler($(this));
+											} );
+										},
+										callbackError: function() {
+											alert("Unable to create HTML for response list.");
+											$.mobile.pageLoading(true);
+										}
+									})
+								} else {
+									$theseThreads.html("<h4>No responses.</h4>");
 									$.mobile.pageLoading(true);
 								}
-							})
-						} else {
-							$theseThreads.html("<h4>No responses.</h4>");
-							$.mobile.pageLoading(true);
-						}
-					},
-					errorHandler: function(){
-						alert('unable to get the thread information');
-						$.mobile.pageLoading(true);
-					}		
-				});
+							},
+							errorHandler: function(){
+								alert('unable to get the thread information');
+								$.mobile.pageLoading(true);
+							}		
+						} );
+					}
+				} );
 			}	
 				
 				
@@ -849,16 +845,6 @@ boolClicked = true;
 			$("#pageProfile").live("pageshow", function() {
 				var user, $contInfo = $(this).find('.container-topicinfo');
 				$.mobile.pageLoading();
-			/*	$().mobiQueryApi('get', {
-					strUrl: configSettings.apiproxy + '/me',
-					successHandler: function(jsonResponse){
-		  				$contInfo.html('<p class="mobi-student-name">' + jsonResponse.me.firstName + ' ' + jsonResponse.me.lastName + '</p>');
-		  				$.mobile.pageLoading(true);
-					},
-					errorHandler: function(){
-						$.mobile.pageLoading(true);
-					}
-				} );*/
 				$.mobyProfileManager( {
 					callbackSuccess: function(user) { 
 						$contInfo.html('<p class="mobi-student-name">' + user.firstName + ' ' + user.lastName + '</p>');
