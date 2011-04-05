@@ -428,7 +428,7 @@ div.layout-header .menu-active {
 
 .subnav .activity-toggle {
   float: left;
-  width: 96%;
+  width: 87%;
 }
 
 .subnav .btn-refresh {
@@ -614,6 +614,12 @@ div.layout-header .menu-active {
 .mobi-listview li .mobi-author,
 .mobi-listview li .mobi-total-responses {
 	color: #222;
+}
+
+.mobi-listview li .mobi-author {
+	padding-left: 18px;
+	font-style: italic;
+	background: url(../images/icon_author.png) 0px 0px no-repeat;
 }
 
 .topic-header {
