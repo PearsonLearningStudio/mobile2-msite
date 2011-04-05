@@ -268,6 +268,9 @@ boolClicked = true;
 			$(".btn-activity").click();
 			$("#pageHome").die("pageshow").live("pageshow", function() {
 				$(".btn-activity").click();
+				// Highlight the correct tab
+				$(".container-navbar li a").removeClass("ui-btn-active");
+				$(".container-navbar #home").addClass("ui-btn-active");
 			})
 			
 			// Initialize handler for discussions tab 
@@ -276,6 +279,10 @@ boolClicked = true;
 				// We are showing the Discussion tab.
 				// First, show the loading spinner
 				$.mobile.pageLoading();
+				
+				// Highlight the correct tab
+				$(".container-navbar li a").removeClass("ui-btn-active");
+				$(".container-navbar #discussions").addClass("ui-btn-active");
 				
 				// Reinitialize the navigation arrays.
 				// This starts us over from scratch
@@ -806,6 +813,9 @@ boolClicked = true;
 			
 			$("#pageClasses").live("pageshow", function() { //localStorage.removeItem('courses');
 				$.mobile.pageLoading();
+				// Highlight the correct tab
+				$(".container-navbar li a").removeClass("ui-btn-active");
+				$(".container-navbar #courses").addClass("ui-btn-active");
 				getClassList($(this));
 			} );
 			
@@ -857,6 +867,9 @@ boolClicked = true;
 			$("#pageProfile").live("pageshow", function() {
 				var user, $contInfo = $(this).find('.container-topicinfo');
 				$.mobile.pageLoading();
+				// Highlight the correct tab
+				$(".container-navbar li a").removeClass("ui-btn-active");
+				$(".container-navbar #my_profile").addClass("ui-btn-active");
 				$.mobyProfileManager( {
 					callbackSuccess: function(user) { 
 						$contInfo.html('<p class="mobi-student-name">' + user.firstName + ' ' + user.lastName + '</p>');

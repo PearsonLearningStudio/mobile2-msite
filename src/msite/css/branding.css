@@ -333,6 +333,15 @@ div.layout-header .menu-active {
 .container-navbar ul li .ui-btn-text {
   display: none;
 }
+.container-navbar ul .ui-btn-inner {
+	position: relative;
+}
+.container-navbar ul li .ui-icon {
+	position: relative;
+	left: 0px;
+	top: -80%;
+	display: block;
+}
 
 .container-navbar ul li #home .ui-icon {
   background: url(../images/icon_home.png) 0px -25px no-repeat;

@@ -22,7 +22,7 @@ var arrGlobalActivity = [],
 				objFeed : "",
 				intStartIndex: 0,
 				intEndIndex: configSettings.intNumberOfActivities,
-				boolForceRefresh: true,
+				boolForceRefresh: false,
 				callbackSuccess: function(objReturn) {
 					return objReturn;
 				},
