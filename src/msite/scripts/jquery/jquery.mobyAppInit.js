@@ -32,6 +32,9 @@ boolClicked = true;
 			$(".menu-logout, #profile-logout").live("click", function() { 
 				$.mobile.pageLoading();
 				sessionManager.logOut();
+				if(dataStorage.isSupported){
+					dataStorage.remove('user');
+				}
 				createCookie("access_grant", "", -1);
 				$(location).attr("href", "login.html");
 				return false;
@@ -160,15 +163,16 @@ boolClicked = true;
 						// The user has tapped on a thread.  We need
 						// to display the thread detail page.
 						//First get the discussion response
-						/*$().mobiQueryApi('get', {
-							strUrl: configSettings.apiproxy + '/courses/' + activityArray[1] + '/threadeddiscussions/' +  + '/topics/' + activityArray[2],
+						$().mobiQueryApi('get', {
+							//strUrl: configSettings.apiproxy + '/courses/' + activityArray[1] + '/threadeddiscussions/' +  + '/topics/' + activityArray[2] + '/responses/',
+							strUrl: configSettings.apiproxy + "/me/userresponses/" + activityArray[3],
 							successHandler: function(jsonResponse){
 								console.log(jsonResponse);
 							},
 							errorHandler: function(){
 								
 							}
-						} ); */
+						} ); 
 						//$.mobile.pageLoading();
 						objInfo = {
 							strNewId: activityArray[1] + '-' + activityArray[2],
@@ -181,9 +185,9 @@ boolClicked = true;
 						}
 						//responseClickHandler($(this), objInfo);
 						//arrGlobalThreads.push(objInfo);
-						//console.log(objInfo);
-					}
-				} );
+						//console.log(objInfo); 
+					} 
+				} ); 
 				
 				// Add scroll event for infinite scroll and positioning bookmark alert div
 				$(window).scroll(function() {
@@ -844,13 +848,22 @@ boolClicked = true;
 			$("#pageProfile").live("pageshow", function() {
 				var user, $contInfo = $(this).find('.container-topicinfo');
 				$.mobile.pageLoading();
-				$().mobiQueryApi('get', {
+			/*	$().mobiQueryApi('get', {
 					strUrl: configSettings.apiproxy + '/me',
 					successHandler: function(jsonResponse){
 		  				$contInfo.html('<p class="mobi-student-name">' + jsonResponse.me.firstName + ' ' + jsonResponse.me.lastName + '</p>');
 		  				$.mobile.pageLoading(true);
 					},
 					errorHandler: function(){
+						$.mobile.pageLoading(true);
+					}
+				} );*/
+				$.mobyProfileManager( {
+					callbackSuccess: function(user) { 
+						$contInfo.html('<p class="mobi-student-name">' + user.firstName + ' ' + user.lastName + '</p>');
+		  				$.mobile.pageLoading(true);
+					},
+					callbackError: function() {
 						$.mobile.pageLoading(true);
 					}
 				} );
@@ -909,7 +922,11 @@ boolClicked = true;
 			var signInHandler = function(p_isLoggedIn, p_errorCode) { 
 				if (p_isLoggedIn) {
 					eraseCookie("currentPage");
-					$(location).attr("href", "index.html");
+					$.mobyProfileManager( {
+						callbackSuccess: function() {
+							$(location).attr("href", "index.html");
+						}
+					} );
 					return;
 				}
 				//not logged in, what went wrong?
