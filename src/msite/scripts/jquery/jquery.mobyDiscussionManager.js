@@ -28,7 +28,8 @@ var arrGlobalThreads = [];
 						
 					}
 				},
-				respObj, response, counts, author, objInfo = {};
+				respObj, response, counts, author, 
+				strTotalResponsesText = "", objInfo = {};
 			if(options) {
 				$.extend(settings, options)
 			}
@@ -43,19 +44,18 @@ var arrGlobalThreads = [];
 								counts =respObj.childResponseCounts;
 								author = response.author;
 								
-								strTotalResponsesText = "";
-								if (uResponses[i].childResponseCounts.totalResponseCount === 0) {
+								if (counts.totalResponseCount === 0) {
 									strTotalResponsesText = "No responses";
-								} else if (uResponses[i].childResponseCounts.totalResponseCount === 1) {
+								} else if (counts.totalResponseCount === 1) {
 									strTotalResponsesText = "1 response";
 								} else {
-									strTotalResponsesText = uResponses[i].childResponseCounts.totalResponseCount + " total responses";
+									strTotalResponsesText = counts.totalResponseCount + " total responses";
 								}
 								
 								objInfo = {
 									strAuthorName: author.firstName + ' ' + author.lastName,
 									strTitle: response.title,									
-									strTotalResponseString: counts.totalResponseCount,
+									strTotalResponseString: strTotalResponsesText,
 									strUnreadResponseString: counts.unreadResponseCount,
 									strDescription: response.description							
 								}

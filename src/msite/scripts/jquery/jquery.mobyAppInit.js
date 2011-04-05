@@ -642,7 +642,6 @@ boolClicked = true;
 				$().mobyDiscussionManager('getSingleResponse', objThreadId, objThread, {
 					callbackSuccess: function(objInfo) {
 						$.extend(objThread, objInfo);
-						console.log('foo', objThread);
 						numResponses = objThread.strTotalResponseString;
 						// Next, empty out the detail info
 						$(".header-disucssion-detail .mobi-title, .container-topicinfo .mobi-title, .container-topicinfo .mobi-author, .container-topicinfo .mobi-total-responses, .container-topicinfo .mobi-unread-responses, .container-message").html("");
