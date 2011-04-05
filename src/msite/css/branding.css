@@ -14,9 +14,14 @@
   background: url(../images/background_signon.png) left top no-repeat;
 }
 
+#loginForm .authFields {
+}
 
 #loginForm .authFields ul,
 #registerPage .authFields ul {
+
+
+	border: 1px solid transparent;
   background-image: -moz-linear-gradient(top, 
   						rgba(255,255,255,.9), 
   						rgba(255,255,255,.8));
@@ -28,7 +33,7 @@
 
 #loginForm .authFields ul li,
 #registerPage .authFields ul li {
-  background: transparent;
+  background: none;
   border: none;
 }
 

@@ -264,6 +264,7 @@ boolClicked = true;
 			
 			// Every time we show the home page, we need to show the activities.
 
+
 			$(".btn-activity").click();
 			$("#pageHome").die("pageshow").live("pageshow", function() {
 				$(".btn-activity").click();
