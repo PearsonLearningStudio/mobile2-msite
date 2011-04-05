@@ -292,3 +292,7 @@
   border-right: none;
   
 }
+
+.ui-btn-left {
+  float: left;
+}

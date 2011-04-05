@@ -399,11 +399,16 @@ textarea.textarea-response-title {
 	width: 85px;
 }
 
-#pageActivityDetail .container-topicinfo {
+#pageActivityDetail .container-topicinfo,
+.detail-header .container-topicinfo {
 	float: left;
 	margin: .5em 0 0;
 	width: 200px;
 	padding-left: 4px;
+}
+
+.detail-header {
+	background: url(../images/background_content.png);
 }
 
 .container-topicinfo .mobi-course-title {
