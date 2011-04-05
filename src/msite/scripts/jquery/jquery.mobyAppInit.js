@@ -578,7 +578,7 @@ boolClicked = true;
 									$().mobyDiscussionManager("userResponsesToHtml", {
 										objUserResponses: jsonResponse,
 										callbackSuccess: function(strReturnHtml) {
-											var strHtml = '<ul data-role="listview" data-inset="true" class="mobi-listview">';
+											var strHtml = '<ul data-role="listview" class="mobi-listview">';
 											strHtml += strReturnHtml;
 											strHtml += "</ul>"
 											$theseThreads.html(strHtml)
@@ -716,7 +716,7 @@ boolClicked = true;
 										objUserResponses: jsonResponse,
 										strUrl: $thisView[0].id === 'pageDiscussionThreadDetail' ? '/discussionthreaddetail2.html' : "/discussionthreaddetail.html",
 										callbackSuccess: function(strReturnHtml) {
-											strHtml = '<ul data-role="listview" data-inset="true" class="mobi-listview">';
+											strHtml = '<ul data-role="listview" class="mobi-listview">';
 											strHtml += strReturnHtml;
 											strHtml += "</ul>"
 											$theseThreads.html(strHtml);

@@ -607,6 +607,12 @@ div.layout-header .menu-active {
 	color: #222;
 }
 
+.mobi-listview li .mobi-author {
+	padding-left: 18px;
+	font-style: italic;
+	background: url(../images/icon_author.png) 0px 0px no-repeat;
+}
+
 .topic-header {
   background: url(../images/background_content.png);
   padding: 10px 0;
