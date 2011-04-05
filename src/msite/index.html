@@ -81,10 +81,14 @@ $(document).ready(function() {
 					<li><a href="/profile.html" data-transition="none" id="my_profile" data-icon="custom">My Profile</a></li>
 				</ul>
 			</div>
-			<div data-role="controlgroup" data-type="horizontal" class="ui-fluid ui-even-2 subnav">
-				<a href="#" data-role="button" class="btn-activity">Activity</a>
-				<a href="#" data-role="button" class="btn-whatsdue">Upcoming</a>
-			</div>
+			<div class="subnav">
+  			<div data-role="controlgroup" data-type="horizontal" class="ui-fluid ui-even-2 activity-toggle">
+  				<a href="#" data-role="button" class="btn-activity">Activity</a>
+  				<a href="#" data-role="button" class="btn-whatsdue">Upcoming</a>
+  			</div>
+  			<a href="#" data-role="button" class="btn-refresh" data-icon="arrow" data-iconpos="notext">Refresh</a>
+  			<div class="clear"></div>
+  		</div>
 			<div data-role="content">
 
 				<div class="view-activity">

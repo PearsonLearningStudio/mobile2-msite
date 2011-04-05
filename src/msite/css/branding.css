@@ -368,6 +368,40 @@ div.layout-header .menu-active {
   clear: both;
 }
 
+#pageHome .subnav {
+  height: 40px;
+  padding-top: 0;
+}
+
+
+.subnav .btn-refresh {
+  float: right;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+}
+
+.subnav .activity-toggle {
+  float: left;
+  width: 96%;
+}
+
+.subnav .btn-refresh {
+  float: right;
+  width: 29px;
+  height: 29px;
+  padding: 0;
+}
+
+.subnav .btn-refresh .ui-icon {
+  margin: 4px 6px;
+  background: url(../images/icon_refresh.png) 0px 0 no-repeat;
+}
+
+.subnav .btn-refresh .btn-inner-text {
+  text-indent: ;
+}
+
 .subnav .announcement-subject,
 .subnav .announcement-message {
   color: #FFF;
