@@ -269,8 +269,9 @@ div.layout-header .menu-active {
 	font-weight: bold;
 }
 .container-discussion-detail .mobi-author {
-	margin-left: 10px;
+	padding-left: 18px;
 	font-style: italic;
+	background: url(../images/icon_author.png) 0px 0px no-repeat;
 }
 .container-discussion-detail .mobi-total-responses {
 	font-weight: bold;
