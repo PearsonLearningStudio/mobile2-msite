@@ -432,6 +432,9 @@ var dataStorage = {
     get: function (key) {
         return localStorage.getItem(key);
         //or localStorage[key];
+    },
+    remove: function(key) {
+    	return localStorage.removeItem(key);
     }
 };
 
