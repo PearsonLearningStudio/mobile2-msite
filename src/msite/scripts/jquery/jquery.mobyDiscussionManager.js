@@ -111,7 +111,7 @@ var arrGlobalThreads = [];
 		userResponsesToHtml : function(options) {
 			var settings = {
 				objUserResponses: "",
-				strUrl: "/discussionthreaddetail.html",
+				strUrl: "discussionthreaddetail.html",
 				callbackSuccess: function(strHtml) {
 					return strHtml;
 				},
@@ -246,7 +246,7 @@ var arrGlobalThreads = [];
 									
 									tempHtml += '<li class="' + iconClass + ' course-'+uTopics[j].topic.containerInfo.courseID+'">';
 									// To do: Link this off to a detail page.
-									tempHtml += '<a href="/discussiontopicdetail.html" class="listitem-topic" id="topic_'+uTopics[j].id+'">';
+									tempHtml += '<a href="discussiontopicdetail.html" class="listitem-topic" id="topic_'+uTopics[j].id+'">';
 									
 									tempHtml += '<span class="mobi-title">'+uTopics[j].topic.title+'</span>';
 									tempHtml += '<span class="mobi-response-count">'+strTotalResponsesText+'</span>';

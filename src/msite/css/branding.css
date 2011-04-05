@@ -14,6 +14,7 @@
   background: url(../images/background_signon.png) left top no-repeat;
 }
 
+
 #loginForm .authFields ul,
 #registerPage .authFields ul {
   background-image: -moz-linear-gradient(top, 
@@ -34,12 +35,9 @@
 #loginForm .authFields ul li label,
 #registerPage .authFields ul li label {
   color: #354394;
-  margin: 0px;
-  padding: 0px;
   padding-left: 2px;
   text-shadow: #FFFFFF 0 1px 0;
   font-weight: bold;
-  float: left;
   line-height: 40px;
 }
 
@@ -48,6 +46,16 @@
 #registerPage .authFields ul li input[type=text],
 #registerPage .authFields ul li input[type=password] {
   border: solid 1px #CCC;
+  
+}
+.portrait #loginForm .authFields ul li input,
+.portrait #registerPage .authFields ul li input {
+	width: 120%;
+}
+
+.landscape #loginForm .authFields ul li input,
+.landscape #registerPage .authFields ul li input {
+	width: 110%;
 }
 
 #loginForm .authFields ul li .ui-checkbox input[type=checkbox] {
@@ -59,6 +67,7 @@
   border: none;
   margin: -30px 0 0 0;
   color: #333;
+  width: 110%;
 }
 
 #loginForm .authFields ul li .ui-checkbox label .ui-btn-text {
@@ -135,6 +144,9 @@
 }
 
 /* Registration Page */
+#registerPage {
+	background-color: #333;
+}
 #registerPage h2 {
 	color: #fff;
 	text-shadow: 0 -1px 0 #000;
@@ -147,6 +159,15 @@
 
 #registerPage ul.steps {
 	background-color: #ccc;
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	padding-top: 15px;
+	padding-right: 15px;
+}
+#registerPage ul.steps li {
+	padding-bottom: 15px;
+	text-shadow: none;
 }
 
 /* Header */

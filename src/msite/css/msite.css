@@ -100,17 +100,27 @@ div.layout-header .menu-active {
   background-repeat: no-repeat;
 }
 
+.topic-header .responses,
+.topic-header .no-responses,
+.topic-header .hot-topic {
+	background-position: 6px 0px;
+	background-repeat: no-repeat;
+}
+
 .mobi-listview li.responses,
-.mobi-listview li.thread-topic {
+.mobi-listview li.thread-topic,
+.topic-header .responses {
 	background-image: url(../images/icon_responses.png);
 }
 
 .mobi-listview li.no-responses,
-.mobi-listview li.thread-post {
+.mobi-listview li.thread-post,
+.topic-header .no-responses {
 	background-image: url(../images/icon_no_responses.png);
 }
 
-.mobi-listview li.hot-topic {
+.mobi-listview li.hot-topic,
+.topic-header .hot-topic {
 	background-image: url(../images/icon_hot_topic.png);
 }
 
@@ -241,7 +251,7 @@ div.layout-header .menu-active {
 	margin-top: 0px;
 }
 .container-discussion-detail .container-topicinfo {
-	padding-left: 30px;
+	padding-left: 40px;
 	padding-bottom: 10px;
 	font-size: 90%;
 	border-bottom: 1px solid #C2BFB5;
@@ -264,7 +274,7 @@ div.layout-header .menu-active {
 }
 .container-discussion-detail .mobi-total-responses {
 	font-weight: bold;
-	margin-left: 10px;
+	font-size: 12px;
 }
 .container-discussion-detail .mobi-date {
 	position: absolute;
