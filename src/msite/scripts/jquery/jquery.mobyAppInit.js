@@ -72,10 +72,11 @@ boolClicked = true;
 			}).click(); // default view for page, set on load.
 			
 			//response click handler for clicking on any response	
-			function responseClickHandler($this, objectInfo) { 
+			function responseClickHandler($this) { 
 				// The user has tapped on a thread.  We need
 				// to display the thread detail page.
-				$.mobile.pageLoading();
+				//$.mobile.pageLoading();
+				
 				var responseId = $this.attr("id").split("_")[1],
 					objInfo = {};
 				//if response about to be viewed is unread...mark as read
@@ -102,9 +103,6 @@ boolClicked = true;
 					strDescription: $this.find(".mobi-description").data("description"),
 					strDate: $this.find(".mobi-date").text()
 				}
-				if (objectInfo) {
-					$.extend(objInfo, objectInfo);
-				}
 				arrGlobalThreads.push(objInfo);
 			}
 			
@@ -127,8 +125,9 @@ boolClicked = true;
 				});
 			}
 			
-			$('.btn-activity-refresh').live('click', function() {
+			$('.btn-refresh').live('click', function() {
 				// Fetch the feed and insert into DOM.
+				$.mobile.pageLoading();
 				getActivities();
 			} );
 			
@@ -145,7 +144,7 @@ boolClicked = true;
 				
 				// Fetch the feed and insert into DOM.
 				getActivities();
-		
+				
 				//when a user taps on an activity
 				$(".listitem-activity").live('click',  function(e){
 					e.preventDefault();
@@ -450,7 +449,7 @@ boolClicked = true;
 									href = '/discussionthreaddetail2.html';
 								}
 								newResponse = '<li class="no-responses response-'+ id +'">';
-								newResponse += '<a href="' + href + '" class="listitem-response" id="response_'+response.id +'">';				
+								newResponse += '<a href="' + href + '" class="listitem-response not-read" id="response_'+ response.author.id + '-' + response.id +'">';				
 								newResponse += '<span class="mobi-title">'+response.title+'</span>';
 								newResponse += '<span class="mobi-author">' +response.author.firstName + " " + response.author.lastName+ '</span>';
 								newResponse += '<span class="mobi-total-responses">No responses</span>';
@@ -474,6 +473,14 @@ boolClicked = true;
 									match = numResponses.match(/\d+/);
 									$totResponses.html( numResponses.replace( match, +match + 1 ) );
 								}
+								$(".listitem-response").live('click', function() { 
+									// The user has tapped on a thread.  We need
+									// to display the thread detail page.
+									//moved click handler to external function to remove 
+									//duplication from #pageDiscussionTopicDetail and 
+									//discussionThreadDetail
+									responseClickHandler($(this));
+								} );
 							},
 							errorHandler: function() {
 								alert("There was an error posting your response. Please try again");
@@ -585,7 +592,7 @@ boolClicked = true;
 											$theseThreads.find(".mobi-listview").listview();
 											
 											// Tap event listener
-											$(".listitem-response").click(function() {
+											$(".listitem-response").live('click',function() {
 												// The user has tapped on a thread.  We need
 												// to display the thread detail page.
 												//moved click handler to external function to remove 
@@ -723,7 +730,7 @@ boolClicked = true;
 											$theseThreads.find(".mobi-listview").listview();
 											$.mobile.pageLoading(true);
 											// Tap event listener
-											$(".listitem-response").click(function() {
+											$(".listitem-response").live('click', function() {
 												// The user has tapped on a thread.  We need
 												// to display the thread detail page.
 												//moved click handler to external function to remove 
