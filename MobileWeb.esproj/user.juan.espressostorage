@@ -75,12 +75,6 @@
 			</dict>
 			<dict>
 				<key>DocumentURL</key>
-				<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/discussiontopicdetail.html</string>
-				<key>StateType</key>
-				<string>DefaultTab</string>
-			</dict>
-			<dict>
-				<key>DocumentURL</key>
 				<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/scripts/jquery/jquery.mobyActivityManager.js</string>
 				<key>StateType</key>
 				<string>DefaultTab</string>
