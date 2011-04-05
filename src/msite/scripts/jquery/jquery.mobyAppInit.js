@@ -127,22 +127,20 @@ boolClicked = true;
 				// Fetch the feed and insert into DOM.
 				getActivities();
 			} );
+			
+			
 			// Initialize click listener for Activity button
-			$(".btn-activity").live('click', function() {
+			$(".btn-activity").die("click").live('click', function() {
 				$(".btn-whatsdue").removeClass("ui-btn-active");
 				$(this).addClass("ui-btn-active");
 				$(".view-whatsdue").hide();
 				$(".view-activity").show();
 				
-				// If this view is empty, we need to get the Activities list.
+
+				$.mobile.pageLoading();
 				
-				if ($("#pageHome .view-activity .mobi-listview").length === 0) {
-				
-					$.mobile.pageLoading();
-					
-					// Fetch the feed and insert into DOM.
-					getActivities();
-				}
+				// Fetch the feed and insert into DOM.
+				getActivities();
 		
 				//when a user taps on an activity
 				$(".listitem-activity").live('click',  function(){
@@ -215,7 +213,15 @@ boolClicked = true;
 					}
 				})
 		
+				// Now that we've bound a scroll event listener to the window, we need to unbind it if we change pages, because
+				// other pages do not need it.
+				$("#pageHome").die("pagebeforehide").live("pagebeforehide", function() {
+					$(window).unbind("scroll");
+				})
+
+
 			});
+			
 		
 		
 			// Check to see if we need to display a bookmark popup
@@ -267,6 +273,13 @@ boolClicked = true;
 				})
 			}
 			
+			
+			// Every time we show the home page, we need to show the activities.
+
+			$(".btn-activity").click();
+			$("#pageHome").die("pageshow").live("pageshow", function() {
+				$(".btn-activity").click();
+			})
 			
 			// Initialize handler for discussions tab 
 			$("#pageDiscuss").live("pageshow", function() {
