@@ -563,3 +563,15 @@ textarea.textarea-response-title {
 .ui-fluid .ui-checkbox, .ui-fluid .ui-radio { display: table-cell; }
 .ui-fluid .ui-checkbox label, .ui-fluid .ui-radio label { width: 100%;display: block; text-align: center; }
 
+.ui-controlgroup {
+  margin: 8px 0 0 0;
+}
+
+#pageDiscuss .ui-select .ui-btn {
+  margin: 0;
+  padding: 0;
+}
+
+#pageDiscuss .ui-select .ui-btn .ui-btn-text {
+  padding: 6px 0 0 4px;
+}
