@@ -47,13 +47,6 @@ boolClicked = true;
 			// Initialize course cache
 			// Force a refresh in case this is a new login
 			$().mobyCourseManager();
-			
-			// bind listener to menu button
-			$(".layout-header").delegate(".button-menu", "click", function() {
-				$(this).siblings("ul").slideToggle(0);
-				$(this).toggleClass("menu-active");
-				return false;
-			});
 		
 			// Initialize mobi-listview elements
 			$(".mobi-listview li").click(function() {
@@ -70,6 +63,19 @@ boolClicked = true;
 				
 				$(window).unbind("scroll");
 			}).click(); // default view for page, set on load.
+			
+			// Helper function to show the menu, which must be bound in every page upon every show no matter what,
+			function showMenu(ptrButton) {
+				$this = $(ptrButton);
+				$this.siblings("ul").slideToggle(0);
+				$this.toggleClass("menu-active");
+				return false;
+			}
+			
+			// bind the menu button click listener for this page
+			$(".button-menu").bind("click", function() {
+				showMenu(this);
+			})
 			
 			//response click handler for clicking on any response	
 			function responseClickHandler($this) { 
@@ -276,14 +282,20 @@ boolClicked = true;
 				// Highlight the correct tab
 				$(".container-navbar li a").removeClass("ui-btn-active");
 				$(".container-navbar #home").addClass("ui-btn-active");
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
 			})
 			
 			// Initialize handler for discussions tab 
-			$("#pageDiscuss").live("pageshow", function() {
+			$("#pageDiscuss").die("pageshow").live("pageshow", function() {
 				
 				// We are showing the Discussion tab.
 				// First, show the loading spinner
 				$.mobile.pageLoading();
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
 				
 				// Highlight the correct tab
 				$(".container-navbar li a").removeClass("ui-btn-active");
@@ -370,6 +382,9 @@ boolClicked = true;
 				// We are showing the activity tab.
 				// First, show the loading spinner
 				$.mobile.pageLoading();
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
 				
 				$contMessage.addClass(activityType);
 				$contMessage.html("");
@@ -510,6 +525,9 @@ boolClicked = true;
 				// We are showing the Discussion tab.
 				// First, show the loading spinner
 				$.mobile.pageLoading();
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
 				
 				// Next, empty out the detail info
 				$(".header-disucssion-detail .mobi-title, .container-topicinfo .mobi-title, .container-topicinfo .mobi-author, .container-topicinfo .mobi-total-responses, .container-topicinfo .mobi-unread-responses, .container-message").html("");
@@ -777,6 +795,9 @@ boolClicked = true;
 			
 			// Page show event for the thread detail page
 			$("#pageDiscussionThreadDetail").live("pageshow", function(event, ui) {
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
 				discussionThreadDetail( $(this) );
 				// Back button:  If we tap the back button, it will take us back to the prior screen.
 				// We must therefore remove the current element from the array.
@@ -790,6 +811,9 @@ boolClicked = true;
 			
 			// Page show event for the 
 			$("#pageDiscussionThreadDetail2").live("pageshow", function(event, ui) {
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
 				discussionThreadDetail( $(this) );
 				// Back button:  If we tap the back button, it will take us back to the prior screen.
 				// We must therefore remove the current element from the array.
@@ -832,6 +856,9 @@ boolClicked = true;
 			
 			$("#pageClasses").live("pageshow", function() { //localStorage.removeItem('courses');
 				$.mobile.pageLoading();
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
 				// Highlight the correct tab
 				$(".container-navbar li a").removeClass("ui-btn-active");
 				$(".container-navbar #courses").addClass("ui-btn-active");
@@ -843,6 +870,9 @@ boolClicked = true;
 				$contInfo = $this.find('.container-topicinfo'),
 				$contAnn = $this.find('.container-announcement');
 				$.mobile.pageLoading();
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
 				$contInfo.empty();
 				$contAnn.empty();
 				$().mobiQueryApi('get', {
@@ -886,6 +916,9 @@ boolClicked = true;
 			$("#pageProfile").live("pageshow", function() {
 				var user, $contInfo = $(this).find('.container-topicinfo');
 				$.mobile.pageLoading();
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
 				// Highlight the correct tab
 				$(".container-navbar li a").removeClass("ui-btn-active");
 				$(".container-navbar #my_profile").addClass("ui-btn-active");
