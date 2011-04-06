@@ -48,6 +48,7 @@ var arrGlobalActivity = [],
 					objFeedItems = objFeed.activityStream.items, item, time, grade, type,
 					strEndHtml = '<li data-role="list-divider" class="activity-scroll-indicator">Loading more...</li>\n';
 					
+					
 				if ((intEnd > objFeedItems.length)|| (intEnd === -1)) {
 					intEnd = objFeedItems.length;
 					boolItems = true;
