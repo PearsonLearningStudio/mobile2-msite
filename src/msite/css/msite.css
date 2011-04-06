@@ -489,6 +489,14 @@ textarea.textarea-response-title {
 }
 
 /*
+ * Profile page
+ */
+ 
+ #pageProfile li.course .ui-icon {
+ 	display: none;
+ }
+
+/*
  * Bookmark popup
  */
 .bookmark-popup {

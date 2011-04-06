@@ -330,8 +330,9 @@ boolClicked = true;
 											$items.show();
 											$(".view-discussion .mobi-listview .ui-li-divider:visible:first").addClass("ui-corner-top");
 										//}
-										
 									}
+									//trying to prevent page refresh on Pre 
+									return false;
 								})
 							}
 						});
@@ -796,6 +797,7 @@ boolClicked = true;
 				var courses = '', i, $classesList = $this.find('.view-courses .mobi-listview');
 				$().mobyCourseManager( {
 					callbackSuccess: function(arrCourses) { 
+						
 						$(arrCourses).each(function(i) { 
 							courses +='<li class="course">';
 							courses +='<a id="' + i + '"  href="/course.html" class="listitem-course">';
@@ -806,9 +808,12 @@ boolClicked = true;
 						} ); 
 						$classesList.html(courses);
 						$classesList.listview('refresh');
-						$classesList.find('.listitem-course').click(function() {
+						$classesList.find('.listitem-course').click(function(e) {
 							//add the current course data into the arrGlobalCourse array for #pageCourseDetail
 							varGlobalCourse = arrCourses[this.id];
+							if($this[0].id === 'pageProfile') {
+								return false;
+							}
 						} );
 						$.mobile.pageLoading(true);
 					},
