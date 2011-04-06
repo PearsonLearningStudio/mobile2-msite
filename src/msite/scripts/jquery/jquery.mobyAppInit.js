@@ -23,7 +23,7 @@ boolClicked = true;
 			}
 			
 			// Be sure the dropdown menu is hidden each time we change a page
-			$(".container-page").live("pagebeforeshow pagebeforehide", function() {
+			$(".container-page").die("pagebeforeshow pagebeforehide").live("pagebeforeshow pagebeforehide", function() {
 				$.mobile.pageLoading();
 			});
 			
@@ -49,7 +49,7 @@ boolClicked = true;
 			$().mobyCourseManager();
 			
 			// bind listener to menu button
-			$(".container-page .button-menu").live("click", function() {
+			$(".layout-header").delegate(".button-menu", "click", function() {
 				$(this).siblings("ul").slideToggle(0);
 				$(this).toggleClass("menu-active");
 				return false;
@@ -75,7 +75,7 @@ boolClicked = true;
 			function responseClickHandler($this) { 
 				// The user has tapped on a thread.  We need
 				// to display the thread detail page.
-				//$.mobile.pageLoading();
+				$.mobile.pageLoading();
 				
 				var responseId = $this.attr("id").split("_")[1],
 					objInfo = {};
@@ -179,23 +179,31 @@ boolClicked = true;
 						$.mobile.pageLoading();
 						
 						// Fetch the feed and insert into DOM.
-						$().mobyActivityManager("toHtml", {
-							intStartIndex: configSettings.intCurrentNumberOfActivities,
-							intEndIndex: configSettings.intCurrentNumberOfActivities + configSettings.intNumberOfActivities,
-							callbackSuccess: function(objReturn) {
-								$(".activity-scroll-indicator").remove();
-								var strFeedHtml = objReturn.strFeedHtml;
-						
-								$("#pageHome .view-activity .mobi-listview").append(strFeedHtml);
-								$("#pageHome .view-activity .mobi-listview").listview("refresh");
-								$.mobile.pageLoading(true);
-								configSettings.intCurrentNumberOfActivities += configSettings.intNumberOfActivities;
-								if (objReturn.boolAllItems) {
-									// All items have been returned and displayed, so unbind the scroll event.
-									$(window).unbind("scroll");
+						var doIt = function() {
+							$().mobyActivityManager("toHtml", {
+								intStartIndex: configSettings.intCurrentNumberOfActivities,
+								intEndIndex: configSettings.intCurrentNumberOfActivities + configSettings.intNumberOfActivities,
+								callbackSuccess: function(objReturn) {
+									$(".activity-scroll-indicator").remove();
+									var strFeedHtml = objReturn.strFeedHtml;
+							
+									$("#pageHome .view-activity .mobi-listview").append(strFeedHtml);
+									$("#pageHome .view-activity .mobi-listview").listview("refresh");
+									//var delay = setTimeout(function() {}, 500);
+									$.mobile.pageLoading(true);
+									configSettings.intCurrentNumberOfActivities += configSettings.intNumberOfActivities;
+									if (objReturn.boolAllItems) {
+										// All items have been returned and displayed, so unbind the scroll event.
+										$(window).unbind("scroll");
+									}
 								}
-							}
-						});
+							});
+							
+						}
+						// We have to do this on a brief delay for older iphones, otherwise events happen crazy out of order.
+						var otherDelay = setTimeout(function(){
+							doIt()
+						}, 500);
 			
 					}
 				})
@@ -262,8 +270,6 @@ boolClicked = true;
 			
 			
 			// Every time we show the home page, we need to show the activities.
-
-
 			$(".btn-activity").click();
 			$("#pageHome").die("pageshow").live("pageshow", function() {
 				$(".btn-activity").click();
@@ -601,7 +607,7 @@ boolClicked = true;
 											$theseThreads.find(".mobi-listview").listview();
 											
 											// Tap event listener
-											$(".listitem-response").live('click', function() {
+											$(".listitem-response").die("click").live('click', function() {
 												// The user has tapped on a thread.  We need
 												// to display the thread detail page.
 												//moved click handler to external function to remove 
@@ -739,12 +745,12 @@ boolClicked = true;
 											$theseThreads.find(".mobi-listview").listview();
 											$.mobile.pageLoading(true);
 											// Tap event listener
-											$(".listitem-response").live('click', function() {
+											$(".listitem-response").die("click").live('click', function() {
 												// The user has tapped on a thread.  We need
-												// to display the thread detail page.
-												//moved click handler to external function to remove 
-												//duplication from #pageDiscussionTopicDetail and 
-												//discussionThreadDetail
+												// to display the next detail page.
+												// moved click handler to external function to remove 
+												// duplication from #pageDiscussionTopicDetail and 
+												// discussionThreadDetail
 												responseClickHandler($(this));
 											} );
 										},

@@ -22,8 +22,6 @@
 		<key>ExpandedURLs</key>
 		<array>
 			<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/css</string>
-			<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/images</string>
-			<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/scripts/ecollege</string>
 			<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/scripts/jquery</string>
 		</array>
 	</dict>
