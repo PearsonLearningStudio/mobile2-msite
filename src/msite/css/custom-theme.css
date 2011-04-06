@@ -301,3 +301,17 @@
 .people-toggle {
   margin: 0;
 }
+
+.mobi-person-role {
+  margin: 0;
+  padding: 0;
+  font-size: .8em;
+}
+
+#pageCourseProfile {
+  background: url(../images/background_content.png);
+}
+
+.detail-header .my-profile-item-icon {
+  margin: 6px;
+}
