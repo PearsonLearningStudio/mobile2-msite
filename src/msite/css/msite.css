@@ -154,7 +154,8 @@ div.layout-header .menu-active {
 	text-overflow: ellipsis;
 	overflow: hidden;
 }
-.view-activity .mobi-course-title {
+.view-activity .mobi-course-title,
+.view-whatsdue .mobi-course-title {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	font-size: 70%;
@@ -164,6 +165,7 @@ div.layout-header .menu-active {
 	color: #333;
 }
 .view-activity .mobi-summary,
+.view-whatsdue .mobi-summary,
 .activity-info-header .mobi-summary {
 	text-overflow: ellipsis;
 	overflow: hidden;
