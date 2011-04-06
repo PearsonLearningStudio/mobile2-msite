@@ -23,7 +23,7 @@ boolClicked = true;
 			}
 			
 			// Be sure the dropdown menu is hidden each time we change a page
-			$(".container-page").live("pagebeforeshow pagebeforehide", function() {
+			$(".container-page").die("pagebeforeshow pagebeforehide").live("pagebeforeshow pagebeforehide", function() {
 				$.mobile.pageLoading();
 			});
 			
@@ -47,13 +47,6 @@ boolClicked = true;
 			// Initialize course cache
 			// Force a refresh in case this is a new login
 			$().mobyCourseManager();
-			
-			// bind listener to menu button
-			$(".container-page .button-menu").live("click", function() {
-				$(this).siblings("ul").slideToggle(0);
-				$(this).toggleClass("menu-active");
-				return false;
-			});
 		
 			// Initialize mobi-listview elements
 			$(".mobi-listview li").click(function() {
@@ -71,11 +64,24 @@ boolClicked = true;
 				$(window).unbind("scroll");
 			}).click(); // default view for page, set on load.
 			
+			// Helper function to show the menu, which must be bound in every page upon every show no matter what,
+			function showMenu(ptrButton) {
+				$this = $(ptrButton);
+				$this.siblings("ul").slideToggle(0);
+				$this.toggleClass("menu-active");
+				return false;
+			}
+			
+			// bind the menu button click listener for this page
+			$(".button-menu").bind("click", function() {
+				showMenu(this);
+			})
+			
 			//response click handler for clicking on any response	
 			function responseClickHandler($this) { 
 				// The user has tapped on a thread.  We need
 				// to display the thread detail page.
-				//$.mobile.pageLoading();
+				$.mobile.pageLoading();
 				
 				var responseId = $this.attr("id").split("_")[1],
 					objInfo = {};
@@ -105,9 +111,14 @@ boolClicked = true;
 				arrGlobalThreads.push(objInfo);
 			}
 			
-			function getActivities() {
+			function getActivities(options) { 
+				var opts = options || {};
+				if(opts.refresh) {
+					$.mobile.pageLoading();
+				}
 				$().mobyActivityManager("toHtml", {
-					callbackSuccess: function(objReturn){
+					boolForceRefresh: opts.refresh,			
+					callbackSuccess: function(objReturn){ 
 						var strFeedHtml = objReturn.strFeedHtml,
 							strHtml = "", activityType, objInfo = {},
 							activityArray = [], userId, response, 
@@ -124,10 +135,10 @@ boolClicked = true;
 				});
 			}
 			
-			$('.btn-refresh').live('click', function() {
+			$('.btn-refresh').live('click', function() { 
 				// Fetch the feed and insert into DOM.
-				$.mobile.pageLoading();
-				getActivities();
+				// force refresh
+				getActivities( { refresh: true } );
 			} );
 			
 			
@@ -179,23 +190,31 @@ boolClicked = true;
 						$.mobile.pageLoading();
 						
 						// Fetch the feed and insert into DOM.
-						$().mobyActivityManager("toHtml", {
-							intStartIndex: configSettings.intCurrentNumberOfActivities,
-							intEndIndex: configSettings.intCurrentNumberOfActivities + configSettings.intNumberOfActivities,
-							callbackSuccess: function(objReturn) {
-								$(".activity-scroll-indicator").remove();
-								var strFeedHtml = objReturn.strFeedHtml;
-						
-								$("#pageHome .view-activity .mobi-listview").append(strFeedHtml);
-								$("#pageHome .view-activity .mobi-listview").listview("refresh");
-								$.mobile.pageLoading(true);
-								configSettings.intCurrentNumberOfActivities += configSettings.intNumberOfActivities;
-								if (objReturn.boolAllItems) {
-									// All items have been returned and displayed, so unbind the scroll event.
-									$(window).unbind("scroll");
+						var doIt = function() {
+							$().mobyActivityManager("toHtml", {
+								intStartIndex: configSettings.intCurrentNumberOfActivities,
+								intEndIndex: configSettings.intCurrentNumberOfActivities + configSettings.intNumberOfActivities,
+								callbackSuccess: function(objReturn) {
+									$(".activity-scroll-indicator").remove();
+									var strFeedHtml = objReturn.strFeedHtml;
+							
+									$("#pageHome .view-activity .mobi-listview").append(strFeedHtml);
+									$("#pageHome .view-activity .mobi-listview").listview("refresh");
+									//var delay = setTimeout(function() {}, 500);
+									$.mobile.pageLoading(true);
+									configSettings.intCurrentNumberOfActivities += configSettings.intNumberOfActivities;
+									if (objReturn.boolAllItems) {
+										// All items have been returned and displayed, so unbind the scroll event.
+										$(window).unbind("scroll");
+									}
 								}
-							}
-						});
+							});
+							
+						}
+						// We have to do this on a brief delay for older iphones, otherwise events happen crazy out of order.
+						var otherDelay = setTimeout(function(){
+							doIt()
+						}, 500);
 			
 					}
 				})
@@ -262,22 +281,26 @@ boolClicked = true;
 			
 			
 			// Every time we show the home page, we need to show the activities.
-
-
 			$(".btn-activity").click();
 			$("#pageHome").die("pageshow").live("pageshow", function() {
 				$(".btn-activity").click();
 				// Highlight the correct tab
 				$(".container-navbar li a").removeClass("ui-btn-active");
 				$(".container-navbar #home").addClass("ui-btn-active");
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
 			})
 			
 			// Initialize handler for discussions tab 
-			$("#pageDiscuss").live("pageshow", function() {
+			$("#pageDiscuss").die("pageshow").live("pageshow", function() {
 				
 				// We are showing the Discussion tab.
 				// First, show the loading spinner
 				$.mobile.pageLoading();
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
 				
 				// Highlight the correct tab
 				$(".container-navbar li a").removeClass("ui-btn-active");
@@ -330,8 +353,9 @@ boolClicked = true;
 											$items.show();
 											$(".view-discussion .mobi-listview .ui-li-divider:visible:first").addClass("ui-corner-top");
 										//}
-										
 									}
+									//trying to prevent page refresh on Pre 
+									return false;
 								})
 							}
 						});
@@ -363,6 +387,9 @@ boolClicked = true;
 				// We are showing the activity tab.
 				// First, show the loading spinner
 				$.mobile.pageLoading();
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
 				
 				$contMessage.addClass(activityType);
 				$contMessage.html("");
@@ -503,6 +530,9 @@ boolClicked = true;
 				// We are showing the Discussion tab.
 				// First, show the loading spinner
 				$.mobile.pageLoading();
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
 				
 				// Next, empty out the detail info
 				$(".header-disucssion-detail .mobi-title, .container-topicinfo .mobi-title, .container-topicinfo .mobi-author, .container-topicinfo .mobi-total-responses, .container-topicinfo .mobi-unread-responses, .container-message").html("");
@@ -600,7 +630,7 @@ boolClicked = true;
 											$theseThreads.find(".mobi-listview").listview();
 											
 											// Tap event listener
-											$(".listitem-response").live('click', function() {
+											$(".listitem-response").die("click").live('click', function() {
 												// The user has tapped on a thread.  We need
 												// to display the thread detail page.
 												//moved click handler to external function to remove 
@@ -738,12 +768,12 @@ boolClicked = true;
 											$theseThreads.find(".mobi-listview").listview();
 											$.mobile.pageLoading(true);
 											// Tap event listener
-											$(".listitem-response").live('click', function() {
+											$(".listitem-response").die("click").live('click', function() {
 												// The user has tapped on a thread.  We need
-												// to display the thread detail page.
-												//moved click handler to external function to remove 
-												//duplication from #pageDiscussionTopicDetail and 
-												//discussionThreadDetail
+												// to display the next detail page.
+												// moved click handler to external function to remove 
+												// duplication from #pageDiscussionTopicDetail and 
+												// discussionThreadDetail
 												responseClickHandler($(this));
 											} );
 										},
@@ -770,6 +800,9 @@ boolClicked = true;
 			
 			// Page show event for the thread detail page
 			$("#pageDiscussionThreadDetail").live("pageshow", function(event, ui) {
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
 				discussionThreadDetail( $(this) );
 				// Back button:  If we tap the back button, it will take us back to the prior screen.
 				// We must therefore remove the current element from the array.
@@ -783,6 +816,9 @@ boolClicked = true;
 			
 			// Page show event for the 
 			$("#pageDiscussionThreadDetail2").live("pageshow", function(event, ui) {
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
 				discussionThreadDetail( $(this) );
 				// Back button:  If we tap the back button, it will take us back to the prior screen.
 				// We must therefore remove the current element from the array.
@@ -796,6 +832,7 @@ boolClicked = true;
 				var courses = '', i, $classesList = $this.find('.view-courses .mobi-listview');
 				$().mobyCourseManager( {
 					callbackSuccess: function(arrCourses) { 
+						
 						$(arrCourses).each(function(i) { 
 							courses +='<li class="course">';
 							courses +='<a id="' + i + '"  href="/course.html" class="listitem-course">';
@@ -806,9 +843,12 @@ boolClicked = true;
 						} ); 
 						$classesList.html(courses);
 						$classesList.listview('refresh');
-						$classesList.find('.listitem-course').click(function() {
+						$classesList.find('.listitem-course').click(function(e) {
 							//add the current course data into the arrGlobalCourse array for #pageCourseDetail
 							varGlobalCourse = arrCourses[this.id];
+							if($this[0].id === 'pageProfile') {
+								return false;
+							}
 						} );
 						$.mobile.pageLoading(true);
 					},
@@ -821,6 +861,9 @@ boolClicked = true;
 			
 			$("#pageClasses").live("pageshow", function() { //localStorage.removeItem('courses');
 				$.mobile.pageLoading();
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
 				// Highlight the correct tab
 				$(".container-navbar li a").removeClass("ui-btn-active");
 				$(".container-navbar #courses").addClass("ui-btn-active");
@@ -832,6 +875,9 @@ boolClicked = true;
 				$contInfo = $this.find('.container-topicinfo'),
 				$contAnn = $this.find('.container-announcement');
 				$.mobile.pageLoading();
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
 				$contInfo.empty();
 				$contAnn.empty();
 				$().mobiQueryApi('get', {
@@ -875,6 +921,9 @@ boolClicked = true;
 			$("#pageProfile").live("pageshow", function() {
 				var user, $contInfo = $(this).find('.container-topicinfo');
 				$.mobile.pageLoading();
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
 				// Highlight the correct tab
 				$(".container-navbar li a").removeClass("ui-btn-active");
 				$(".container-navbar #my_profile").addClass("ui-btn-active");

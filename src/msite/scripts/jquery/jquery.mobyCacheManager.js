@@ -48,10 +48,9 @@
 				var dateToday = new Date();
 				var dateCache = new Date(strCacheDate);
 				dateCache.add(settings.objCacheRefresh);
-				
 				// Do we need to refresh the cache?
 				var boolRefresh = false;
-				if ((strCacheDate == null) || (strCache == null)) {
+				if ((strCacheDate == null) || (strCache == null) || (typeof(strCache) != "string") || (strCache.length < 10)) {
 					boolRefresh = true;
 				} else {
 					if (strCache.length < 1) {
@@ -80,6 +79,8 @@
 					
 				} else {
 					// Cache is ok, so let's use that
+					// TODO:  probably should validate that the stuff we're getting from storage is
+					// legit
 					settings.callbackSuccess(JSON.parse(strCache), -1);
 				}
 			} else {

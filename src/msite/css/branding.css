@@ -216,25 +216,25 @@ div.layout-header .menu-active {
 }
 
 .layout-header li.home .ui-btn-text {
-	background: url(../images/icon_menu_home.png) left top no-repeat;
+	background: url(../images/icon_menu_home.png) 12px 12px no-repeat;
 	line-height: 25px;
 	padding: 0 0 0 32px;
 }
 
 .layout-header li.my_profile .ui-btn-text {
-	background: url(../images/icon_menu_my_profile.png) left top no-repeat;
+	background: url(../images/icon_menu_my_profile.png) 12px 12px no-repeat;
 	line-height: 26px;
 	padding: 0 0 0 32px;
 }
 
 .layout-header li.settings .ui-btn-text {
-	background: url(../images/icon_menu_settings.png) left top no-repeat;
+	background: url(../images/icon_menu_settings.png) 12px 12px no-repeat;
 	line-height: 26px;
 	padding: 0 0 0 32px;
 }
 
 .layout-header li.signout .ui-btn-text {
-	background: url(../images/icon_menu_sign_out.png) left top no-repeat;
+	background: url(../images/icon_menu_sign_out.png) 12px 12px no-repeat;
 	line-height: 26px;
 	padding: 0 0 0 32px;
 }
@@ -325,7 +325,7 @@ div.layout-header .menu-active {
 .container-navbar ul li .ui-icon {
 	position: relative;
 	left: 0px;
-	top: -80%;
+	top: -70%;
 	display: block;
 }
 

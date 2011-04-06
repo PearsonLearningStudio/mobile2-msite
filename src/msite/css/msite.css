@@ -154,7 +154,8 @@ div.layout-header .menu-active {
 	text-overflow: ellipsis;
 	overflow: hidden;
 }
-.view-activity .mobi-course-title {
+.view-activity .mobi-course-title,
+.view-whatsdue .mobi-course-title {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	font-size: 70%;
@@ -164,11 +165,16 @@ div.layout-header .menu-active {
 	color: #333;
 }
 .view-activity .mobi-summary,
+.view-whatsdue .mobi-summary,
 .activity-info-header .mobi-summary {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	font-size: 95%;
 	color: #333;
+}
+.view-whatsdue .mobi-summary,
+.view-whatsdue .mobi-title {
+	padding-right: 50px;
 }
 
 /* Discussion list view */
@@ -487,6 +493,14 @@ textarea.textarea-response-title {
 .container-navbar .ui-icon {
 	margin-top: -10px;
 }
+
+/*
+ * Profile page
+ */
+ 
+ #pageProfile li.course .ui-icon {
+ 	display: none;
+ }
 
 /*
  * Bookmark popup
