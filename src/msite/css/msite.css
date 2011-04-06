@@ -519,6 +519,8 @@ textarea.textarea-response-title {
 
 .clear {
 	clear: both;
+	height: 1px;
+	overflow: hidden;
 }
 
 .ui-fluid, 
