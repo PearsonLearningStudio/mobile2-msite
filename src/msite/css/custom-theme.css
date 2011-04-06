@@ -242,8 +242,9 @@
 .ui-btn-up-e .ui-btn-inner,
 .ui-btn-hover-e .ui-btn-inner,
 .ui-btn-down-e .ui-btn-inner {
-  padding: 0px;
+  padding: 0px 6px;
   line-height: 24px;
+  font-size: .8em;
 }
 
 .ui-btn-hover-e {
@@ -295,6 +296,23 @@
 
 .ui-btn-left {
   float: left;
+}
+.people-toggle {
+  margin: 0;
+}
+
+.mobi-person-role {
+  margin: 0;
+  padding: 0;
+  font-size: .8em;
+}
+
+#pageCourseProfile {
+  background: url(../images/background_content.png);
+}
+
+.detail-header .my-profile-item-icon {
+  margin: 6px;
 }
 
 /* Overrides for jQuery Mobile styles */

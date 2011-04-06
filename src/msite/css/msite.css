@@ -181,7 +181,8 @@ div.layout-header .menu-active {
 	color: #333;
 }
 .view-discussion .mobi-your-responses,
-.mobi-your-responses {
+.mobi-your-responses,
+.mobi-your-course{
 	font-size: 70%;
 	font-style: italic;
 	margin-top: 0.2em;
