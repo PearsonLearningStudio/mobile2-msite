@@ -462,8 +462,8 @@ var friendlyDate = function(myDate) {
 	// Returns: a formatted string.
 	
 	var dateNow = Date.today().add({hours: 23, minutes: 59, secondsd: 59}),
-	dateToday = Date.today().add({days: -1}),
-	dateYesterday = Date.today().add({days: -2}),
+	dateToday = Date.today(),
+	dateYesterday = Date.today().add({days: -1}),
 	dateActivity = myDate,
 	strSuffix = " AM",
 	strReturn = "";
@@ -479,9 +479,9 @@ var friendlyDate = function(myDate) {
 	}
 	
 	// Yesterday, Today, etc?
-	console.log(dateActivity);
-	console.log(dateToday);
-	console.log(dateNow);
+	//console.log(dateActivity);
+	//console.log(dateToday);
+	//console.log(dateNow);
 	if (dateActivity.between(dateToday, dateNow)) {
 		// If the date is today, return "Today h:mm am/pm"
 		strReturn = "Today " + dateActivity.toString("h:mm") + strSuffix;
