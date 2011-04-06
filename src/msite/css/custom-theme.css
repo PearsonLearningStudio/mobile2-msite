@@ -296,3 +296,14 @@
 .ui-btn-left {
   float: left;
 }
+
+/* Overrides for jQuery Mobile styles */
+
+/* loading icon */
+.ui-icon-loading {
+	background-image: url(images/ajax-loader.gif);
+}
+.ui-loader { 
+	opacity: none;
+}
+

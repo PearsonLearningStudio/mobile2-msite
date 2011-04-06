@@ -75,7 +75,7 @@ boolClicked = true;
 			function responseClickHandler($this) { 
 				// The user has tapped on a thread.  We need
 				// to display the thread detail page.
-				//$.mobile.pageLoading();
+				$.mobile.pageLoading();
 				
 				var responseId = $this.attr("id").split("_")[1],
 					objInfo = {};
@@ -262,8 +262,6 @@ boolClicked = true;
 			
 			
 			// Every time we show the home page, we need to show the activities.
-
-
 			$(".btn-activity").click();
 			$("#pageHome").die("pageshow").live("pageshow", function() {
 				$(".btn-activity").click();
@@ -600,7 +598,7 @@ boolClicked = true;
 											$theseThreads.find(".mobi-listview").listview();
 											
 											// Tap event listener
-											$(".listitem-response").live('click', function() {
+											$(".listitem-response").die("click").live('click', function() {
 												// The user has tapped on a thread.  We need
 												// to display the thread detail page.
 												//moved click handler to external function to remove 
@@ -738,12 +736,12 @@ boolClicked = true;
 											$theseThreads.find(".mobi-listview").listview();
 											$.mobile.pageLoading(true);
 											// Tap event listener
-											$(".listitem-response").live('click', function() {
+											$(".listitem-response").die("click").live('click', function() {
 												// The user has tapped on a thread.  We need
-												// to display the thread detail page.
-												//moved click handler to external function to remove 
-												//duplication from #pageDiscussionTopicDetail and 
-												//discussionThreadDetail
+												// to display the next detail page.
+												// moved click handler to external function to remove 
+												// duplication from #pageDiscussionTopicDetail and 
+												// discussionThreadDetail
 												responseClickHandler($(this));
 											} );
 										},
