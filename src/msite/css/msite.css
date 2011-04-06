@@ -172,6 +172,10 @@ div.layout-header .menu-active {
 	font-size: 95%;
 	color: #333;
 }
+.view-whatsdue .mobi-summary,
+.view-whatsdue .mobi-title {
+	padding-right: 50px;
+}
 
 /* Discussion list view */
 .view-discussion .mobi-title {
