@@ -105,9 +105,9 @@ boolClicked = true;
 				arrGlobalThreads.push(objInfo);
 			}
 			
-			function getActivities() {
-				$().mobyActivityManager("toHtml", {
-					callbackSuccess: function(objReturn){
+			function getActivities(options) { 
+				$().mobyActivityManager("toHtml", {					
+					callbackSuccess: function(objReturn){ 
 						var strFeedHtml = objReturn.strFeedHtml,
 							strHtml = "", activityType, objInfo = {},
 							activityArray = [], userId, response, 
@@ -124,10 +124,10 @@ boolClicked = true;
 				});
 			}
 			
-			$('.btn-refresh').live('click', function() {
+			$('.btn-refresh').live('click', function() { 
 				// Fetch the feed and insert into DOM.
 				$.mobile.pageLoading();
-				getActivities();
+				getActivities( { boolForceRefresh: true } );
 			} );
 			
 			
