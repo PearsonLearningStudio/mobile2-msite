@@ -106,7 +106,12 @@ boolClicked = true;
 			}
 			
 			function getActivities(options) { 
-				$().mobyActivityManager("toHtml", {					
+				var opts = options || {};
+				if(opts.refresh) {
+					$.mobile.pageLoading();
+				}
+				$().mobyActivityManager("toHtml", {
+					boolForceRefresh: opts.refresh,			
 					callbackSuccess: function(objReturn){ 
 						var strFeedHtml = objReturn.strFeedHtml,
 							strHtml = "", activityType, objInfo = {},
@@ -126,8 +131,8 @@ boolClicked = true;
 			
 			$('.btn-refresh').live('click', function() { 
 				// Fetch the feed and insert into DOM.
-				$.mobile.pageLoading();
-				getActivities( { boolForceRefresh: true } );
+				// force refresh
+				getActivities( { refresh: true } );
 			} );
 			
 			
