@@ -242,8 +242,9 @@
 .ui-btn-up-e .ui-btn-inner,
 .ui-btn-hover-e .ui-btn-inner,
 .ui-btn-down-e .ui-btn-inner {
-  padding: 0px;
+  padding: 0px 6px;
   line-height: 24px;
+  font-size: .8em;
 }
 
 .ui-btn-hover-e {
