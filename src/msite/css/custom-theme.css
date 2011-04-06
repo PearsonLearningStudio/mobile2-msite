@@ -322,6 +322,6 @@
 	background-image: url(images/ajax-loader.gif);
 }
 .ui-loader { 
-	opacity: none;
+	opacity: 1;
 }
 

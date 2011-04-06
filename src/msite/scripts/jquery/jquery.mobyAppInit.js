@@ -23,7 +23,7 @@ boolClicked = true;
 			}
 			
 			// Be sure the dropdown menu is hidden each time we change a page
-			$(".container-page").live("pagebeforeshow pagebeforehide", function() {
+			$(".container-page").die("pagebeforeshow pagebeforehide").live("pagebeforeshow pagebeforehide", function() {
 				$.mobile.pageLoading();
 			});
 			
@@ -49,7 +49,7 @@ boolClicked = true;
 			$().mobyCourseManager();
 			
 			// bind listener to menu button
-			$(".container-page .button-menu").live("click", function() {
+			$(".layout-header").delegate(".button-menu", "click", function() {
 				$(this).siblings("ul").slideToggle(0);
 				$(this).toggleClass("menu-active");
 				return false;
@@ -179,23 +179,31 @@ boolClicked = true;
 						$.mobile.pageLoading();
 						
 						// Fetch the feed and insert into DOM.
-						$().mobyActivityManager("toHtml", {
-							intStartIndex: configSettings.intCurrentNumberOfActivities,
-							intEndIndex: configSettings.intCurrentNumberOfActivities + configSettings.intNumberOfActivities,
-							callbackSuccess: function(objReturn) {
-								$(".activity-scroll-indicator").remove();
-								var strFeedHtml = objReturn.strFeedHtml;
-						
-								$("#pageHome .view-activity .mobi-listview").append(strFeedHtml);
-								$("#pageHome .view-activity .mobi-listview").listview("refresh");
-								$.mobile.pageLoading(true);
-								configSettings.intCurrentNumberOfActivities += configSettings.intNumberOfActivities;
-								if (objReturn.boolAllItems) {
-									// All items have been returned and displayed, so unbind the scroll event.
-									$(window).unbind("scroll");
+						var doIt = function() {
+							$().mobyActivityManager("toHtml", {
+								intStartIndex: configSettings.intCurrentNumberOfActivities,
+								intEndIndex: configSettings.intCurrentNumberOfActivities + configSettings.intNumberOfActivities,
+								callbackSuccess: function(objReturn) {
+									$(".activity-scroll-indicator").remove();
+									var strFeedHtml = objReturn.strFeedHtml;
+							
+									$("#pageHome .view-activity .mobi-listview").append(strFeedHtml);
+									$("#pageHome .view-activity .mobi-listview").listview("refresh");
+									//var delay = setTimeout(function() {}, 500);
+									$.mobile.pageLoading(true);
+									configSettings.intCurrentNumberOfActivities += configSettings.intNumberOfActivities;
+									if (objReturn.boolAllItems) {
+										// All items have been returned and displayed, so unbind the scroll event.
+										$(window).unbind("scroll");
+									}
 								}
-							}
-						});
+							});
+							
+						}
+						// We have to do this on a brief delay for older iphones, otherwise events happen crazy out of order.
+						var otherDelay = setTimeout(function(){
+							doIt()
+						}, 500);
 			
 					}
 				})
