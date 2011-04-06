@@ -803,7 +803,7 @@ boolClicked = true;
 							courses +='<span class="mobi-your-course">' + this.number + '</span>';
 							courses +='</a>';
 							courses +='</li>';
-						} );
+						} ); 
 						$classesList.html(courses);
 						$classesList.listview('refresh');
 						$classesList.find('.listitem-course').click(function() {
