@@ -468,14 +468,14 @@ var friendlyDate = function(myDate) {
 	strSuffix = " AM",
 	strReturn = "";
 	
+	// If myDate isn't a date object we need to make it one.
+	if (typeof(myDate) != "object") {
+		dateActivity = Date.parseExact(myDate, "yyyy-MM-ddTHH:mm:ssZ").setTimezone('GMT');
+	}
+	console.log(dateActivity, parseInt(dateActivity.toString("HH")));
 	// AM or PM?
 	if (parseInt(dateActivity.toString("HH")) > 12) {
 		strSuffix = " PM";
-	}
-	
-	// If myDate isn't a date object we need to make it one.
-	if (typeof(myDate) != "object") {
-		dateActivity = Date.parseExact(myDate, "yyyy-MM-ddTHH:mm:ssZ");
 	}
 	
 	// Yesterday, Today, etc?
@@ -491,7 +491,7 @@ var friendlyDate = function(myDate) {
 		//Actually, just return "Yesterday"
 		strReturn = "Yesterday"
 	} else if(dateNow.getFullYear() > dateActivity.getFullYear()) {
-		strReturn = dateActivity.toString("MMM d, yyyy");
+		strReturn = dateActivity.toString("MMM d, yyyy h:mm");
 	} else {
 		// Otherwise return "MMM d" (e.g., "Mar 12" or "Sep 20")
 		strReturn = dateActivity.toString("MMM d");
