@@ -472,7 +472,7 @@ var friendlyDate = function(myDate) {
 	if (typeof(myDate) != "object") {
 		dateActivity = Date.parseExact(myDate, "yyyy-MM-ddTHH:mm:ssZ").setTimezone('GMT');
 	}
-	console.log(dateActivity, parseInt(dateActivity.toString("HH")));
+	
 	// AM or PM?
 	if (parseInt(dateActivity.toString("HH")) > 12) {
 		strSuffix = " PM";
