@@ -412,6 +412,10 @@ textarea.textarea-response-title {
 	width: 85px;
 }
 
+#pageActivityDetail .ui-content {
+	padding: 6px;
+}
+
 #pageActivityDetail .container-topicinfo,
 .detail-header .container-topicinfo {
 	float: left;
