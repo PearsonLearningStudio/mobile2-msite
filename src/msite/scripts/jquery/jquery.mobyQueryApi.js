@@ -28,7 +28,6 @@
 			
 			// Do a cross-domain ajax GET to the specified URL
 			ajaxManager = AjaxManager.getInstance();
-			//alert('he')
 			sessionManager.getAuthorizationHeader(function(authorizationHeader, errorCode) { 
 				ajaxManager.get(settings.strUrl, 
 							    [authorizationHeader], 
