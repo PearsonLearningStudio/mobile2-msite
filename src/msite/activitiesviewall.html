@@ -1,4 +1,4 @@
-<div data-role="page" id="pageActivitiesViewAll" class="container-page">
+<div data-role="page" id="pageActivitiesViewAll" class="activity-view-all container-page">
 	<div class="layout-header">
 		<p class="branding-header-logo">Pearson</p>
 		<a class="button-menu">Menu</a>
@@ -11,26 +11,29 @@
 		</ul>
 		<div class="clear"></div>
 	</div>
-	<div data-role="content">
-		<div data-role="navbar" class="container-navbar">
-			<ul>
-				<li><a href="#pageHome" data-transition="slide" data-direction="reverse">Home</a></li>
-				<li><a href="/discuss.html" data-transition="slide">Discuss</a></li>
-				<li><a href="/classes.html" data-transition="slide">Classes</a></li>
-				<li><a href="/people.html" data-transition="slide">People</a></li>
-				<li><a href="/profile.html" data-transition="slide">Profile</a></li>
-			</ul>
+	<div class="detail-header">
+		<a data-theme="e" href="#" class="ui-btn-left ui-btn ui-btn-corner-all ui-shadow ui-btn-up-e" data-rel="back" >
+			<span class="ui-btn-inner ui-btn-corner-all">
+				<span class="ui-btn-text">Back</span>
+				<span class="ui-icon ui-icon-arrow-l ui-icon-shadow"></span>
+			</span>
+		</a>
+		<div class="container-topicinfo">
+			<p class="mobi-course-title">Algrebra 101</p>
+			<p class="mobi-activity-type">Dropbox Submission</p>
 		</div>
-		<a data-theme="b" href="#" class="ui-btn-left ui-btn ui-btn-icon-left ui-btn-corner-all ui-shadow ui-btn-up-b" data-rel="back" data-icon="arrow-l"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Back</span><span class="ui-icon ui-icon-arrow-l ui-icon-shadow"></span></span></a>
-		<h3>View All of this type of activitiy for this course</h3>
-		<div data-role="content" id="container-activity-detail">
-			<div class="container-topicinfo">
-				<p class="mobi-course-title">Course title</p>
-				<p class="mobi-activity-type">Activity type</p>
+	</div>
+	<div data-role="content">
+		<div id="container-activity-detail">
+			<div class="activity-info-header">
+				<p class="mobi-title">Dropbox: Assignments</p>
+				<p class="mobi-summary">Comments: Comments on assignment</p>
+				<p class="mobi-date">Apr 1</p>
 			</div>
-			<div class="container-message container-message-open">
-				<p>Tell us a little about yourself. Include your name and major.  Also, this needs to be long so that we can see what extra text looks like lorem ipsum dolor sit amet requisciat in pace.  Lorem ipsum dolor sit amet.  Lorem. Ipsum dolor sit amet requisciat in pache domini.</p>
-				<div class="layout-button-expand">&nbsp;</div>
+			<div class="activity-detail-links">
+				<p>
+					<a href="#" class="detail-link-file">MyDocument.doc</a>
+				</p>
 			</div>
 		</div>
 	</div>

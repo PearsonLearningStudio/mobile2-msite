@@ -667,6 +667,7 @@ div.layout-header .menu-active {
   background-color: #EEE;
   border: solid 1px #CCC;
   color: #666;
+  text-align: center;
   -webkit-border-radius: 4px;
 }
 

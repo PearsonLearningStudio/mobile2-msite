@@ -412,6 +412,7 @@ boolClicked = true;
 					strUrl: configSettings.apiproxy + url,
 					successHandler: function(jsonResponse, intTransactionId) {
 						//console.log(jsonResponse, intTransactionId);
+						details += ' <div class="activity-info-header">';
 						if(activityType === 'grade') { 
 							details += '<p class="mobi-activity-title">Grade: ' + activity.grade + '</p>';
 							details += '<p class="mobi-activity-comments">Comments: '+ jsonResponse.grade.comments + '</p>';
@@ -420,8 +421,9 @@ boolClicked = true;
 							details += '<p class="mobi-activity-author">Posted by: ' + jsonResponse.messages[0].author.firstName + ' ' +jsonResponse.messages[0].author.lastName + '</p>';
 							details += '<p class="mobi-activity-comments">Comments: '+ jsonResponse.messages[0].comments + '</p>';
 						}
-						details += '<p class="mobi-activity-time">' + activity.time + '</p>';
-						details += '<a id="btn-viewall-activity" class="ui-btn ui-btn-up-c" data-transition="slide" data-direction="reverse" data-role="button" data-theme="c" href="#pageActivitiesViewAll"><span class="ui-btn-inner">View All Course ' + activity.object.objectType.replace('-', ' ') + 's</span></a>';	
+						details += '<p class="mobi-activity-date">' + activity.time + '</p>';
+						details += '</div>';
+						details += '<div class="activity-detail-links"><p><a id="btn-viewall-activity" class="detail-link ui-link" data-transition="slide" data-direction="reverse" data-role="button" href="/activitiesviewall.html">View All Course ' + activity.object.objectType.replace('-', ' ') + 's</a></p></div>';	
 						$contMessage.html(details);	
 						$.mobile.pageLoading(true);
 					},

@@ -58,6 +58,10 @@ div.layout-header .menu-active {
 	color: #333;
 }
 
+.activity-info-header {
+	padding: 0 0 0 40px;
+}
+
 .activity-info-header .mobi-date {
   font-size: .8em;
   font-style: italic;
@@ -91,11 +95,10 @@ div.layout-header .menu-active {
   background-repeat: no-repeat;
 }
 
-.dropbox-submission .activity-info-header,
-.grade .activity-info-header,
-.exam-submission .activity-info-header,
-.assignment-submission .activity-info-header {
-  padding: 0 0 0 40px;
+#container-activity-detail .dropbox-submission,
+#container-activity-detail .grade,
+#container-activity-detail .exam-submission,
+#container-activity-detail .assignment-submission {
   background-position: 0 0;
   background-repeat: no-repeat;
 }
@@ -129,16 +132,17 @@ div.layout-header .menu-active {
 }
 
 .mobi-listview li.grade,
-.grade .activity-info-header {
+#container-activity-detail .grade {
 	background-image: url(../images/icon_grade.png);
 }
 
 .mobi-listview li.dropbox-submission,
-.dropbox-submission .activity-info-header {
+#container-activity-detail .dropbox-submission {
 	background-image: url(../images/icon_dropbox.png);  
 }
 
-.mobi-listview li.exam-submission {
+.mobi-listview li.exam-submission,
+#container-activity-detail .exam-submission {
 	background-image: url(../images/icon_exam.png);  
 }
 
@@ -458,10 +462,6 @@ textarea.textarea-response-title {
 	font-weight: bold;
 	margin-bottom: 5px;
 	text-transform: capitalize;
-}
-
-#container-activity-detail .mobi-activity-time {
-	font-style: italic;
 }
 
 #btn-viewall-activity {
