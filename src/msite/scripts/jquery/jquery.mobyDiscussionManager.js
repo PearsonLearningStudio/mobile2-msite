@@ -88,10 +88,10 @@ var arrGlobalThreads = [];
 					var strCourseList = "";
 					var strDelimiter = ";";
 					for (var i = 0; i < arrCourses.length; i++) {
-						strCourseList += arrCourses[i].id + strDelimiter;
 						if (i === arrCourses.length -1) {
 							strDelimiter = "";
 						}
+						strCourseList += arrCourses[i].id + strDelimiter;
 					}
 
 					// Fetch the user topic object from the service.

@@ -46,7 +46,7 @@ boolClicked = true;
 			
 			// Initialize course cache
 			// Force a refresh in case this is a new login
-			$().mobyCourseManager();
+			$().mobyCourseManager({boolForceRefresh: true});
 		
 			// Initialize mobi-listview elements
 			$(".mobi-listview li").click(function() {
@@ -140,11 +140,8 @@ boolClicked = true;
 				getActivities( { refresh: true } );
 			} );
 			
-			
-			// Initialize click listener for Activity button
-			$(".btn-activity").die("click").live('click', function() {
+			var activityButtonClickHandler = function(boolForceRefresh) {
 				$(".btn-whatsdue").removeClass("ui-btn-active");
-				$(this).addClass("ui-btn-active");
 				$(".view-whatsdue").hide();
 				$(".view-activity").show();
 				
@@ -152,7 +149,7 @@ boolClicked = true;
 				if ($(".view-activity li").length < 24) {
 					$.mobile.pageLoading();
 					// Fetch the feed and insert into DOM.
-					getActivities();
+					getActivities({refresh: boolForceRefresh});
 					//when a user taps on an activity
 					$(".listitem-activity").live('click',  function(e){
 						e.preventDefault();
@@ -230,6 +227,12 @@ boolClicked = true;
 				})
 
 
+			}
+			
+			// Initialize click listener for Activity button
+			$(".btn-activity").die("click").live('click', function() {
+				$(this).addClass("ui-btn-active");
+				activityButtonClickHandler(false);
 			});
 			
 		
@@ -285,7 +288,8 @@ boolClicked = true;
 			
 			
 			// Every time we show the home page, we need to show the activities.
-			$(".btn-activity").click();
+			$(".btn-activity").addClass("ui-btn-active");
+			activityButtonClickHandler(true);
 			$("#pageHome").die("pageshow").live("pageshow", function() {
 				$(".btn-activity").click();
 				// Highlight the correct tab
