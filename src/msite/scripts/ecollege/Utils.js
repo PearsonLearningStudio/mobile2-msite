@@ -491,7 +491,7 @@ var friendlyDate = function(myDate) {
 		//Actually, just return "Yesterday"
 		strReturn = "Yesterday"
 	} else if(dateNow.getFullYear() > dateActivity.getFullYear()) {
-		strReturn = dateActivity.toString("MMM d, yyyy h:mm");
+		strReturn = dateActivity.toString("MMM d, yyyy");
 	} else {
 		// Otherwise return "MMM d" (e.g., "Mar 12" or "Sep 20")
 		strReturn = dateActivity.toString("MMM d");
