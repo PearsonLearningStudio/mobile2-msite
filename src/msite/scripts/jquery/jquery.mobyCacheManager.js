@@ -62,6 +62,7 @@
 				}
 				
 				if (boolRefresh || settings.boolForceRefresh) {
+					objGlobalResources = {};
 					$().mobiQueryApi(settings.strQueryType, {
 						strUrl: settings.strQueryUrl,
 						strData: settings.strQueryData,
