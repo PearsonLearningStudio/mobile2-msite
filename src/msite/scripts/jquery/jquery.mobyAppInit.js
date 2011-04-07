@@ -60,7 +60,6 @@ boolClicked = true;
 				$(this).addClass("ui-btn-active");
 				$(".view-activity").hide();
 				$(".view-whatsdue").show();
-				
 				$(window).unbind("scroll");
 			}).click(); // default view for page, set on load.
 			
@@ -149,36 +148,38 @@ boolClicked = true;
 				$(".view-whatsdue").hide();
 				$(".view-activity").show();
 				
-
-				$.mobile.pageLoading();
 				
-				// Fetch the feed and insert into DOM.
-				getActivities();
+				// Are there already items on display?
+				if ($(".view-activity li").length === 0) {
+					$.mobile.pageLoading();
+					// Fetch the feed and insert into DOM.
+					getActivities();
+					//when a user taps on an activity
+					$(".listitem-activity").live('click',  function(e){
+						e.preventDefault();
+						arrGlobalActivity =  this.className.match(/\w+[-]*\w+\d+/ig);
+						activityArray = arrGlobalActivity[0].split('_');
+						activityType = activityArray[0];
+						if(activityType === 'thread-topic'){									
+							arrGlobalTopics.push(strCurrentTopic);
+						} else if(activityType === 'thread-post'){						
+							// The user has tapped on a thread.  We need
+							// to display the thread detail page.
+							// pass the responseId 
+							objInfo = {
+								boolFromActivity: true,
+								strNewId: activityArray[1] + '-' + activityArray[2],
+								strOldId: -1
+							}
+							arrGlobalThreads.push(objInfo);
+						} 
+					}); 
+				}
 				
-				//when a user taps on an activity
-				$(".listitem-activity").live('click',  function(e){
-					e.preventDefault();
-					arrGlobalActivity =  this.className.match(/\w+[-]*\w+\d+/ig);
-					activityArray = arrGlobalActivity[0].split('_');
-					activityType = activityArray[0];
-					if(activityType === 'thread-topic'){									
-						arrGlobalTopics.push(strCurrentTopic);
-					} else if(activityType === 'thread-post'){						
-						// The user has tapped on a thread.  We need
-						// to display the thread detail page.
-						// pass the responseId 
-						objInfo = {
-							boolFromActivity: true,
-							strNewId: activityArray[1] + '-' + activityArray[2],
-							strOldId: -1
-						}
-						arrGlobalThreads.push(objInfo);
-					} 
-				} ); 
+				
 				
 				// Add scroll event for infinite scroll and positioning bookmark alert div
-				$(window).scroll(function() {
-					
+				$(window).unbind("scroll").scroll(function() {
 					// always position the bookmark popup at the bottom of the viewport
 					if ($("#pageHome .bookmark-popup:visible").length > 0){
 						$("#pageHome .bookmark-popup").positionBottomOfViewport()
@@ -186,7 +187,11 @@ boolClicked = true;
 					
 					// Infinite scroll
 					if (($(window).scrollTop() + 150) >= ($(document).height() - $(window).height())) {
-						// Get more goodies!
+						// Get more things
+						if (configSettings.boolScrollUpdate) {
+							return;
+						}
+						configSettings.boolScrollUpdate = true;
 						$.mobile.pageLoading();
 						
 						// Fetch the feed and insert into DOM.
@@ -200,13 +205,13 @@ boolClicked = true;
 							
 									$("#pageHome .view-activity .mobi-listview").append(strFeedHtml);
 									$("#pageHome .view-activity .mobi-listview").listview("refresh");
-									//var delay = setTimeout(function() {}, 500);
 									$.mobile.pageLoading(true);
 									configSettings.intCurrentNumberOfActivities += configSettings.intNumberOfActivities;
 									if (objReturn.boolAllItems) {
 										// All items have been returned and displayed, so unbind the scroll event.
 										$(window).unbind("scroll");
 									}
+									configSettings.boolScrollUpdate = false;
 								}
 							});
 							

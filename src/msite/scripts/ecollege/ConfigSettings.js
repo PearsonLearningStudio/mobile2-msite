@@ -8,3 +8,4 @@ configSettings.wmm = {};
 configSettings.wmm.enabled = "true";
 configSettings.intNumberOfActivities = 10;
 configSettings.intCurrentNumberOfActivities = configSettings.intNumberOfActivities;
+configSettings.boolScrollUpdate = false;
