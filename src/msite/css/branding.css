@@ -53,15 +53,7 @@
   border: solid 1px #CCC;
   
 }
-.portrait #loginForm .authFields ul li input,
-.portrait #registerPage .authFields ul li input {
-	width: 120%;
-}
 
-.landscape #loginForm .authFields ul li input,
-.landscape #registerPage .authFields ul li input {
-	width: 110%;
-}
 
 #loginForm .authFields ul li .ui-checkbox input[type=checkbox] {
 /*  margin: 30px 0 0 0;*/

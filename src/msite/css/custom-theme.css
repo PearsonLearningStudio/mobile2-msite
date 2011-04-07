@@ -21,7 +21,7 @@
 }
 
 .ui-btn-hover-c {
-/*	border: 1px solid 		#bbb;*/
+    border: 0px solid 		#bbb;
 	background: 			#dadada;
 	font-weight: bold;
 	color: 					#FFF;

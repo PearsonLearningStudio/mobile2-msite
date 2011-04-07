@@ -148,9 +148,8 @@ boolClicked = true;
 				$(".view-whatsdue").hide();
 				$(".view-activity").show();
 				
-				
 				// Are there already items on display?
-				if ($(".view-activity li").length === 0) {
+				if ($(".view-activity li").length < 24) {
 					$.mobile.pageLoading();
 					// Fetch the feed and insert into DOM.
 					getActivities();
