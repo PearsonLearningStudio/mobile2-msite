@@ -425,7 +425,7 @@ boolClicked = true;
 							details += '<p class="mobi-activity-author">Posted by: ' + jsonResponse.messages[0].author.firstName + ' ' +jsonResponse.messages[0].author.lastName + '</p>';
 							details += '<p class="mobi-activity-comments">Comments: '+ jsonResponse.messages[0].comments + '</p>';
 						}
-						details += '<p class="mobi-activity-date">' + activity.time + '</p>';
+						details += '<p class="mobi-date">' + activity.time + '</p>';
 						details += '</div>';
 						details += '<div class="activity-detail-links"><p><a id="btn-viewall-activity" class="detail-link ui-link" data-transition="slide" data-direction="reverse" data-role="button" href="/activitiesviewall.html">View All Course ' + activity.object.objectType.replace('-', ' ') + 's</a></p></div>';	
 						$contMessage.html(details);	
