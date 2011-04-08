@@ -695,5 +695,16 @@ div.layout-header .menu-active {
 /* View Profile */
 .view-profile {
    background: url(../images/background_content.png);
-   padding: 20px;
+   padding: 10px 10px 4px 10px;
+}
+
+.view-courses .mobi-listview .course {
+  background-image: none;
+  padding-left: 0px;
+}
+
+.list-header {
+  margin: 20px 0 0 5px;
+  font-weight: bold;
+  color: #66645F;
 }

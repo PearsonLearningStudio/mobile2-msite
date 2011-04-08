@@ -117,14 +117,6 @@
 				<string>DefaultTab</string>
 			</dict>
 			<dict>
-				<key>StateType</key>
-				<string>PreviewTab</string>
-				<key>Title</key>
-				<string>eCollege</string>
-				<key>URL</key>
-				<string>http://localhost/~juan/eCollege/MobileWeb/src/msite/index.html</string>
-			</dict>
-			<dict>
 				<key>DocumentURL</key>
 				<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/dropbox.html</string>
 				<key>StateType</key>
