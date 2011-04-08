@@ -218,7 +218,9 @@ div.layout-header .menu-active {
 	line-height: 26px;
 	padding: 0 0 0 32px;
 }
-
+.layout-header li.settings {
+	display: none;
+}
 .layout-header li.settings .ui-btn-text {
 	background: url(../images/icon_menu_settings.png) 12px 12px no-repeat;
 	line-height: 26px;
