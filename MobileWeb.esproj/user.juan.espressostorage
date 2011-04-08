@@ -22,7 +22,6 @@
 		<key>ExpandedURLs</key>
 		<array>
 			<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/css</string>
-			<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/images</string>
 			<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/scripts/ecollege</string>
 			<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/scripts/jquery</string>
 		</array>
@@ -78,12 +77,6 @@
 			<dict>
 				<key>DocumentURL</key>
 				<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/scripts/jquery/jquery.mobyActivityManager.js</string>
-				<key>StateType</key>
-				<string>DefaultTab</string>
-			</dict>
-			<dict>
-				<key>DocumentURL</key>
-				<string>file://localhost/Users/juan/Sites/eCollege/MobileWeb/src/msite/css/jquery.mobile-1.0a3.css</string>
 				<key>StateType</key>
 				<string>DefaultTab</string>
 			</dict>

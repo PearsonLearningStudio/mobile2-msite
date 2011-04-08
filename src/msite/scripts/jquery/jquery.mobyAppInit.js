@@ -331,7 +331,7 @@ boolClicked = true;
 						// fill in the filter
 						$().mobyCourseManager({
 							callbackSuccess: function(arrCourses) {
-								var strHtml = '<select name="select-filter-discussions" id="select-filter-discussions">';
+								var strHtml = '<select name="select-filter-discussions" id="select-filter-discussions" data-icon="dropdown">';
 								strHtml += '<option value="all">All</option>';
 									
 								for (var i = 0; i < arrCourses.length; i++) {
