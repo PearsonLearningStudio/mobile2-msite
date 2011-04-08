@@ -885,6 +885,19 @@ boolClicked = true;
 				getClassList($(this));
 			} );
 			
+			function  getSummary(text) {
+				var strReturn = "",
+					strStrippedSummary = text.replace(/(<([^>]+)>)/ig,"");
+				if (strStrippedSummary.length > 200) {
+					strReturn = strStrippedSummary.substr(0, 200);
+				} else if (strStrippedSummary.length === 0) {
+					strReturn = "";
+				} else {
+					strReturn = strStrippedSummary;
+				}
+				return strReturn;
+			}
+			
 			$("#pageCourseDetail").live("pageshow", function() {
 				var $this = $(this), info, instructor, announcement, 
 				$contInfo = $this.find('.container-topicinfo'),
@@ -914,9 +927,9 @@ boolClicked = true;
 					strUrl: configSettings.apiproxy + '/courses/' + objGlobalCourse.id + '/announcements',
 					successHandler: function(jsonResponse){
 						announcement = jsonResponse.announcements[0];
-						if(announcement) {							
+						if(announcement) {					
 							info = '<h5 class="announcement-subject">' + announcement.subject + '</h5>';
-							info += '<p class="announcement-message">' + announcement.text + '</p>';
+							info += '<p class="announcement-message">' + getSummary( announcement.text ) + '</p>';
 							$contAnn.html(info);
 						}
 						$.mobile.pageLoading(true);
