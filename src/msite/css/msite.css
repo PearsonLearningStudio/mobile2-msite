@@ -233,7 +233,13 @@ div.layout-header .menu-active {
 	font-weight: bold;
 	right: 10px;
 	top: 30%;
+	background: url(../images/icon_list_arrow.png) center center no-repeat;
 }
+
+li .ui-icon-arrow-r {
+	background: url(../images/icon_list_arrow.png) center bottom no-repeat;
+}
+
 .view-discussion .ui-icon-arrow-r {
 	/*display: none;*/
 }
