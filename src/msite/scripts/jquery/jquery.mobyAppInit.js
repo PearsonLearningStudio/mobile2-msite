@@ -332,7 +332,7 @@ boolClicked = true;
 						$().mobyCourseManager({
 							callbackSuccess: function(arrCourses) {
 								var strHtml = '<select name="select-filter-discussions" id="select-filter-discussions" data-icon="dropdown">';
-								strHtml += '<option value="all">All</option>';
+								strHtml += '<option value="all">All Courses</option>';
 									
 								for (var i = 0; i < arrCourses.length; i++) {
 									//don't filter out courses with no discussions.
@@ -364,17 +364,15 @@ boolClicked = true;
 									}
 									//trying to prevent page refresh on Pre 
 									return false;
-								})
+								} );
+								$(".listitem-topic").live('click', function() {
+									// The user has tapped a topic to drill down.
+									// Store the topic information in the global topics array.
+									var strCurrentTopic = $(this).attr("id").split("_")[1];
+									arrGlobalTopics.push(strCurrentTopic);
+								} );
 							}
-						});
-						
-						$(".listitem-topic").click(function() {
-							// The user has tapped a topic to drill down.
-							// Store the topic information in the global topics array.
-							var strCurrentTopic = $(this).attr("id").split("_")[1];
-							arrGlobalTopics.push(strCurrentTopic);
-						})
-						
+						} );						
 						
 						$.mobile.pageLoading(true);
 					}
@@ -842,23 +840,30 @@ boolClicked = true;
 				var courses = '', i, $classesList = $this.find('.view-courses .mobi-listview');
 				$().mobyCourseManager( {
 					callbackSuccess: function(arrCourses) { 
-						
-						$(arrCourses).each(function(i) { 
-							courses +='<li class="course">';
-							courses +='<a id="' + i + '"  href="/course.html" class="listitem-course">';
-							courses +='<span class="mobi-title">' + this.title + '</span>';
-							courses +='<span class="mobi-your-course">' + this.number + '</span>';
-							courses +='</a>';
-							courses +='</li>';
-						} ); 
+						if($this[0].id === 'pageProfile') {								
+							$(arrCourses).each(function(i) { 
+								courses +='<li class="course">';
+								//courses +='<a id="' + i + '"  href="#" class="listitem-course">';
+								courses +='<span class="mobi-title">' + this.title + '</span>';
+								courses +='<span class="mobi-your-course">' + this.number + '</span>';
+								//courses +='</a>';
+								courses +='</li>';
+							} ); 
+						} else {
+							$(arrCourses).each(function(i) { 
+								courses +='<li class="course">';
+								courses +='<a id="' + i + '"  href="/course.html" class="listitem-course">';
+								courses +='<span class="mobi-title">' + this.title + '</span>';
+								courses +='<span class="mobi-your-course">' + this.number + '</span>';
+								courses +='</a>';
+								courses +='</li>';
+							} ); 
+						}
 						$classesList.html(courses);
 						$classesList.listview('refresh');
 						$classesList.find('.listitem-course').click(function(e) {
 							//add the current course data into the arrGlobalCourse array for #pageCourseDetail
-							varGlobalCourse = arrCourses[this.id];
-							if($this[0].id === 'pageProfile') {
-								return false;
-							}
+							objGlobalCourse = arrCourses[this.id];
 						} );
 						$.mobile.pageLoading(true);
 					},
@@ -880,6 +885,19 @@ boolClicked = true;
 				getClassList($(this));
 			} );
 			
+			function  getSummary(text) {
+				var strReturn = "",
+					strStrippedSummary = text.replace(/(<([^>]+)>)/ig,"");
+				if (strStrippedSummary.length > 200) {
+					strReturn = strStrippedSummary.substr(0, 200);
+				} else if (strStrippedSummary.length === 0) {
+					strReturn = "";
+				} else {
+					strReturn = strStrippedSummary;
+				}
+				return strReturn;
+			}
+			
 			$("#pageCourseDetail").live("pageshow", function() {
 				var $this = $(this), info, instructor, announcement, 
 				$contInfo = $this.find('.container-topicinfo'),
@@ -891,11 +909,11 @@ boolClicked = true;
 				$contInfo.empty();
 				$contAnn.empty();
 				$().mobiQueryApi('get', {
-					strUrl: configSettings.apiproxy + '/courses/' + varGlobalCourse.id + '/instructors',
+					strUrl: configSettings.apiproxy + '/courses/' + objGlobalCourse.id + '/instructors',
 					successHandler: function(jsonResponse){
 						instructor = jsonResponse.instructors[0];
-						info = '<p class="mobi-course-title">' + varGlobalCourse.number + '</p>';
-						info += '<p class="mobi-activity-type">' + varGlobalCourse.title + '</p>';
+						info = '<p class="mobi-course-title">' + objGlobalCourse.number + '</p>';
+						info += '<p class="mobi-activity-type">' + objGlobalCourse.title + '</p>';
 						if(instructor) {
 		  					info += '<p class="mobi-instructor-name">' + instructor.firstName + ' ' + instructor.lastName + '</p>';
 	  					}
@@ -906,12 +924,12 @@ boolClicked = true;
 					}
 				} ); 
 				$().mobiQueryApi('get', { 
-					strUrl: configSettings.apiproxy + '/courses/' + varGlobalCourse.id + '/announcements',
+					strUrl: configSettings.apiproxy + '/courses/' + objGlobalCourse.id + '/announcements',
 					successHandler: function(jsonResponse){
 						announcement = jsonResponse.announcements[0];
-						if(announcement) {							
+						if(announcement) {					
 							info = '<h5 class="announcement-subject">' + announcement.subject + '</h5>';
-							info += '<p class="announcement-message">' + announcement.text + '</p>';
+							info += '<p class="announcement-message">' + getSummary( announcement.text ) + '</p>';
 							$contAnn.html(info);
 						}
 						$.mobile.pageLoading(true);
@@ -920,13 +938,34 @@ boolClicked = true;
 						$.mobile.pageLoading(true);
 					}
 				} );
-				
 				//remove the current course from the global var when clicking on the back button
 				$("#pageCourseDetail #back-classes").unbind(".myclick").bind("click.myclick", function() {
 					$.mobile.pageLoading();
-					varGlobalCourse = '';
+					objGlobalCourse = {};
 				} );
 			} ) ;
+			
+			$('#pageCoursePeople').live("pageshow", function() {
+				var $this = $(this), info, 
+				$contInfo = $this.find('.container-topicinfo');
+				$contInfo.empty();
+				info = '<p class="mobi-course-title">' + objGlobalCourse.number + '</p>';
+				info += '<p class="mobi-activity-type">' + objGlobalCourse.title + '</p>';
+				if(objGlobalCourse.instructor) {
+					info += '<p class="mobi-instructor-name">' + objGlobalCourse.instructor + '</p>';
+				}
+				$contInfo.html(info);
+			} );
+			
+			$('#pagePerson').live('pageshow', function() {
+				var $this = $(this), info, 
+				$contInfo = $this.find('.container-personinfo');
+				$contInfo.empty();
+				info = '<p class="mobi-student-name">Student Name</p>';
+				info += '<p class="mobi-student-role">Student Role</p>';
+				info += '<p class="mobi-student-class">from ' + objGlobalCourse.title + '</p>';
+				$contInfo.html(info);
+			} );
 			
 			$("#pageProfile").live("pageshow", function() {
 				var user, $contInfo = $(this).find('.container-topicinfo');

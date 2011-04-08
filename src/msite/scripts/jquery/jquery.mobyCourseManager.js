@@ -13,7 +13,7 @@
  * 		callbackSuccess:  The callback to execute upon successful fetching of the course information array
  * 		callbackError:  The callback to execute if an error occurs.
  */
- var varGlobalCourse;
+ var objGlobalCourse;
 
 (function($) {
 	var methods = {
