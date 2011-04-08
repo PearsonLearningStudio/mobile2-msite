@@ -332,7 +332,7 @@ boolClicked = true;
 						$().mobyCourseManager({
 							callbackSuccess: function(arrCourses) {
 								var strHtml = '<select name="select-filter-discussions" id="select-filter-discussions" data-icon="dropdown">';
-								strHtml += '<option value="all">All</option>';
+								strHtml += '<option value="all">All Courses</option>';
 									
 								for (var i = 0; i < arrCourses.length; i++) {
 									//don't filter out courses with no discussions.

@@ -193,6 +193,10 @@ div.layout-header .menu-active {
 .view-discussion .mobi-title {
 	position: relative;
 	top: -4px; 
+	width: 65%;
+}
+.landscape .view-discussion .mobi-title {
+	width: 77%;
 }
 .view-discussion .mobi-response-count {
 	font-size: 70%;
