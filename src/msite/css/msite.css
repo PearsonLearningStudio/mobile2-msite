@@ -219,7 +219,7 @@ div.layout-header .menu-active {
 	-webkit-border-radius: 8px;
 	border-radius: 8px;
 	right: 30px;
-	top: 37%;
+	top: 39%;
 	padding-left: 4px;
 	padding-right: 4px;
 	padding-bottom: 1px;
@@ -232,7 +232,7 @@ div.layout-header .menu-active {
 	color: #666;
 	font-weight: bold;
 	right: 10px;
-	top: 30%;
+	top: 28%;
 	background: url(../images/icon_list_arrow.png) center center no-repeat;
 }
 
