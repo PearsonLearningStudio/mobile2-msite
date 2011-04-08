@@ -52,7 +52,7 @@ div.layout-header .menu-active {
 }
 .mobi-listview .mobi-date {
 	position: absolute;
-	top: 4px;
+	top: 12px;
 	right: 10px;
 	font-size: 80%;
 	color: #333;
@@ -79,6 +79,7 @@ div.layout-header .menu-active {
 	overflow: hidden;
 	margin-bottom: 0.1em;
 }
+
 
 .mobi-listview li.responses,
 .mobi-listview li.no-responses,
@@ -181,6 +182,11 @@ div.layout-header .menu-active {
 .view-whatsdue .mobi-summary,
 .view-whatsdue .mobi-title {
 	padding-right: 50px;
+}
+.portrait .view-activity .mobi-title,
+.portrait .view-whatsdue .mobi-title {
+	width: 65%;
+	padding-right: 0px;
 }
 
 /* Discussion list view */
