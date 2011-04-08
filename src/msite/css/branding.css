@@ -650,6 +650,10 @@ div.layout-header .menu-active {
   left: -6px;
 }
 
+.my-profile-item-icon .person {
+	display: none;
+}
+
 .detail-header {
   width: 100%;
   padding: 0px;

@@ -471,7 +471,6 @@ textarea.textarea-response-title {
 	color: #2e3a81;
 	font-weight: bold;
 	margin: 0;
-	padding-top: 8px;
 }
 
 #container-activity-detail {
@@ -554,14 +553,14 @@ textarea.textarea-response-title {
 	padding: 3px 5px 4px;
 }
 
-#pagePerson .container-personinfo {
-	  float: left;
-    margin: 5px 0 0;
-    padding-left: 4px;
-    width: 200px;
+ .container-personinfo {
+	float: left;
+	margin: 5px 0 0;
+	padding-left: 4px;
+	width: 200px;
 }
 
-#pagePerson .container-personinfo .mobi-student-name {
+.container-personinfo .mobi-student-name {
 	font-size: 20px;
 	color: #2e3a81;
 	font-weight: bold;
