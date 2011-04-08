@@ -451,6 +451,14 @@ textarea.textarea-response-title {
 	color: #2e3a81;
 }
 
+.container-topicinfo .mobi-student-name {
+	font-size: 20px;
+	color: #2e3a81;
+	font-weight: bold;
+	margin: 0;
+	padding-top: 8px;
+}
+
 #container-activity-detail {
 	background-color: #fff;
 	border: 1px solid #fff;
