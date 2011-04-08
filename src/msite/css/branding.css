@@ -370,7 +370,7 @@ div.layout-header .menu-active {
 }
 
 /* grid c: 25/25/25/25 */
-.container-navbar .ui-grid-c .ui-block-a, .container-navbar .ui-grid-c .ui-block-b, .container-navbar .ui-grid-c .ui-block-c, .container-navbar .ui-grid-c .ui-block-d { width: 24%; padding: 0; }
+.container-navbar .ui-grid-c .ui-block-a, .container-navbar .ui-grid-c .ui-block-b, .container-navbar .ui-grid-c .ui-block-c, .container-navbar .ui-grid-c .ui-block-d { width: 25%; padding: 0; }
 
 .subnav {
   padding: 6px;
