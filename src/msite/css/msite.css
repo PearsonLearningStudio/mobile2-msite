@@ -536,6 +536,45 @@ textarea.textarea-response-title {
  #pageProfile li.course .ui-icon {
  	display: none;
  }
+ 
+ #pageProfile li.course {
+ 	font-size: 16px;
+ 	padding: 0.7em 75px 0.7em 15px;
+ }
+ 
+ #pageProfile span.mobi-your-course {
+ 	font-weight: normal;
+ }
+ 
+ /*
+  * Person page
+  */
+
+#pagePerson .view-profile {
+	padding: 3px 5px 4px;
+}
+
+#pagePerson .container-personinfo {
+	  float: left;
+    margin: 5px 0 0;
+    padding-left: 4px;
+    width: 200px;
+}
+
+#pagePerson .container-personinfo .mobi-student-name {
+	font-size: 20px;
+	color: #2e3a81;
+	font-weight: bold;
+	margin: 0;
+}
+
+#pagePerson .mobi-student-class {
+	color: #333333;
+	display: block;
+	font-size: 70%;
+	font-weight: bold;
+	margin: 0;
+}
 
 /*
  * Bookmark popup

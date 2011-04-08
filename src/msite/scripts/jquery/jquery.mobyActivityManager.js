@@ -168,8 +168,8 @@ var arrGlobalActivity = [],
 				// get the feed
 				$().mobyCacheManager({
 					boolForceRefresh: settings.boolForceRefresh,
-					//strQueryUrl: configSettings.apiproxy + "/me/whatshappeningfeed",
-					strQueryUrl: configSettings.apiproxy + "/me/whatshappeningfeed" + "?types=grade,dropbox-submission",
+					strQueryUrl: configSettings.apiproxy + "/me/whatshappeningfeed",
+					//strQueryUrl: configSettings.apiproxy + "/me/whatshappeningfeed" + "?types=grade,dropbox-submission",
 					strQueryType: "get",
 					strQueryData: "",
 					strCacheDate: "activities-timestamp",
@@ -188,7 +188,7 @@ var arrGlobalActivity = [],
 					callbackError: function() {
 						settings.callbackError();
 					}
-				})
+				} );
 			} else {
 				objFeed = settings.objFeed;
 				objReturn = createHtml(objFeed);
