@@ -710,8 +710,6 @@ boolClicked = true;
 					callbackSuccess: function(objInfo) {
 						$.extend(objThread, objInfo);
 						numResponses = objThread.strTotalResponseString;
-						// Next, empty out the detail info
-						$(".header-disucssion-detail .mobi-title, .container-topicinfo .mobi-title, .container-topicinfo .mobi-author, .container-topicinfo .mobi-total-responses, .container-topicinfo .mobi-unread-responses, .container-message").html("");
 						
 						// What thread should we show?  This information should be contained in the
 						// arrGlobalThreads array.  If it isn't, we should go back.
@@ -737,6 +735,7 @@ boolClicked = true;
 						}					
 						$thisView.find('.container-topicinfo').addClass(iconClass);
 						// Fill in the thread detail information
+						$thisView.find(".header-discussion-detail .mobi-title").text(objThread.strTitle);
 						$thisView.find(".container-discussion-detail .container-topicinfo .mobi-title").text(objThread.strTitle);
 						$thisView.find(".container-discussion-detail .container-topicinfo .mobi-author").text(objThread.strAuthorName);
 						$thisView.find(".container-discussion-detail .container-topicinfo .mobi-total-responses").text(objThread.strTotalResponseString);
