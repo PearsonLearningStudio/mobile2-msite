@@ -533,6 +533,12 @@ boolClicked = true;
 				} );				
 			}
 			
+			$("#pageDiscussionTopicDetail").live("pagebeforeshow", function(event, ui) {
+				$("#pageDiscussionTopicDetail .container-discussion-detail").css("visibility", "hidden");
+				$("#pageDiscussionTopicDetail .header-discussion-detail").css("visibility", "hidden")
+			})
+			
+			
 			// Page show event for a discussion topic detail page
 			$("#pageDiscussionTopicDetail").live("pageshow", function(event, ui) {
 				// We are showing the Discussion tab.
@@ -649,12 +655,16 @@ boolClicked = true;
 											//insert the discussion reply input and add event handling
 											discussionReply( $thisView, strTitle, 'topics', userTopicId  );
 											$.mobile.pageLoading(true);
+											$("#pageDiscussionTopicDetail .container-discussion-detail").css("visibility", "visible");
+											$("#pageDiscussionTopicDetail .header-discussion-detail").css("visibility", "visible")
 										}
 									});
 								},
 								errorHandler: function() {
 									alert('Unable to fetch response information for topic.');
 									
+									$("#pageDiscussionTopicDetail .container-discussion-detail").css("visibility", "visible");
+									$("#pageDiscussionTopicDetail .header-discussion-detail").css("visibility", "visible")
 									$.mobile.pageLoading(true);
 								}
 							});
@@ -662,6 +672,8 @@ boolClicked = true;
 							$theseThreads.html("<h4>No responses.</h4>");
 							//insert the discussion reply input and add event handling
 							discussionReply( $thisView, strTitle, 'topics', userTopicId  );
+							$("#pageDiscussionTopicDetail .container-discussion-detail").css("visibility", "visible");
+							$("#pageDiscussionTopicDetail .header-discussion-detail").css("visibility", "visible")
 							$.mobile.pageLoading(true);
 						}
 						
@@ -669,6 +681,8 @@ boolClicked = true;
 					errorHandler: function() {
 						alert("Unable to fetch the topic's responses. Please try again.");
 						
+						$("#pageDiscussionTopicDetail .container-discussion-detail").css("visibility", "visible");
+						$("#pageDiscussionTopicDetail .header-discussion-detail").css("visibility", "visible")
 						$.mobile.pageLoading(true);
 					}
 				});
@@ -806,12 +820,21 @@ boolClicked = true;
 				
 				
 			
+			$("#pageDiscussionThreadDetail").live("pagebeforeshow", function(event, ui) {
+				$("#pageDiscussionThreadDetail .container-discussion-detail").css("visibility", "hidden");
+				$("#pageDiscussionThreadDetail .header-discussion-detail").css("visibility", "hidden");
+				$("#pageDiscussionThreadDetail .container-threads").css("visibility", "hidden");
+			})
+			
 			// Page show event for the thread detail page
 			$("#pageDiscussionThreadDetail").live("pageshow", function(event, ui) {
 				$(".button-menu").unbind("click").bind("click", function() {
 					showMenu(this);
 				})
 				discussionThreadDetail( $(this) );
+				$("#pageDiscussionThreadDetail .container-discussion-detail").css("visibility", "visible");
+				$("#pageDiscussionThreadDetail .header-discussion-detail").css("visibility", "visible")
+				$("#pageDiscussionThreadDetail .container-threads").css("visibility", "visible");
 				// Back button:  If we tap the back button, it will take us back to the prior screen.
 				// We must therefore remove the current element from the array.
 				$("#pageDiscussionThreadDetail #back-thread-detail").unbind(".myclick").bind("click.myclick", function() {
@@ -820,7 +843,11 @@ boolClicked = true;
 				})
 			});
 			
-			
+			$("#pageDiscussionThreadDetail2").live("pagebeforeshow", function(event, ui) {
+				$("#pageDiscussionThreadDetail2 .container-discussion-detail").css("visibility", "hidden");
+				$("#pageDiscussionThreadDetail2 .header-discussion-detail").css("visibility", "hidden")
+				$("#pageDiscussionThreadDetail2 .container-threads").css("visibility", "hidden");
+			})
 			
 			// Page show event for the 
 			$("#pageDiscussionThreadDetail2").live("pageshow", function(event, ui) {
@@ -828,6 +855,10 @@ boolClicked = true;
 					showMenu(this);
 				})
 				discussionThreadDetail( $(this) );
+				
+				$("#pageDiscussionThreadDetail2 .container-discussion-detail").css("visibility", "visible");
+				$("#pageDiscussionThreadDetail2 .header-discussion-detail").css("visibility", "visible");
+				$("#pageDiscussionThreadDetail2 .container-threads").css("visibility", "visible");
 				// Back button:  If we tap the back button, it will take us back to the prior screen.
 				// We must therefore remove the current element from the array.
 				$("#pageDiscussionThreadDetail2 #back-thread-detail-2").unbind(".myclick").bind("click.myclick", function() {
