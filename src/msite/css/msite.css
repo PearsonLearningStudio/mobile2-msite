@@ -152,6 +152,9 @@ div.layout-header .menu-active {
 }
 
 /* Activity list view */
+.view-whatsdue {
+	display: none;
+}
 .mobi-listview .mobi-activity-title {
 	font-weight: bold;
 	font-size: 105%;
@@ -656,4 +659,12 @@ textarea.textarea-response-title {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
+}
+
+.portrait #pageCourseDetail .container-topicinfo {
+	width: 250px;
+	border: 1px solid red;
+}
+.landscape #pageCourseDetail .container-topicinfo {
+	width: 400px;
 }

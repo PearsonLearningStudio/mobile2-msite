@@ -919,7 +919,7 @@ boolClicked = true;
 				var strReturn = "",
 					strStrippedSummary = text.replace(/(<([^>]+)>)/ig,"");
 				if (strStrippedSummary.length > 200) {
-					strReturn = strStrippedSummary.substr(0, 200);
+					strReturn = strStrippedSummary.substr(0, 100);
 				} else if (strStrippedSummary.length === 0) {
 					strReturn = "";
 				} else {
@@ -927,6 +927,12 @@ boolClicked = true;
 				}
 				return strReturn;
 			}
+			$("#pageCourseDetail").live("pagebeforeshow", function() {
+				$("#pageCourseDetail .container-topicinfo").css("visibility", "hidden");
+				$("#pageCourseDetail .announcement-subject").css("visibility", "hidden");
+				$("#pageCourseDetail .announcement-message").css("visibility", "hidden");
+				
+			});
 			
 			$("#pageCourseDetail").live("pageshow", function() {
 				var $this = $(this), info, instructor, announcement, 
@@ -938,6 +944,14 @@ boolClicked = true;
 				})
 				$contInfo.empty();
 				$contAnn.empty();
+				if (objGlobalCourse.number === "SOT") {
+					// Hide the People link for Student Orientation Tutorials, as they have a gajillion people in them
+					// and hitting the service will return ALL OF THEM.
+					$this.find(".item-people").hide();
+				} else {
+					// Because we might have previously hidden it...
+					$this.find(".item-people").show();
+				}
 				$().mobiQueryApi('get', {
 					strUrl: configSettings.apiproxy + '/courses/' + objGlobalCourse.id + '/instructors',
 					successHandler: function(jsonResponse){
@@ -948,6 +962,7 @@ boolClicked = true;
 		  					info += '<p class="mobi-instructor-name">' + instructor.firstName + ' ' + instructor.lastName + '</p>';
 	  					}
 		  				$contInfo.html(info);
+						$("#pageCourseDetail .container-topicinfo").css("visibility", "visible");
 					},
 					errorHandler: function(){
 						$.mobile.pageLoading(true);
@@ -962,6 +977,8 @@ boolClicked = true;
 							info += '<p class="announcement-message">' + getSummary( announcement.text ) + '</p>';
 							$contAnn.html(info);
 						}
+						$("#pageCourseDetail .announcement-subject").css("visibility", "visible");
+						$("#pageCourseDetail .announcement-message").css("visibility", "visible");
 						$.mobile.pageLoading(true);
 					},
 					errorHandler: function(){
@@ -975,9 +992,20 @@ boolClicked = true;
 				} );
 			} ) ;
 			
+			
+			$("#pageCoursePeople").live("pagebeforeshow", function(event, ui) {
+				$("#pageCoursePeople .container-topicinfo").css("visibility", "hidden");
+				$("#pageCoursePeople .view-course-sections .mobi-listview").css("visibility", "hidden");
+			})
+			
 			$('#pageCoursePeople').live("pageshow", function() {
+				$.mobile.pageLoading();
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
 				var $this = $(this), info, 
-				$contInfo = $this.find('.container-topicinfo');
+					$contInfo = $this.find('.container-topicinfo'),
+					$userList = $this.find(".view-course-sections .mobi-listview");
 				$contInfo.empty();
 				info = '<p class="mobi-course-title">' + objGlobalCourse.number + '</p>';
 				info += '<p class="mobi-activity-type">' + objGlobalCourse.title + '</p>';
@@ -985,6 +1013,114 @@ boolClicked = true;
 					info += '<p class="mobi-instructor-name">' + objGlobalCourse.instructor + '</p>';
 				}
 				$contInfo.html(info);
+				
+				
+				// Filter buttons.
+				$this.find(".btn-everyone").unbind("click").bind("click", function() {
+					// Show everyone.
+					var $this = $(this).parents("#pageCoursePeople");
+					$(this).addClass("ui-btn-active");
+					$this.find(".btn-classmates").removeClass("ui-btn-active");
+					$this.find(".btn-instructors").removeClass("ui-btn-active");
+					$this.find(".view-course-sections .mobi-listview .STUD").show();
+					$this.find(".view-course-sections .mobi-listview .PROF").show();
+				});
+				$this.find(".btn-classmates").unbind("click").bind("click", function() {
+					// Show only classmates..
+					var $this = $(this).parents("#pageCoursePeople");
+					$(this).addClass("ui-btn-active");
+					$this.find(".btn-everyone").removeClass("ui-btn-active");
+					$this.find(".btn-instructors").removeClass("ui-btn-active");
+					$this.find(".view-course-sections .mobi-listview .PROF").hide();
+					$this.find(".view-course-sections .mobi-listview .STUD").show();
+				});
+				$this.find(".btn-instructors").unbind("click").bind("click", function() {
+					// Show only professors.
+					var $this = $(this).parents("#pageCoursePeople");
+					$(this).addClass("ui-btn-active");
+					$this.find(".btn-classmates").removeClass("ui-btn-active");
+					$this.find(".btn-everyone").removeClass("ui-btn-active");
+					// The order in which we hide and show things matters.
+					$this.find(".view-course-sections .mobi-listview .STUD").hide();
+					$this.find(".view-course-sections .mobi-listview .PROF").show();
+				})
+				
+				
+				
+				$().mobiQueryApi('get', {
+					strUrl: configSettings.apiproxy + "/courses/" + objGlobalCourse.id + "/roster",
+					successHandler: function(jsonResponse) {
+						var arrRoster = [];
+						for (var i = 0; i < jsonResponse.roster.length; i++) {
+							var objCurrent = jsonResponse.roster[i];
+							// Sort by last name, first name
+							var strArrayContent = objCurrent.lastName + ", " + objCurrent.firstName + "|" + JSON.stringify(objCurrent);
+							arrRoster.push(strArrayContent);
+						}
+						// It's a beautiful thing
+						arrRoster.sort();
+						
+						var strCurrentLetter = "";
+						var strDividerClass = "";
+						var strList = "";
+						var strChunk = ""
+						var strDivider = "";
+						for (var i = 0; i < arrRoster.length; i++) {
+							
+							// Get the current JSON object from the now-sorted array.
+							var objCurrent = JSON.parse(arrRoster[i].split("|")[1]);
+							
+							// What role is the user?
+							var strRole = "Student";
+							if (objCurrent.roleType === "PROF") {
+								strRole = "Professor";
+							} else if (objCurrent.roleType === "TA") {
+								strRole = "Teaching Assistant";
+							}
+
+							// Do we need a new letter divider?
+							var strFirstLetter = arrRoster[i].charAt(0);
+							if (strFirstLetter != strCurrentLetter) {
+								// create new letter divider
+								if (strChunk != "") {
+									strDivider += strCurrentLetter + '</li>';
+									strList += '<li data-role="list-divider" class="' +strDividerClass+ '">' + strDivider;
+									strList += strChunk;
+									strChunk = "";
+									strDivider = "";
+									strDividerClass = "";
+								}
+								strCurrentLetter = strFirstLetter;
+							}
+							
+							// Do we need to add the role to the divider class?
+							if (strDividerClass.search(objCurrent.roleType)=== -1) {
+								if (strDividerClass.length != 0) {
+									strDividerClass += " ";
+								}
+								strDividerClass += objCurrent.roleType;
+							}
+							
+							strChunk += '<li class="person '+objCurrent.roleType+'">';
+							strChunk += '<a href="/person.html" class="listitem-topic">';
+							strChunk += '<span class="mobi-title">' + objCurrent.firstName + " " + objCurrent.lastName + '</span>';
+							strChunk += '<span class="mobi-your-responses">' + strRole + '</span></a></li>\n';
+						}
+						// We should have built a full list, so insert it into the DOM
+						$userList.html(strList);
+						// Need to wait for DOM to settle a bit before messing with it more
+						var ptrTimeout = setTimeout(function() {
+							$userList.listview().css("visibility", "visible");
+							$contInfo.css("visibility", "visible");
+							$.mobile.pageLoading(true);
+						}, 300)
+						
+					},
+					errorHandler : function() {
+						alert('Unable to get the people in this course.  Please try again.');
+						$mobile.pageLoading(true);
+					}
+				});
 			} );
 			
 			$('#pagePerson').live('pageshow', function() {

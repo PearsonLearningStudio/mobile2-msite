@@ -506,6 +506,9 @@ div.layout-header .menu-active {
   float: left;
 }
 
+.subnav .container-announcement {
+	line-height: 1.0em;
+}
 
 /* List View */
 .mobi-listview li {
