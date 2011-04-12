@@ -995,7 +995,7 @@ boolClicked = true;
 			
 			$("#pageCoursePeople").live("pagebeforeshow", function(event, ui) {
 				$("#pageCoursePeople .container-topicinfo").css("visibility", "hidden");
-				$("#pageCoursePeople .view-course-sections .mobi-listview").css("visibility", "hidden");
+				$("#pageCoursePeople .view-course-sections").css("visibility", "hidden");
 			})
 			
 			$('#pageCoursePeople').live("pageshow", function() {
@@ -1005,7 +1005,7 @@ boolClicked = true;
 				})
 				var $this = $(this), info, 
 					$contInfo = $this.find('.container-topicinfo'),
-					$userList = $this.find(".view-course-sections .mobi-listview");
+					$userList = $this.find(".view-course-sections");
 				$contInfo.empty();
 				info = '<p class="mobi-course-title">' + objGlobalCourse.number + '</p>';
 				info += '<p class="mobi-activity-type">' + objGlobalCourse.title + '</p>';
@@ -1046,81 +1046,90 @@ boolClicked = true;
 				})
 				
 				
-				
-				$().mobiQueryApi('get', {
-					strUrl: configSettings.apiproxy + "/courses/" + objGlobalCourse.id + "/roster",
-					successHandler: function(jsonResponse) {
-						var arrRoster = [];
-						for (var i = 0; i < jsonResponse.roster.length; i++) {
-							var objCurrent = jsonResponse.roster[i];
-							// Sort by last name, first name
-							var strArrayContent = objCurrent.lastName + ", " + objCurrent.firstName + "|" + JSON.stringify(objCurrent);
-							arrRoster.push(strArrayContent);
-						}
-						// It's a beautiful thing
-						arrRoster.sort();
-						
-						var strCurrentLetter = "";
-						var strDividerClass = "";
-						var strList = "";
-						var strChunk = ""
-						var strDivider = "";
-						for (var i = 0; i < arrRoster.length; i++) {
-							
-							// Get the current JSON object from the now-sorted array.
-							var objCurrent = JSON.parse(arrRoster[i].split("|")[1]);
-							
-							// What role is the user?
-							var strRole = "Student";
-							if (objCurrent.roleType === "PROF") {
-								strRole = "Professor";
-							} else if (objCurrent.roleType === "TA") {
-								strRole = "Teaching Assistant";
+				// We only need to fill in the roster if it isn't already done.
+				if ($userList.find(".mobi-listview").length < 1) {
+					$().mobiQueryApi('get', {
+						strUrl: configSettings.apiproxy + "/courses/" + objGlobalCourse.id + "/roster",
+						successHandler: function(jsonResponse) {
+							var arrRoster = [];
+							for (var i = 0; i < jsonResponse.roster.length; i++) {
+								var objCurrent = jsonResponse.roster[i];
+								// Sort by last name, first name
+								var strArrayContent = objCurrent.lastName + ", " + objCurrent.firstName + "|" + JSON.stringify(objCurrent);
+								arrRoster.push(strArrayContent);
 							}
+							// It's a beautiful thing
+							arrRoster.sort();
+							
+							var strCurrentLetter = "";
+							var strDividerClass = "";
+							var strList = '<ul class="mobi-listview">';
+							var strChunk = "";
+							var strDivider = "";
+							for (var i = 0; i < arrRoster.length; i++) {
+								
+								// Get the current JSON object from the now-sorted array.
+								var objCurrent = JSON.parse(arrRoster[i].split("|")[1]);
+								
+								// What role is the user?
+								var strRole = "Student";
+								if (objCurrent.roleType === "PROF") {
+									strRole = "Professor";
+								} else if (objCurrent.roleType === "TA") {
+									strRole = "Teaching Assistant";
+								}
+	
+								// Do we need a new letter divider?
+								var strFirstLetter = arrRoster[i].charAt(0);
+								if (strFirstLetter != strCurrentLetter) {
+									// create new letter divider
+									if (strChunk != "") {
+										strDivider += strCurrentLetter + '</li>';
+										strList += '<li data-role="list-divider" class="' +strDividerClass+ '">' + strDivider;
+										strList += strChunk;
+										strChunk = "";
+										strDivider = "";
+										strDividerClass = "";
+									}
+									strCurrentLetter = strFirstLetter;
+								}
+								
+								// Do we need to add the role to the divider class?
+								if (strDividerClass.search(objCurrent.roleType)=== -1) {
+									if (strDividerClass.length != 0) {
+										strDividerClass += " ";
+									}
+									strDividerClass += objCurrent.roleType;
+								}
+								
+								strChunk += '<li class="person '+objCurrent.roleType+'">';
+								strChunk += '<a href="/person.html" class="listitem-topic">';
+								strChunk += '<span class="mobi-title">' + objCurrent.firstName + " " + objCurrent.lastName + '</span>';
+								strChunk += '<span class="mobi-your-responses">' + strRole + '</span></a></li>\n';
+							}
+							// We should have built a full list, so insert it into the DOM
+							strList +=  "</ul>\n";
+							$userList.html(strList);
+							// Need to wait for DOM to settle a bit before messing with it more
+							var ptrTimeout = setTimeout(function() {
+								$userList.find(".mobi-listview").listview()
+								$userList.css("visibility", "visible");
+								$contInfo.css("visibility", "visible");
+								$.mobile.pageLoading(true);
+							}, 200)
+							
+						},
+						errorHandler : function() {
+							alert('Unable to get the people in this course.  Please try again.');
+							$mobile.pageLoading(true);
+						}
+					});
+				} else {
+					$userList.css("visibility", "visible");
+					$contInfo.css("visibility", "visible");
+					$.mobile.pageLoading(true);
+				}
 
-							// Do we need a new letter divider?
-							var strFirstLetter = arrRoster[i].charAt(0);
-							if (strFirstLetter != strCurrentLetter) {
-								// create new letter divider
-								if (strChunk != "") {
-									strDivider += strCurrentLetter + '</li>';
-									strList += '<li data-role="list-divider" class="' +strDividerClass+ '">' + strDivider;
-									strList += strChunk;
-									strChunk = "";
-									strDivider = "";
-									strDividerClass = "";
-								}
-								strCurrentLetter = strFirstLetter;
-							}
-							
-							// Do we need to add the role to the divider class?
-							if (strDividerClass.search(objCurrent.roleType)=== -1) {
-								if (strDividerClass.length != 0) {
-									strDividerClass += " ";
-								}
-								strDividerClass += objCurrent.roleType;
-							}
-							
-							strChunk += '<li class="person '+objCurrent.roleType+'">';
-							strChunk += '<a href="/person.html" class="listitem-topic">';
-							strChunk += '<span class="mobi-title">' + objCurrent.firstName + " " + objCurrent.lastName + '</span>';
-							strChunk += '<span class="mobi-your-responses">' + strRole + '</span></a></li>\n';
-						}
-						// We should have built a full list, so insert it into the DOM
-						$userList.html(strList);
-						// Need to wait for DOM to settle a bit before messing with it more
-						var ptrTimeout = setTimeout(function() {
-							$userList.listview().css("visibility", "visible");
-							$contInfo.css("visibility", "visible");
-							$.mobile.pageLoading(true);
-						}, 300)
-						
-					},
-					errorHandler : function() {
-						alert('Unable to get the people in this course.  Please try again.');
-						$mobile.pageLoading(true);
-					}
-				});
 			} );
 			
 			$('#pagePerson').live('pageshow', function() {
