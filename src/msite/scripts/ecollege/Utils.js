@@ -451,8 +451,7 @@ var detectDevice = function() {
 
 // stripTags: Helper method for stripping HTML tags from a string.
 var stripTags = function(strHtml) {
-	var strReturn = "";
-	var strStrippedSummary = strHtml.replace(/(<([^>]+)>)/ig,"");
+	var strReturn = strHtml.replace(/(<([^>]+)>)/ig,"");
 	return strReturn;
 }
 

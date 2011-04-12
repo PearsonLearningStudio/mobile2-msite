@@ -12,6 +12,7 @@
  * 
  */
 boolClicked = true;
+var objGlobalUser = {};
 (function($) {
 	var methods = {
 		initIndex : function(options) {
@@ -21,7 +22,11 @@ boolClicked = true;
 			if ( options ) {
 				$.extend( settings, options );
 			}
-			
+/*
+ * =====================================
+ * Generic Initialization for index.html
+ * =====================================
+ */
 			// Be sure the dropdown menu is hidden each time we change a page
 			$(".container-page").die("pagebeforeshow pagebeforehide").live("pagebeforeshow pagebeforehide", function() {
 				$.mobile.pageLoading();
@@ -62,7 +67,31 @@ boolClicked = true;
 				$(".view-whatsdue").show();
 				$(window).unbind("scroll");
 			}).click(); // default view for page, set on load.
+
+
+			// Initialize click listener for Activity button
+			$(".btn-activity").die("click").live('click', function() {
+				$(this).addClass("ui-btn-active");
+				activityButtonClickHandler(false);
+			});
 			
+			// bind the menu button click listener for this page
+			$(".button-menu").bind("click", function() {
+				showMenu(this);
+			})
+			
+			$('.btn-refresh').live('click', function() { 
+				// Fetch the feed and insert into DOM.
+				// force refresh
+				getActivities( { refresh: true } );
+			});
+/*
+ * ================
+ * Helper Functions
+ * ================
+ * 
+ * click listeners, JSON parsers, etc.
+ */
 			// Helper function to show the menu, which must be bound in every page upon every show no matter what,
 			function showMenu(ptrButton) {
 				$this = $(ptrButton);
@@ -71,10 +100,6 @@ boolClicked = true;
 				return false;
 			}
 			
-			// bind the menu button click listener for this page
-			$(".button-menu").bind("click", function() {
-				showMenu(this);
-			})
 			
 			//response click handler for clicking on any response	
 			function responseClickHandler($this) { 
@@ -110,6 +135,7 @@ boolClicked = true;
 				arrGlobalThreads.push(objInfo);
 			}
 			
+			// Refresh the Activities feed
 			function getActivities(options) { 
 				var opts = options || {};
 				if(opts.refresh) {
@@ -134,12 +160,7 @@ boolClicked = true;
 				});
 			}
 			
-			$('.btn-refresh').live('click', function() { 
-				// Fetch the feed and insert into DOM.
-				// force refresh
-				getActivities( { refresh: true } );
-			} );
-			
+			// Click handler for the activity button
 			var activityButtonClickHandler = function(boolForceRefresh) {
 				$(".btn-whatsdue").removeClass("ui-btn-active");
 				$(".view-whatsdue").hide();
@@ -229,13 +250,13 @@ boolClicked = true;
 
 			}
 			
-			// Initialize click listener for Activity button
-			$(".btn-activity").die("click").live('click', function() {
-				$(this).addClass("ui-btn-active");
-				activityButtonClickHandler(false);
-			});
+
 			
-		
+/*
+ * ==============
+ * Bookmark Popup
+ * ==============
+ */
 		
 			// Check to see if we need to display a bookmark popup
 			var boolShow = false;
@@ -286,6 +307,11 @@ boolClicked = true;
 				})
 			}
 			
+/*
+ * =========
+ * Home View
+ * =========
+ */
 			
 			// Every time we show the home page, we need to show the activities.
 			$(".btn-activity").addClass("ui-btn-active");
@@ -299,7 +325,11 @@ boolClicked = true;
 					showMenu(this);
 				})
 			})
-			
+/*
+ * ===============
+ * Discussion View
+ * ===============
+ */
 			// Initialize handler for discussions tab 
 			$("#pageDiscuss").die("pageshow").live("pageshow", function() {
 				
@@ -378,7 +408,12 @@ boolClicked = true;
 					}
 				})
 			});
-			
+
+/*
+ * ====================
+ * Activity Detail View
+ * ====================
+ */
 			//Page show event for an activity feed detail page
 			$("#pageActivityDetail").live("pageshow", function(event, ui){
 				var $thisView = $(this), url, details = '', comments,
@@ -532,7 +567,12 @@ boolClicked = true;
 					}
 				} );				
 			}
-			
+
+/*
+ * ============================
+ * Discussion Topic Detail View
+ * ============================
+ */
 			$("#pageDiscussionTopicDetail").live("pagebeforeshow", function(event, ui) {
 				$("#pageDiscussionTopicDetail .container-discussion-detail").css("visibility", "hidden");
 				$("#pageDiscussionTopicDetail .header-discussion-detail").css("visibility", "hidden")
@@ -817,7 +857,11 @@ boolClicked = true;
 				} );
 			}	
 				
-				
+/*
+ * ==============================
+ * Discussion Thread Detail Views
+ * ==============================
+ */	
 			
 			$("#pageDiscussionThreadDetail").live("pagebeforeshow", function(event, ui) {
 				$("#pageDiscussionThreadDetail .container-discussion-detail").css("visibility", "hidden");
@@ -903,7 +947,11 @@ boolClicked = true;
 					}
 				} );
 			}
-			
+/*
+ * ============
+ * Classes View
+ * ============
+ */
 			$("#pageClasses").live("pageshow", function() { //localStorage.removeItem('courses');
 				$.mobile.pageLoading();
 				$(".button-menu").unbind("click").bind("click", function() {
@@ -917,7 +965,7 @@ boolClicked = true;
 			
 			function  getSummary(text) {
 				var strReturn = "",
-					strStrippedSummary = text.replace(/(<([^>]+)>)/ig,"");
+					strStrippedSummary = stripTags(text);
 				if (strStrippedSummary.length > 200) {
 					strReturn = strStrippedSummary.substr(0, 100);
 				} else if (strStrippedSummary.length === 0) {
@@ -927,6 +975,12 @@ boolClicked = true;
 				}
 				return strReturn;
 			}
+			
+/*
+ * ==================
+ * Course Detail View
+ * ==================
+ */
 			$("#pageCourseDetail").live("pagebeforeshow", function() {
 				$("#pageCourseDetail .container-topicinfo").css("visibility", "hidden");
 				$("#pageCourseDetail .announcement-subject").css("visibility", "hidden");
@@ -973,7 +1027,7 @@ boolClicked = true;
 					successHandler: function(jsonResponse){
 						announcement = jsonResponse.announcements[0];
 						if(announcement) {					
-							info = '<h5 class="announcement-subject">' + announcement.subject + '</h5>';
+							info = '<h5 class="announcement-subject">' + stripTags(announcement.subject) + '</h5>';
 							info += '<p class="announcement-message">' + getSummary( announcement.text ) + '</p>';
 							$contAnn.html(info);
 						}
@@ -984,15 +1038,79 @@ boolClicked = true;
 					errorHandler: function(){
 						$.mobile.pageLoading(true);
 					}
-				} );
-				//remove the current course from the global var when clicking on the back button
+				});
+				//remove the current course from the global variable when clicking on the back button
 				$("#pageCourseDetail #back-classes").unbind(".myclick").bind("click.myclick", function() {
 					$.mobile.pageLoading();
 					objGlobalCourse = {};
 				} );
-			} ) ;
+			} );
 			
+/*
+ * =========================
+ * Course Announcements View
+ * =========================
+ */	
 			
+			$("#pageCourseAnnouncements").live("pagebeforeshow", function() {
+				$("#pageCourseAnnouncements .container-topicinfo").css("visibility", "hidden");
+				$("#pageCourseAnnouncements .view-course-announcements").css("visibility", "hidden");
+				
+			});
+			
+			$("#pageCourseAnnouncements").live("pageshow", function() {
+				var $this = $(this), info, instructor, announcement, 
+				$contInfo = $this.find('.container-topicinfo'),
+				$contAnn = $this.find('.view-course-announcements');
+				$.mobile.pageLoading();
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				});
+				
+				// Fill in the header
+				$contInfo.find(".mobi-course-title").text(objGlobalCourse.number);
+				
+				// Get the list of announcements for the course. 
+				$().mobiQueryApi('get', { 
+					strUrl: configSettings.apiproxy + '/courses/' + objGlobalCourse.id + '/announcements',
+					successHandler: function(jsonResponse){
+						
+						var strHtml = '<ul data-role="listview" class="mobi-listview">';
+						
+						if (jsonResponse.announcements.length > 0) {
+							for (var i = 0; i < jsonResponse.announcements.length; i++) {
+								var objCurrAnn = jsonResponse.announcements[i];
+								strHtml += '<li><a href="/course-announcements-detail.html">';
+								strHtml += '<span class="mobi-title">' + stripTags(objCurrAnn.subject)+ '</span>';
+								strHtml += '<span class="mobi-summary">' + stripTags(objCurrAnn.text)+ '</span>';
+								strHtml += '</a></li>';
+							}
+						} else {
+							strHtml += '<li><span class="mobi-title">No announcements.</span></li>';
+						}
+						strHtml += "</ul>";
+						$contAnn.html(strHtml);
+						$contAnn.find(".mobi-listview").listview();
+						
+						$.mobile.pageLoading(true);
+						$("#pageCourseAnnouncements .container-topicinfo").css("visibility", "visible");
+						$("#pageCourseAnnouncements .view-course-announcements").css("visibility", "visible");
+					},
+					errorHandler: function(){
+						$.mobile.pageLoading(true);
+						$("#pageCourseAnnouncements .container-topicinfo").css("visibility", "visible");
+						$("#pageCourseAnnouncements .view-course-announcements").css("visibility", "visible");
+					}
+				});
+				
+				
+			});
+			
+/*
+ * ==================
+ * Course People View
+ * ==================
+ */
 			$("#pageCoursePeople").live("pagebeforeshow", function(event, ui) {
 				$("#pageCoursePeople .container-topicinfo").css("visibility", "hidden");
 				$("#pageCoursePeople .view-course-sections").css("visibility", "hidden");
@@ -1118,6 +1236,14 @@ boolClicked = true;
 								$.mobile.pageLoading(true);
 							}, 200)
 							
+							// Add a click listener to the link so that we pass needed info on to the next page
+							$("#pageCoursePeople .listitem-topic").click(function() {
+								var $this = $(this);
+								objGlobalUser = {};
+								objGlobalUser.name = $this.find(".mobi-title").text();
+								objGlobalUser.role = $this.find(".mobi-your-responses").text();
+							})
+							
 						},
 						errorHandler : function() {
 							alert('Unable to get the people in this course.  Please try again.');
@@ -1132,16 +1258,33 @@ boolClicked = true;
 
 			} );
 			
+/*
+ * =======================
+ * Individual Student View
+ * =======================
+ */		
+			$("#pagePerson").live("pagebeforeshow", function(event, ui) {
+				$("#pagePerson .detail-header").css("visibility", "hidden");
+			})
+			
 			$('#pagePerson').live('pageshow', function() {
 				var $this = $(this), info, 
 				$contInfo = $this.find('.container-personinfo');
-				$contInfo.empty();
-				info = '<p class="mobi-student-name">Student Name</p>';
-				info += '<p class="mobi-student-role">Student Role</p>';
-				info += '<p class="mobi-student-class">from ' + objGlobalCourse.title + '</p>';
-				$contInfo.html(info);
+				$.mobile.pageLoading();
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
+				$contInfo.find(".mobi-student-name").html(objGlobalUser.name);
+				$contInfo.find(".mobi-student-role").html(objGlobalUser.role);
+				$contInfo.find(".mobi-student-class").html(objGlobalCourse.title);
+				$("#pagePerson .detail-header").css("visibility", "visible");
+				$.mobile.pageLoading(true);
 			} );
-			
+/*
+ * ============
+ * Profile View
+ * ============
+ */
 			$("#pageProfile").live("pageshow", function() {
 				var user, $contInfo = $(this).find('.container-topicinfo');
 				$.mobile.pageLoading();
@@ -1166,6 +1309,8 @@ boolClicked = true;
 			$("body").removeClass("ui-loading");
 
 		},
+		
+		
 		initError: function(options){
 			var settings = {
 				strErrorMessage: "Unable to initialize the application.  Please log in and try again.",

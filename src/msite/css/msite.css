@@ -173,6 +173,7 @@ div.layout-header .menu-active {
 	color: #333;
 }
 .view-activity .mobi-summary,
+.view-course-announcements .mobi-summary,
 .view-whatsdue .mobi-summary,
 .activity-info-header .mobi-summary {
 	text-overflow: ellipsis;
@@ -182,12 +183,15 @@ div.layout-header .menu-active {
 }
 .view-activity .mobi-summary,
 .view-activity .mobi-title, 
+.view-course-announcements .mobi-summary,
+.view-course-announcements .mobi-title,
 .view-whatsdue .mobi-summary,
 .view-whatsdue .mobi-title {
 	padding-right: 50px;
 }
 .portrait .view-activity .mobi-title,
-.portrait .view-whatsdue .mobi-title {
+.portrait .view-whatsdue .mobi-title,
+.portrait .view-course-announcements .mobi-title {
 	width: 65%;
 	padding-right: 0px;
 }
@@ -243,8 +247,12 @@ li .ui-icon-arrow-r {
 	background: url(../images/icon_list_arrow.png) center bottom no-repeat;
 }
 
-.view-discussion .ui-icon-arrow-r {
-	/*display: none;*/
+/* Course Announcements List view */
+.view-course-announcements .mobi-summary {
+	width: 70%;
+}
+.landscape .view-course-announcements .mobi-summary {
+	width: 85%;
 }
 
 /* Discussion detail view */
