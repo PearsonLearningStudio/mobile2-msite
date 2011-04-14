@@ -398,6 +398,11 @@ div.layout-header .menu-active {
   padding-top: 0;
 }
 
+#pageCoursePeople .subnav  {
+	padding-top: 1px;
+	padding-bottom: 8px;
+}
+
 
 .subnav .btn-refresh {
   float: right;

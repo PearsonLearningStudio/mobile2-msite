@@ -1245,9 +1245,7 @@ var objGlobalUser = {};
 					$this.find(".view-course-sections .mobi-listview .PROF").show();
 				})
 				
-				
-				// We only need to fill in the roster if it isn't already done.
-				if ($userList.find(".mobi-listview").length < 1) {
+	
 					$().mobiQueryApi('get', {
 						strUrl: configSettings.apiproxy + "/courses/" + objGlobalCourse.id + "/roster",
 						successHandler: function(jsonResponse) {
@@ -1332,11 +1330,6 @@ var objGlobalUser = {};
 							$mobile.pageLoading(true);
 						}
 					});
-				} else {
-					$userList.css("visibility", "visible");
-					$contInfo.css("visibility", "visible");
-					$.mobile.pageLoading(true);
-				}
 
 			} );
 			
