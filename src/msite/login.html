@@ -62,8 +62,19 @@ $(document).ready(function() {
 			$().mobyAppInit("initLogin");
 		},
 		crossDomainErrorHandler : function() {
+			// Bad error.  Show error message.
 			$("#dialogError div.errorMessage").html(msite.localization.index["generic-server-error"]);
 			$("#show-error-message").click();
+			
+			// Hide the loading spinner.
+		    $.mobile.pageLoading(true);
+			$("body").removeClass("ui-loading");
+			
+			// disable the form.  Until they reload, we cannot login.
+			$("#signInBtn").button("disable");
+			$("#registerButton").button().button("disable");
+			$("#loginForm input").textinput().textinput("disable");
+			$("#formAccess input").textinput().textinput("disable");
 		}
 	});
 })
@@ -127,7 +138,7 @@ $(document).ready(function() {
 				
 				<h2>Get a Mobile Access Link</h2>
 				<div id="registerFormContainer">
-					<form method="GET" name="" id="" action="submit">
+					<form method="GET" name="" id="formAccess" action="submit">
 						<p>Enter some information so we can register you:</p>
 						<div class="authFields">
 							<ul data-role="listview" data-inset="true" data-theme="d" data-dividertheme="b">
@@ -141,8 +152,8 @@ $(document).ready(function() {
 								</li>
 							</ul>
 						</div>
+						<button type="submit" id="registerButton">Email My Access Link</button>
 					</form>
-					<button type="submit" id="registerButton">Email My Access Link</button>
 				</div>
 
 				<div data-role="collapsible" data-collapsed="true">
