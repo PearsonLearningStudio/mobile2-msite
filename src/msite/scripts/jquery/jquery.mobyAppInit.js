@@ -1027,9 +1027,22 @@ var objGlobalUser = {};
 					successHandler: function(jsonResponse){
 						announcement = jsonResponse.announcements[0];
 						if(announcement) {					
-							info = '<h5 class="announcement-subject">' + stripTags(announcement.subject) + '</h5>';
-							info += '<p class="announcement-message">' + getSummary( announcement.text ) + '</p>';
+						    var info = "";
+							var strSubject = stripTags(announcement.subject);
+							var strSummary = getSummary(announcement.text);
+							if (strSubject.length > 0) {
+								info += '<h5 class="announcement-subject"><a href="/course-announcement-detail.html">' + strSubject + '</a></h5>';
+							}
+							if (strSummary.length > 5) {
+								info += '<p class="announcement-message"><a href="/course-announcement-detail.html">' + strSummary + '</a></p>';
+							}
 							$contAnn.html(info);
+							
+							objGlobalResources.announcement = {};
+							objGlobalResources.announcement.course = objGlobalCourse.number;
+							objGlobalResources.announcement.title = announcement.subject;
+							objGlobalResources.announcement.detail = announcement.text;
+							
 						}
 						$("#pageCourseDetail .announcement-subject").css("visibility", "visible");
 						$("#pageCourseDetail .announcement-message").css("visibility", "visible");
@@ -1069,32 +1082,62 @@ var objGlobalUser = {};
 				
 				// Fill in the header
 				$contInfo.find(".mobi-course-title").text(objGlobalCourse.number);
-				
+
 				// Get the list of announcements for the course. 
 				$().mobiQueryApi('get', { 
 					strUrl: configSettings.apiproxy + '/courses/' + objGlobalCourse.id + '/announcements',
 					successHandler: function(jsonResponse){
 						
-						var strHtml = '<ul data-role="listview" class="mobi-listview">';
+						var strHtml = '<ul data-role="listview" class="mobi-listview"></ul>';
+						$contAnn.html(strHtml);
 						
 						if (jsonResponse.announcements.length > 0) {
 							for (var i = 0; i < jsonResponse.announcements.length; i++) {
 								var objCurrAnn = jsonResponse.announcements[i];
-								strHtml += '<li><a href="/course-announcements-detail.html">';
+								var strId = "id-" + objCurrAnn.id;
+								strHtml = '<li><a href="/course-announcement-detail.html" id="'+strId+'" class="course-announcement">';
 								strHtml += '<span class="mobi-title">' + stripTags(objCurrAnn.subject)+ '</span>';
 								strHtml += '<span class="mobi-summary">' + stripTags(objCurrAnn.text)+ '</span>';
-								strHtml += '</a></li>';
+								strHtml += '</a></li>\n';
+								$contAnn.find("ul").append(strHtml);
+								
+								// Store the full detail info in the data for this element
+								$contAnn.find("#" + strId).data("detail", objCurrAnn.text);
 							}
 						} else {
-							strHtml += '<li><span class="mobi-title">No announcements.</span></li>';
+							strHtml = '<li><span class="mobi-title">No announcements.</span></li>';
+							$contAnn.find("ul").append(strHtml);
 						}
-						strHtml += "</ul>";
-						$contAnn.html(strHtml);
 						$contAnn.find(".mobi-listview").listview();
+						
+						// Loop through each announcement and create and save a JSON string to its local data,
+						// for passing to the detail page when clicked.
+						$("#pageCourseAnnouncements .view-course-announcements li a.course-announcement").each(function() {
+							var $this = $(this);
+							var objJSON = {};
+							objJSON.id = $this.attr("id").split("-")[1];
+							objJSON.course = $this.parents("#pageCourseAnnouncements").find(".container-topicinfo .mobi-mobi-course-title").text();
+							objJSON.title = $this.find(".mobi-title").text();
+							objJSON.detail = $this.data("detail");
+							var strJSON = JSON.stringify(objJSON);
+							$this.data("info", strJSON);
+							
+						})
 						
 						$.mobile.pageLoading(true);
 						$("#pageCourseAnnouncements .container-topicinfo").css("visibility", "visible");
 						$("#pageCourseAnnouncements .view-course-announcements").css("visibility", "visible");
+						
+						
+						// Attach an event listener to the list items so that when
+						// a user taps on them we can pass info to the next page
+						$("#pageCourseAnnouncements .view-course-announcements li a").click(function() {
+							var $this = $(this);
+							var strJSON = $this.data("info");
+							var objJSON = JSON.parse(strJSON);
+							objGlobalResources.announcement = {};
+							objGlobalResources.announcement = objJSON;
+						})
 					},
 					errorHandler: function(){
 						$.mobile.pageLoading(true);
@@ -1102,6 +1145,45 @@ var objGlobalUser = {};
 						$("#pageCourseAnnouncements .view-course-announcements").css("visibility", "visible");
 					}
 				});
+			});
+/*
+ * ===============================
+ * Course Announcement Detail View
+ * ===============================
+ */
+
+			$("#pageCourseAnnouncementDetail").live("pagebeforeshow", function() {
+				$("#pageCourseAnnouncements .container-topicinfo").css("visibility", "hidden");
+				$("#pageCourseAnnouncements .container-activity-detail").css("visibility", "hidden");
+				
+			});
+			
+			$("#pageCourseAnnouncementDetail").live("pageshow", function() {
+				var $this = $(this), info, instructor, announcement, 
+				$contInfo = $this.find('.container-topicinfo'),
+				$contAnn = $this.find('.container-activity-detail .container-message');
+				$.mobile.pageLoading();
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				});
+				
+				// Fill in the header
+				$contInfo.find(".mobi-course-title").text(objGlobalResources.announcement.course);
+				$contInfo.find(".mobi-activity-type").text(objGlobalResources.announcement.title);
+				
+				// Fill in the Detail
+				var strStrippedDetail = stripTags(objGlobalResources.announcement.detail);
+				if (strStrippedDetail.length > 5) {
+					$contAnn.html(objGlobalResources.announcement.detail);
+					$("#pageCourseAnnouncementDetail .container-activity-detail").show();
+				} else {
+					$("#pageCourseAnnouncementDetail .container-activity-detail").hide();
+				}
+				
+				// Show everything
+				$("#pageCourseAnnouncements .container-topicinfo").css("visibility", "visible");
+				$("#pageCourseAnnouncements .container-activity-detail").css("visibility", "visible");
+				$.mobile.pageLoading(true);
 				
 				
 			});

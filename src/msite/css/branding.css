@@ -428,11 +428,23 @@ div.layout-header .menu-active {
 }
 
 .subnav .announcement-subject,
-.subnav .announcement-message {
+.subnav .announcement-message,
+.subnav .announcement-subject a,
+.subnav .announcement-message a {
   color: #FFF;
   text-shadow: rgba(0,0,0,.8) 0 -1px 0;
   margin: 0;
   padding: 4px;
+}
+
+.subnav .announcement-subject a,
+.subnav .announcement-message a {
+	background-image: none;
+	background-color: transparent;
+	font-weight: inherit;
+	border-width: 0px;
+	text-decoration: none;
+	-moz-box-shadow: none;
 }
 
 .subnav .announcement-message {

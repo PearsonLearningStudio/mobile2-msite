@@ -10,6 +10,7 @@
  * 		string title
  * 	}]
  * 		boolForceRefresh: Force a refresh of the information and store the results in the cache
+ *      strSort: Sort the course list.  Valid values are none, id, number, title. Default is title.
  * 		callbackSuccess:  The callback to execute upon successful fetching of the course information array
  * 		callbackError:  The callback to execute if an error occurs.
  */
@@ -20,6 +21,7 @@
 		init : function(options) {
 			var settings = {
 				boolForceRefresh: false,
+				strSort: "title",
 				callbackSuccess: function(arrCourses) {
 					return arrCourses;
 				},
@@ -123,15 +125,51 @@
 			
 			// helper function: break out of async calls
 			var breakOut = function() {
-				// At this point, arrCourses is full, and can be stored.
+				// At this point, arrCourses is full, and can be sorted and stored.
+				
+				
+				// First, sort the array as requested
+				var arrSortedCourses = [];
+				if (settings.strSort != "none") {
+					// Sorting was requested.
+					var arrSort = [];
+					var strDelimiter = "[-=-%)]";
+					for (var i = 0; i < arrCourses.length; i++) {
+						var strJSON = JSON.stringify(arrCourses[i]);
+						var strSort = "";
+						if (settings.strSort === "title") {
+							strSort = arrCourses[i].title + strDelimiter + strJSON;
+						} else if (settings.strSort === "id") {
+							strSort = arrCourses[i].id + strDelimiter + strJSON;
+						} else if (settings.strSort === "number") {
+							strSort = arrCourses[i].number + strDelimiter + strJSON;
+						}
+						arrSort.push(strSort);
+					}
+					
+					// sort the array
+					arrSort.sort();
+					
+					// Recreate the original array of objects
+					for (var i = 0; i < arrSort.length; i++) {
+						var objJSON = JSON.parse(arrSort[i].split(strDelimiter)[1]);
+						arrSortedCourses.push(objJSON);
+					}
+				} else {
+					// Sorting was not requested.
+					arrSortedCourses = arrCourses;
+				}
+				
+				// Store the information
 				if (dataStorage.isSupported()) {
-					var strCourses = JSON.stringify(arrCourses);
+					var strCourses = JSON.stringify(arrSortedCourses);
 					var dateToday = new Date();
 					dataStorage.add("courses", strCourses);
 					dataStorage.add("courses-timestamp", dateToday);
 				}
+				
 				// Now call the success callback.
-				settings.callbackSuccess(arrCourses);
+				settings.callbackSuccess(arrSortedCourses);
 			}
 		}
 	}

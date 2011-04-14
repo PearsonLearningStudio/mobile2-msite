@@ -96,10 +96,10 @@ div.layout-header .menu-active {
   background-repeat: no-repeat;
 }
 
-#container-activity-detail .dropbox-submission,
-#container-activity-detail .grade,
-#container-activity-detail .exam-submission,
-#container-activity-detail .assignment-submission {
+.container-activity-detail .dropbox-submission,
+.container-activity-detail .grade,
+.container-activity-detail .exam-submission,
+.container-activity-detail .assignment-submission {
   background-position: 0 0;
   background-repeat: no-repeat;
 }
@@ -133,17 +133,17 @@ div.layout-header .menu-active {
 }
 
 .mobi-listview li.grade,
-#container-activity-detail .grade {
+.container-activity-detail .grade {
 	background-image: url(../images/icon_grade.png);
 }
 
 .mobi-listview li.dropbox-submission,
-#container-activity-detail .dropbox-submission {
+.container-activity-detail .dropbox-submission {
 	background-image: url(../images/icon_dropbox.png);  
 }
 
 .mobi-listview li.exam-submission,
-#container-activity-detail .exam-submission {
+.container-activity-detail .exam-submission {
 	background-image: url(../images/icon_exam.png);  
 }
 
@@ -484,7 +484,7 @@ textarea.textarea-response-title {
 	margin: 0;
 }
 
-#container-activity-detail {
+.container-activity-detail {
 	background-color: #fff;
 	border: 1px solid #fff;
 	-moz-border-radius: 5px;
@@ -496,11 +496,11 @@ textarea.textarea-response-title {
 	padding: 10px;
 }
 
-#container-activity-detail p {
+.container-activity-detail p {
 	 margin: 0 0 0 0;
 }
 
-#container-activity-detail .mobi-activity-title {
+.container-activity-detail .mobi-activity-title {
 	color: #347BAD;
 	font-weight: bold;
 	margin-bottom: 5px;
