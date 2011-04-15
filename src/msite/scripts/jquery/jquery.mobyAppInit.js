@@ -1554,7 +1554,7 @@ var objGlobalUser = {};
 				}, 5000);
 			};
 		
-			//$("body").removeClass("ui-loading");
+			$("body").removeClass("ui-loading");
 		}
 	}
 	
