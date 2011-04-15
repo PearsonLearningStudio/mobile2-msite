@@ -460,7 +460,7 @@ var objGlobalUser = {};
 						}
 						details += '<p class="mobi-date">' + activity.time + '</p>';
 						details += '</div>';
-						details += '<div class="activity-detail-links"><p><a id="btn-viewall-activity" class="detail-link ui-link" data-transition="slide" data-direction="reverse" data-role="button" href="/activitiesviewall.html">View All Course ' + activity.object.objectType.replace('-', ' ') + 's</a></p></div>';	
+						details += '<div class="activity-detail-links"><p><a id="btn-viewall-activity" class="detail-link ui-link" data-transition="slide" data-direction="reverse" data-role="button" href="#">View All Course ' + activity.object.objectType.replace('-', ' ') + 's</a></p></div>';	
 						$contMessage.html(details);	
 						$.mobile.pageLoading(true);
 					},
@@ -480,7 +480,18 @@ var objGlobalUser = {};
 					numResponses = $totResponses.html(),
 					$buttons = $thisView.find(".container-response-buttons"),
 					$responseInputTitle = $thisView.find(".textarea-response-title"),
+					intMaxTitleLength = 35,
 					$responseInputBody = $thisView.find(".textarea-response-body");
+				// Truncate text
+				// First, how much?
+				if ($(this).parents(".landscape").length > 0) {
+					// We're in landscape mode, so it needs to be longer
+					intMaxTitleLength = 70;
+				}
+				if (titleText.length > intMaxTitleLength) {
+					var strTemp = titleText.slice(0, intMaxTitleLength) + "...";
+					titleText = strTemp;
+				}
 				$responseInputTitle.val( titleText );		
 				$responseInputBody.hide();
 				function reset() {
@@ -497,7 +508,7 @@ var objGlobalUser = {};
 					}
 					if($responseInputBody.val() === ''){
 						$responseInputBody.setHintText('message');
-					}					
+					}
 					$responseInputBody.show();
 					$buttons.show();
 				} );
@@ -1543,7 +1554,7 @@ var objGlobalUser = {};
 				}, 5000);
 			};
 		
-			$("body").removeClass("ui-loading");
+			//$("body").removeClass("ui-loading");
 		}
 	}
 	

@@ -3,7 +3,6 @@
 	-webkit-border-radius: 0;
 	border-radius: 0;
 }
-
 div.layout-header {
 	position: relative;
 	min-height: 40px;
@@ -96,6 +95,19 @@ div.layout-header .menu-active {
   background-repeat: no-repeat;
 }
 
+.view-activity .mobi-listview li.responses,
+.view-activity .mobi-listview li.no-responses,
+.view-activity .mobi-listview li.hot-topic,
+.view-activity .mobi-listview li.course,
+.view-activity .mobi-listview li.grade,
+.view-activity .mobi-listview li.thread-post,
+.view-activity .mobi-listview li.thread-topic,
+.view-activity .mobi-listview li.dropbox-submission,
+.view-activity .mobi-listview li.exam-submission,
+.view-activity .mobi-listview li.person {
+	background-position: 10px 16px;
+}
+
 .container-activity-detail .dropbox-submission,
 .container-activity-detail .grade,
 .container-activity-detail .exam-submission,
@@ -172,6 +184,7 @@ div.layout-header .menu-active {
 	font-style: italic;
 	color: #333;
 }
+.view-discussion .mobi-summary,
 .view-activity .mobi-summary,
 .view-course-announcements .mobi-summary,
 .view-whatsdue .mobi-summary,
@@ -181,6 +194,11 @@ div.layout-header .menu-active {
 	font-size: 95%;
 	color: #333;
 }
+#pageDiscussionThreadDetail2 .view-discussion,
+#pageDiscussionThreadDetail .view-discussion {
+	font-size: 80%;
+}
+.view-discussion .mobi-summary,
 .view-activity .mobi-summary,
 .view-activity .mobi-title, 
 .view-course-announcements .mobi-summary,

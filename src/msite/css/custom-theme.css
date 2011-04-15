@@ -324,5 +324,18 @@
 .ui-loader { 
 	opacity: 1;
 }
-
+.ui-body-a {
+	border: 1px solid 		#2A2A2A;
+	background: 			#444444;
+	color: 					#fff;
+	 text-shadow: 0 1px 0 	#000;
+	font-weight: normal;
+	background-image: -moz-linear-gradient(top, 
+							#999999, 
+							#444444);
+	background-image: -webkit-gradient(linear,left top,left bottom,
+		color-stop(0, 		#999999),
+		color-stop(1, 		#444444));
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#999999', EndColorStr='#444444)')";
+}
 
