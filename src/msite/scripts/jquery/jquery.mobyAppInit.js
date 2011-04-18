@@ -1345,6 +1345,80 @@ var objGlobalUser = {};
 			} );
 			
 /*
+ * ==================
+ * Gradebook View
+ * ==================
+ */
+			$("#pageGradeBook").live("pagebeforeshow", function() {
+				$("#pageGradeBook .container-topicinfo").css("visibility", "hidden");
+				$("#pageGradeBook .view-course-grades").css("visibility", "hidden");
+				
+			});
+			
+			$("#pageGradeBook").live("pageshow", function() {
+				var $this = $(this), info, instructor, announcement, 
+				$contInfo = $this.find('.container-topicinfo'),
+				$contAnn = $this.find('.view-course-grades');
+				$.mobile.pageLoading();
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				});
+				$contInfo.find(".mobi-course-title").html(objGlobalCourse.title);
+				$().mobiQueryApi('get', { 
+					strUrl: configSettings.apiproxy + '/me/courseitemgrades?courses=' + objGlobalCourse.id,
+					successHandler: function(jsonResponse){
+						var objGrades = {};
+						var strHtml = '<ul data-role="listview" class="mobi-listview">';
+						var strListHtml = "";
+						for (var i = 0; i < jsonResponse.courseitemgrades.length; i++) {
+							var objCurrItem = jsonResponse.courseitemgrades[i];
+							var strItemHtml = '<li><a href="#" class="listitem-topic">';
+							var strPointsGrade = "";
+							var strLetterGrade = "";
+							var strGrade = "";
+							if (objCurrItem.grade.letterGradeSet) {
+								strLetterGrade = objCurrItem.grade.letterGrade;
+							}
+							if (objCurrItem.gradebookItem.pointsPossibleSet && objCurrItem.grade.pointsSet) {
+								strPointsGrade = objCurrItem.grade.points + "/" + objCurrItem.gradebookItem.pointsPossible;
+							}
+							if (strLetterGrade.length>0) {
+								strGrade = strLetterGrade;
+								if (strPointsGrade.length > 0) {
+									strGrade += " (" + strPointsGrade + ")";
+								}
+							} else {
+								strGrade = strPointsGrade;
+							}
+							strItemHtml += '<span class="mobi-title">'+objCurrItem.gradebookItem.title+'</span>';
+							strItemHtml += '<span class="grade">'+strGrade+'</span>';
+							strItemHtml += '</a></li>\n';
+							strListHtml += strItemHtml;
+						}
+						if (strListHtml.length <3) {
+							strListHtml = '<li><span class="mobi-title">No grades for this course.</span></li>';
+						}
+						strHtml += strListHtml + "</ul>\n";
+						$contAnn.html(strHtml);
+						$contAnn.find(".mobi-listview").listview();
+						$.mobile.pageLoading(true);
+						$("#pageGradeBook .container-topicinfo").css("visibility", "visible");
+						$("#pageGradeBook .view-course-grades").css("visibility", "visible");
+					},
+					errorHandler: function() {
+						alert('Unable to fetch grade information for this course, please retry.');
+						$.mobile.pageLoading(true);
+						$("#pageGradeBook .container-topicinfo").css("visibility", "visible");
+						$("#pageGradeBook .view-course-grades").css("visibility", "visible");
+					}
+				});
+						
+				
+			});
+			
+			
+			
+/*
  * =======================
  * Individual Student View
  * =======================
