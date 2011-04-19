@@ -50,13 +50,18 @@ div.layout-header .menu-active {
 	line-height: 1.2em;
 }
 .mobi-listview .mobi-date {
-	position: absolute;
+	position: relative;
 	top: 12px;
 	right: 10px;
 	font-size: 80%;
 	color: #333;
 }
-
+.view-course-grades .mobi-listview .mobi-date {
+	position: auto;
+	top: auto;
+	right: auto;
+	color: #333;
+}
 .activity-info-header {
 	padding: 0 0 0 40px;
 }
@@ -631,6 +636,23 @@ textarea.textarea-response-title {
 	margin: 0px;
 	padding: 0px;
 	margin-left: 20px;
+}
+.bookmark-popup p.button-close {
+	position: absolute;
+	top: 3px;
+	right: 3px;
+	width: 20px;
+	height: 20px;
+	border: 1px solid black;
+	font-weight: bold;
+	text-align: center;
+	line-height: 20px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	font-size: 100%;
+	color: #fff;
+	background-color: #666;
 }
 
 

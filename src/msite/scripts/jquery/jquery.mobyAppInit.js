@@ -266,8 +266,7 @@ var objGlobalUser = {};
 				// Show the popup if we've never shown it before, or if we haven't shown it in the last 5 days.
 				if (strPopupShownDate == null) {
 					boolShow = true;
-				}
-				else {
+				} else {
 					if (Date.parse(strPopupShownDate) > Date.today().add({days: 5})) {
 						boolShow = true;
 					};
@@ -286,13 +285,13 @@ var objGlobalUser = {};
 				var intWidth = $(document).width() - 50;
 				var strDevice = detectDevice();
 				var strHtml = '<h3>You are on a not-iOS, not-Android device</h3>';
-				strHtml += "<p>To add this app to your bookmarks, do whatever it is you need to do to do that.</p>"
+				strHtml += "<p>To add this app to your bookmarks, do whatever it is you need to do to do that.</p><p class='button-close'>X</p>"
 				if (strDevice === "ios") {
 					strHtml = '<h3>You are on an iOS device</h3><p>To add this app to your home screen, ';
-					strHtml += 'tap the bookmark icon in the toolbar below and follow the prompts.</p>';
+					strHtml += 'tap the bookmark icon in the toolbar below and follow the prompts.</p><p class="button-close">X</p>';
 				} else if (strDevice === "android") {
 					strHtml = "<h3>You are on an Android device</h3><p>To add this app to your home screen, ";
-					strHtml += "add it as a bookmark and follow the prompts.</p>";
+					strHtml += "add it as a bookmark and follow the prompts.</p><p class='button-close'>X</p>";
 				}
 				$("#pageHome .bookmark-popup").html(strHtml).width(intWidth).positionBottomOfViewport().show().click(function(){
 					$(this).hide();
@@ -1370,6 +1369,7 @@ var objGlobalUser = {};
 						var objGrades = {};
 						var strHtml = '<ul data-role="listview" class="mobi-listview">';
 						var strListHtml = "";
+						var strDate = "";
 						for (var i = 0; i < jsonResponse.courseitemgrades.length; i++) {
 							var objCurrItem = jsonResponse.courseitemgrades[i];
 							var strItemHtml = '<li><a href="#" class="listitem-topic">';
@@ -1390,8 +1390,14 @@ var objGlobalUser = {};
 							} else {
 								strGrade = strPointsGrade;
 							}
+							if (strGrade.length === 0) {
+								strDate = "No grade yet."
+							} else {
+								strDate = friendlyDate(objCurrItem.grade.updatedDate);
+							}
 							strItemHtml += '<span class="mobi-title">'+objCurrItem.gradebookItem.title+'</span>';
-							strItemHtml += '<span class="grade">'+strGrade+'</span>';
+							strItemHtml += '<span class="mobi-grade">'+strGrade+'</span>';
+							strItemHtml += '<span class="mobi-date">' +strDate+ '</span>';
 							strItemHtml += '</a></li>\n';
 							strListHtml += strItemHtml;
 						}

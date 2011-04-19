@@ -563,10 +563,10 @@ div.layout-header .menu-active {
   border-radius: 10px;
 }
 
-.mobi-listview li span.grade {
+.mobi-listview li span.mobi-grade {
   position: absolute;
   right: 40px;
-  top: 12px;
+  top: 20px;
   color: #666;
   font-weight: bold;
 }
