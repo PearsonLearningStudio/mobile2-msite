@@ -1344,9 +1344,9 @@ var objGlobalUser = {};
 			} );
 			
 /*
- * ==================
- * Gradebook View
- * ==================
+ * ===================
+ * Gradebook List View
+ * ===================
  */
 			$("#pageGradeBook").live("pagebeforeshow", function() {
 				$("#pageGradeBook .container-topicinfo").css("visibility", "hidden");
@@ -1372,10 +1372,11 @@ var objGlobalUser = {};
 						var strDate = "";
 						for (var i = 0; i < jsonResponse.courseitemgrades.length; i++) {
 							var objCurrItem = jsonResponse.courseitemgrades[i];
-							var strItemHtml = '<li><a href="#" class="listitem-topic">';
+							var strItemHtml = '<li><a href="/gradebook-detail.html" class="listitem-topic">';
 							var strPointsGrade = "";
 							var strLetterGrade = "";
 							var strGrade = "";
+							var strFullGrade = "";
 							if (objCurrItem.grade.letterGradeSet) {
 								strLetterGrade = objCurrItem.grade.letterGrade;
 							}
@@ -1385,19 +1386,21 @@ var objGlobalUser = {};
 							if (strLetterGrade.length>0) {
 								strGrade = strLetterGrade;
 								if (strPointsGrade.length > 0) {
-									strGrade += " (" + strPointsGrade + ")";
+									strFullGrade = strGrade + " (" + strPointsGrade + ")";
 								}
 							} else {
 								strGrade = strPointsGrade;
 							}
 							if (strGrade.length === 0) {
-								strDate = "No grade yet."
+								strDate = strFullGrade = "No grade yet."
 							} else {
 								strDate = friendlyDate(objCurrItem.grade.updatedDate);
 							}
 							strItemHtml += '<span class="mobi-title">'+objCurrItem.gradebookItem.title+'</span>';
 							strItemHtml += '<span class="mobi-grade">'+strGrade+'</span>';
 							strItemHtml += '<span class="mobi-date">' +strDate+ '</span>';
+							strItemHtml += '<span class="mobi-fullgrade mobi-hidden">' +strFullGrade+ '</span>';
+							strItemHtml += '<span class="mobi-comments mobi-hidden">' +objCurrItem.grade.comments+ '</span>';
 							strItemHtml += '</a></li>\n';
 							strListHtml += strItemHtml;
 						}
@@ -1407,6 +1410,14 @@ var objGlobalUser = {};
 						strHtml += strListHtml + "</ul>\n";
 						$contAnn.html(strHtml);
 						$contAnn.find(".mobi-listview").listview();
+						// Apply click listeners to the list items
+						$contAnn.find("a.listitem-topic").click(function() {
+							var $this = $(this);
+							var objGradeItemInfo = {};
+							objGradeItemInfo.title = $this.parents("#pageGradeBook").find(" .detail-header .mobi-course-title").text();
+							objGradeItemInfo.strGrade = $this.find(".mobi-fullgrade").text();
+							objGradeItemInfo.strComments = $this.find(".mobi-comments").html();
+						})
 						$.mobile.pageLoading(true);
 						$("#pageGradeBook .container-topicinfo").css("visibility", "visible");
 						$("#pageGradeBook .view-course-grades").css("visibility", "visible");

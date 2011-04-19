@@ -1,3 +1,16 @@
+.mobi-hidden {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 1px;
+	height: 1px;
+	display: none;
+	overflow: hidden;
+}
+.mobi-hidden * {
+	display: none;
+}
+
 .ui-btn-corner-none {	
 	-moz-border-radius: 0;
 	-webkit-border-radius: 0;
@@ -50,14 +63,14 @@ div.layout-header .menu-active {
 	line-height: 1.2em;
 }
 .mobi-listview .mobi-date {
-	position: relative;
+	position: absolute;
 	top: 12px;
 	right: 10px;
 	font-size: 80%;
 	color: #333;
 }
 .view-course-grades .mobi-listview .mobi-date {
-	position: auto;
+	position: relative;
 	top: auto;
 	right: auto;
 	color: #333;
@@ -152,6 +165,14 @@ div.layout-header .menu-active {
 .mobi-listview li.grade,
 .container-activity-detail .grade {
 	background-image: url(../images/icon_grade.png);
+}
+
+#pageGradebookDetail .container-activity-detail p {
+	padding-left: 30px;
+}
+#pageGradebookDetail .container-activity-detail .grade {
+	height: 1.6em;
+	font-weight: bold;
 }
 
 .mobi-listview li.dropbox-submission,
