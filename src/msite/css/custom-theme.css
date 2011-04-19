@@ -315,8 +315,6 @@
   margin: 6px;
 }
 
-/* Overrides for jQuery Mobile styles */
-
 /* loading icon */
 .ui-icon-loading {
 	background-image: url(images/ajax-loader.gif);

@@ -1,3 +1,9 @@
+/*
+msite.css: Main CSS file for msite.  
+*/
+
+/* Generic styles across all views & elements */
+
 .mobi-hidden {
 	position: absolute;
 	top: 0px;
@@ -11,11 +17,54 @@
 	display: none;
 }
 
+.clear {
+	clear: both;
+	height: 1px;
+	overflow: hidden;
+}
+
+.ui-fluid, 
+.min-width-480px .ui-fluid .ui-controlgroup-controls {
+	display: table; 
+	width: 100%; 
+}
+
+.ui-table-row {
+	display: table-row;
+}
+
+.ui-fluid .ui-btn {
+	display: table-cell; 
+	text-align: center; 
+}
+
+.ui-even-2 .ui-btn {
+	width: 50%;
+}
+
+.ui-fluid .ui-btn .ui-btn-inner { width: 100%; padding: 0.6em 0px; }
+
+.ui-fluid .ui-controlgroup-controls { width: 100%; display: table; }
+.ui-fluid .ui-checkbox, .ui-fluid .ui-radio { display: table-cell; }
+.ui-fluid .ui-checkbox label, .ui-fluid .ui-radio label { width: 100%;display: block; text-align: center; }
+
+.ui-controlgroup {
+  margin: 8px 0 0 0;
+}
+.ui-icon-dropdown {
+  background: url(../images/icon_dropdown_arrow.png) center 6px no-repeat;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
 .ui-btn-corner-none {	
 	-moz-border-radius: 0;
 	-webkit-border-radius: 0;
 	border-radius: 0;
 }
+
+/* Begin: Application Header */
 div.layout-header {
 	position: relative;
 	min-height: 40px;
@@ -47,7 +96,10 @@ div.layout-header .menu-active {
 	-webkit-border-radius: 0;
 	border-radius: 0px;
 }
-/* Mobile List View base classes*/
+/* End: Application Header */
+
+
+/* Begin: Mobile List View base classes*/
 .mobi-listview li {
 	border-top: solid 1px #CCC;
 }
@@ -69,21 +121,6 @@ div.layout-header .menu-active {
 	font-size: 80%;
 	color: #333;
 }
-.view-course-grades .mobi-listview .mobi-date {
-	position: relative;
-	top: auto;
-	right: auto;
-	color: #333;
-}
-.activity-info-header {
-	padding: 0 0 0 40px;
-}
-
-.activity-info-header .mobi-date {
-  font-size: .8em;
-  font-style: italic;
-}
-
 .mobi-listview .ui-btn-text {
   text-shadow: none;
 }
@@ -96,8 +133,20 @@ div.layout-header .menu-active {
 	overflow: hidden;
 	margin-bottom: 0.1em;
 }
+.mobi-listview li.dropbox-submission,
+.container-activity-detail .dropbox-submission {
+	background-image: url(../images/icon_dropbox.png);  
+}
 
+.mobi-listview li.exam-submission,
+.container-activity-detail .exam-submission {
+	background-image: url(../images/icon_exam.png);  
+}
 
+.mobi-listview li.person {
+	background-image: url(../images/icon_person.png);  
+}
+/* Icons for list view */
 .mobi-listview li.responses,
 .mobi-listview li.no-responses,
 .mobi-listview li.hot-topic,
@@ -112,7 +161,21 @@ div.layout-header .menu-active {
   background-position: 10px 10px;
   background-repeat: no-repeat;
 }
+/* End: Mobile List View base classes */
 
+/* Begin: List View overrides for course gradebook view */
+.view-course-grades .mobi-listview .mobi-date {
+	position: relative;
+	top: auto;
+	right: auto;
+	color: #333;
+}
+/* End: List View overrides for course gradebook view */
+
+/* Begin: List View overrides for activity view */
+.activity-info-header {
+	padding: 0 0 0 40px;
+}
 .view-activity .mobi-listview li.responses,
 .view-activity .mobi-listview li.no-responses,
 .view-activity .mobi-listview li.hot-topic,
@@ -126,14 +189,15 @@ div.layout-header .menu-active {
 	background-position: 10px 16px;
 }
 
-.container-activity-detail .dropbox-submission,
-.container-activity-detail .grade,
-.container-activity-detail .exam-submission,
-.container-activity-detail .assignment-submission {
-  background-position: 0 0;
-  background-repeat: no-repeat;
+.activity-info-header .mobi-date {
+  font-size: .8em;
+  font-style: italic;
 }
+/* End: List View overrides for activity view */
 
+
+
+/* Begin: Discussions views (discussion topics, discussion topic detail, discussion thread detail) */
 .topic-header .responses,
 .topic-header .no-responses,
 .topic-header .hot-topic {
@@ -166,60 +230,6 @@ div.layout-header .menu-active {
 .container-activity-detail .grade {
 	background-image: url(../images/icon_grade.png);
 }
-
-#pageGradebookDetail .container-activity-detail p {
-	padding-left: 30px;
-}
-#pageGradebookDetail .container-activity-detail .grade {
-	height: 1.6em;
-	font-weight: bold;
-}
-
-.mobi-listview li.dropbox-submission,
-.container-activity-detail .dropbox-submission {
-	background-image: url(../images/icon_dropbox.png);  
-}
-
-.mobi-listview li.exam-submission,
-.container-activity-detail .exam-submission {
-	background-image: url(../images/icon_exam.png);  
-}
-
-.mobi-listview li.person {
-	background-image: url(../images/icon_person.png);  
-}
-
-/* Activity list view */
-.view-whatsdue {
-	display: none;
-}
-.mobi-listview .mobi-activity-title {
-	font-weight: bold;
-	font-size: 105%;
-	margin-top: 0.2em;
-	text-overflow: ellipsis;
-	overflow: hidden;
-}
-.view-activity .mobi-course-title,
-.view-whatsdue .mobi-course-title {
-	text-overflow: ellipsis;
-	overflow: hidden;
-	font-size: 70%;
-	margin-top: 0.2em;
-	padding-bottom: 5px;
-	font-style: italic;
-	color: #333;
-}
-.view-discussion .mobi-summary,
-.view-activity .mobi-summary,
-.view-course-announcements .mobi-summary,
-.view-whatsdue .mobi-summary,
-.activity-info-header .mobi-summary {
-	text-overflow: ellipsis;
-	overflow: hidden;
-	font-size: 95%;
-	color: #333;
-}
 #pageDiscussionThreadDetail2 .view-discussion,
 #pageDiscussionThreadDetail .view-discussion {
 	font-size: 80%;
@@ -239,8 +249,6 @@ div.layout-header .menu-active {
 	width: 65%;
 	padding-right: 0px;
 }
-
-/* Discussion list view */
 .view-discussion .mobi-title {
 	position: relative;
 	top: -4px; 
@@ -291,15 +299,6 @@ li .ui-icon-arrow-r {
 	background: url(../images/icon_list_arrow.png) center bottom no-repeat;
 }
 
-/* Course Announcements List view */
-.view-course-announcements .mobi-summary {
-	width: 70%;
-}
-.landscape .view-course-announcements .mobi-summary {
-	width: 85%;
-}
-
-/* Discussion detail view */
 .header-discussion-detail {
 	min-height: 40px;
 }
@@ -478,10 +477,85 @@ textarea.textarea-response-title {
 	text-overflow: ellipsis;
 	overflow: hidden;
 }
+#pageDiscuss .ui-select .ui-btn {
+  margin: 0;
+  padding: 0;
+}
 
-/* course filter for discussion view */
+#pageDiscuss .ui-select .ui-btn .ui-btn-text {
+  padding: 6px 0 0 4px;
+}
 
-/* activity detail view */
+/* End: Discussions views (discussion topics, discussion topic detail, discussion thread detail) */
+
+/* Begin: Grade Book Detail view */
+
+#pageGradebookDetail .container-activity-detail p {
+	padding-left: 30px;
+}
+#pageGradebookDetail .container-activity-detail .grade {
+	height: 1.6em;
+	font-weight: bold;
+}
+/* End: Grade Book Detail view */
+
+
+
+/* Begin: Activity list view */
+.view-whatsdue {
+	display: none;
+}
+.mobi-listview .mobi-activity-title {
+	font-weight: bold;
+	font-size: 105%;
+	margin-top: 0.2em;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+.view-activity .mobi-course-title,
+.view-whatsdue .mobi-course-title {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	font-size: 70%;
+	margin-top: 0.2em;
+	padding-bottom: 5px;
+	font-style: italic;
+	color: #333;
+}
+.view-discussion .mobi-summary,
+.view-activity .mobi-summary,
+.view-course-announcements .mobi-summary,
+.view-whatsdue .mobi-summary,
+.activity-info-header .mobi-summary {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	font-size: 95%;
+	color: #333;
+}
+/* End: Activity list view */
+
+
+
+
+/* Begin: Course Announcements List view */
+.view-course-announcements .mobi-summary {
+	width: 70%;
+}
+.landscape .view-course-announcements .mobi-summary {
+	width: 85%;
+}
+/* End: Course Announcements List view */
+
+
+
+/* Begin: Activity Detail view */
+.container-activity-detail .dropbox-submission,
+.container-activity-detail .grade,
+.container-activity-detail .exam-submission,
+.container-activity-detail .assignment-submission {
+  background-position: 0 0;
+  background-repeat: no-repeat;
+}
 
 #pageActivityDetail .ui-btn-left {
 	float: left;	
@@ -556,7 +630,9 @@ textarea.textarea-response-title {
 	text-transform: capitalize;
 }
 
-/* activity detail view */
+/* End: Activity Detail view */
+
+/* Begin: Navigation Bar and dropdown menu */
 
 .container-navbar .ui-select {
 	width: 100%;
@@ -582,10 +658,9 @@ textarea.textarea-response-title {
 .container-navbar .ui-icon {
 	margin-top: -10px;
 }
+/* End: Navigation Bar and dropdown menu */
 
-/*
- * Profile page
- */
+/* Begin: Profile page */
  
  #pageProfile li.course .ui-icon {
  	display: none;
@@ -599,10 +674,9 @@ textarea.textarea-response-title {
  #pageProfile span.mobi-your-course {
  	font-weight: normal;
  }
+/* End: Profile page */
  
- /*
-  * Person page
-  */
+/* Begin: Person page*/
 
 #pagePerson .view-profile {
 	padding: 3px 5px 4px;
@@ -629,10 +703,9 @@ textarea.textarea-response-title {
 	font-weight: bold;
 	margin: 0;
 }
+/* End: Person page*/
 
-/*
- * Bookmark popup
- */
+/* Begin: Bookmark popup */
 .bookmark-popup {
 	display: none;
 	width: 100px;
@@ -675,64 +748,13 @@ textarea.textarea-response-title {
 	color: #fff;
 	background-color: #666;
 }
+/* End: Bookmark popup */
 
-
-.clear {
-	clear: both;
-	height: 1px;
-	overflow: hidden;
-}
-
-.ui-fluid, 
-.min-width-480px .ui-fluid .ui-controlgroup-controls {
-	display: table; 
-	width: 100%; 
-}
-
-.ui-table-row {
-	display: table-row;
-}
-
-.ui-fluid .ui-btn {
-	display: table-cell; 
-	text-align: center; 
-}
-
-.ui-even-2 .ui-btn {
-	width: 50%;
-}
-
-.ui-fluid .ui-btn .ui-btn-inner { width: 100%; padding: 0.6em 0px; }
-
-.ui-fluid .ui-controlgroup-controls { width: 100%; display: table; }
-.ui-fluid .ui-checkbox, .ui-fluid .ui-radio { display: table-cell; }
-.ui-fluid .ui-checkbox label, .ui-fluid .ui-radio label { width: 100%;display: block; text-align: center; }
-
-.ui-controlgroup {
-  margin: 8px 0 0 0;
-}
-
-#pageDiscuss .ui-select .ui-btn {
-  margin: 0;
-  padding: 0;
-}
-
-#pageDiscuss .ui-select .ui-btn .ui-btn-text {
-  padding: 6px 0 0 4px;
-}
-
-/* Select Icon */
-
-.ui-icon-dropdown {
-  background: url(../images/icon_dropdown_arrow.png) center 6px no-repeat;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-}
-
+/* Begin: Course Detail View */
 .portrait #pageCourseDetail .container-topicinfo {
 	width: 250px;
 }
 .landscape #pageCourseDetail .container-topicinfo {
 	width: 400px;
 }
+/* End: Course Detail View */
