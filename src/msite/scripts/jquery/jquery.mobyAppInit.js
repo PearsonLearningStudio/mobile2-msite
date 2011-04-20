@@ -1389,7 +1389,7 @@ var objGlobalUser = {};
 									strFullGrade = strGrade + " (" + strPointsGrade + ")";
 								}
 							} else {
-								strGrade = strPointsGrade;
+								strGrade = strFullGrade = strPointsGrade;
 							}
 							if (strGrade.length === 0) {
 								strDate = strFullGrade = "No grade yet."
@@ -1413,10 +1413,12 @@ var objGlobalUser = {};
 						// Apply click listeners to the list items
 						$contAnn.find("a.listitem-topic").click(function() {
 							var $this = $(this);
-							var objGradeItemInfo = {};
-							objGradeItemInfo.title = $this.parents("#pageGradeBook").find(" .detail-header .mobi-course-title").text();
-							objGradeItemInfo.strGrade = $this.find(".mobi-fullgrade").text();
-							objGradeItemInfo.strComments = $this.find(".mobi-comments").html();
+							objGlobalResources.objGradeItemInfo = {};
+							objGlobalResources.objGradeItemInfo.title = $this.parents("#pageGradeBook").find(" .detail-header .mobi-course-title").text();
+							objGlobalResources.objGradeItemInfo.strGrade = $this.find(".mobi-fullgrade").text();
+							objGlobalResources.objGradeItemInfo.strComments = $this.find(".mobi-comments").html();
+							objGlobalResources.objGradeItemInfo.strAssignmentTitle = $this.find(".mobi-title").html();
+							
 						})
 						$.mobile.pageLoading(true);
 						$("#pageGradeBook .container-topicinfo").css("visibility", "visible");
@@ -1429,10 +1431,38 @@ var objGlobalUser = {};
 						$("#pageGradeBook .view-course-grades").css("visibility", "visible");
 					}
 				});
-						
+			});
+
+
+/*
+ * =================
+ * Grade Detail View
+ * =================
+ */
+			$("#pageGradebookDetail").live("pagebeforeshow", function() {
+				$("#pageGradebookDetail .container-topicinfo").css("visibility", "hidden");
+				$("#pageGradebookDetail .container-activity-detail").css("visibility", "hidden");
 				
 			});
 			
+			$("#pageGradebookDetail").live("pageshow", function() {
+				var $this = $(this), info, instructor, announcement, 
+				$contInfo = $this.find('.container-topicinfo'),
+				$contAnn = $this.find('.container-activity-detail');
+				$.mobile.pageLoading();
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				});
+				
+				$contInfo.find(".mobi-course-title").text(objGlobalResources.objGradeItemInfo.title);
+				$contInfo.find(".mobi-activity-type").text(objGlobalResources.objGradeItemInfo.strAssignmentTitle);
+				$contAnn.find(".grade").text(objGlobalResources.objGradeItemInfo.strGrade);
+				$contAnn.find(".container-message div").html(objGlobalResources.objGradeItemInfo.strComments);
+				
+				$("#pageGradebookDetail .container-topicinfo").css("visibility", "visible");
+				$("#pageGradebookDetail .container-activity-detail").css("visibility", "visible");
+				$.mobile.pageLoading(true);
+			});
 			
 			
 /*

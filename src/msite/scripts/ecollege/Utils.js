@@ -444,7 +444,7 @@ var detectDevice = function() {
 	var strDevice = "other";
 	if ((strUserAgent.search("iphone") > -1) || (strUserAgent.search("ipod") >-1) || (strUserAgent.search("ipad") >-1)) {
 		strDevice = "ios";
-	} else if (strUserAgent.search("android")) {
+	} else if (strUserAgent.search("android") > -1) {
 		strDevice = "android";
 	}
 	return strDevice;

@@ -490,7 +490,8 @@ textarea.textarea-response-title {
 
 /* Begin: Grade Book Detail view */
 
-#pageGradebookDetail .container-activity-detail p {
+#pageGradebookDetail .container-activity-detail p,
+#pageGradebookDetail .container-activity-detail div {
 	padding-left: 30px;
 }
 #pageGradebookDetail .container-activity-detail .grade {
