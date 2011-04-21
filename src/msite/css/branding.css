@@ -685,6 +685,12 @@ div.layout-header .menu-active {
   clear: both;
   padding: 16px 0 0 0;
 }
+#pageGradebookDetail .container-activity-detail .activity-detail-links {
+	padding-left: 0px;
+}
+#pageGradebookDetail .container-activity-detail .activity-detail-links p {
+    margin-left: -2px;
+}
 
 .activity-detail-links .ui-link {
   color: #666;

@@ -45,7 +45,8 @@ var objGlobalUser = {};
 					dataStorage.remove('user');
 				}
 				createCookie("access_grant", "", -1);
-				$(location).attr("href", "login.html");
+				// $(location).attr("href", "login.html");
+				exitApp();
 				return false;
 			});
 			
@@ -1372,7 +1373,8 @@ var objGlobalUser = {};
 						var strDate = "";
 						for (var i = 0; i < jsonResponse.courseitemgrades.length; i++) {
 							var objCurrItem = jsonResponse.courseitemgrades[i];
-							var strItemHtml = '<li><a href="/gradebook-detail.html" class="listitem-topic">';
+							var strItemHtml = '<li>';
+							var strCloseAnchor = "";
 							var strPointsGrade = "";
 							var strLetterGrade = "";
 							var strGrade = "";
@@ -1394,14 +1396,17 @@ var objGlobalUser = {};
 							if (strGrade.length === 0) {
 								strDate = strFullGrade = "No grade yet."
 							} else {
+								strItemHtml += '<a href="/gradebook-detail.html" class="listitem-topic">';
+								strCloseAnchor = '</a>';
 								strDate = friendlyDate(objCurrItem.grade.updatedDate);
 							}
+							
 							strItemHtml += '<span class="mobi-title">'+objCurrItem.gradebookItem.title+'</span>';
 							strItemHtml += '<span class="mobi-grade">'+strGrade+'</span>';
 							strItemHtml += '<span class="mobi-date">' +strDate+ '</span>';
 							strItemHtml += '<span class="mobi-fullgrade mobi-hidden">' +strFullGrade+ '</span>';
 							strItemHtml += '<span class="mobi-comments mobi-hidden">' +objCurrItem.grade.comments+ '</span>';
-							strItemHtml += '</a></li>\n';
+							strItemHtml += strCloseAnchor + '</li>\n';
 							strListHtml += strItemHtml;
 						}
 						if (strListHtml.length <3) {
@@ -1418,7 +1423,7 @@ var objGlobalUser = {};
 							objGlobalResources.objGradeItemInfo.strGrade = $this.find(".mobi-fullgrade").text();
 							objGlobalResources.objGradeItemInfo.strComments = $this.find(".mobi-comments").html();
 							objGlobalResources.objGradeItemInfo.strAssignmentTitle = $this.find(".mobi-title").html();
-							
+							objGlobalResources.objGradeItemInfo.strDate = $this.find(".mobi-date").text();
 						})
 						$.mobile.pageLoading(true);
 						$("#pageGradeBook .container-topicinfo").css("visibility", "visible");
@@ -1457,7 +1462,8 @@ var objGlobalUser = {};
 				$contInfo.find(".mobi-course-title").text(objGlobalResources.objGradeItemInfo.title);
 				$contInfo.find(".mobi-activity-type").text(objGlobalResources.objGradeItemInfo.strAssignmentTitle);
 				$contAnn.find(".grade").text(objGlobalResources.objGradeItemInfo.strGrade);
-				$contAnn.find(".container-message div").html(objGlobalResources.objGradeItemInfo.strComments);
+				$contAnn.find(".container-message div.mobi-comments").html(objGlobalResources.objGradeItemInfo.strComments);
+				$contAnn.find(".mobi-date").text(objGlobalResources.objGradeItemInfo.strDate);
 				
 				$("#pageGradebookDetail .container-topicinfo").css("visibility", "visible");
 				$("#pageGradebookDetail .container-activity-detail").css("visibility", "visible");
@@ -1619,7 +1625,7 @@ var objGlobalUser = {};
 					eraseCookie("currentPage");
 					$("#emailSentTo").html($("#systemEmail").val());
 					$.mobile.changePage("#dialogSuccess", "flip");
-					return;
+					return false;
 				}
 				//not logged in, what went wrong?
 				switch(p_errorCode) {
@@ -1637,23 +1643,23 @@ var objGlobalUser = {};
 				}
 				$.mobile.pageLoading(true);
 				$("#show-error-message").click();
-				
+				return false;
 			};
 			
 			// assign actions to the sign in button
-			$("#signInBtn").bind("click", signInClickHandler);
+			$("#signInBtn").unbind("click").bind("click", signInClickHandler);
 			
 			// listen for form submit events, and forward them to the sign in click handler
-			$("#loginForm").bind("submit", function(p_event) {
+			$("#loginForm").unbind("submit").bind("submit", function(p_event) {
 				p_event.preventDefault();
 				signInClickHandler();
 			});
 			
 			// assign actions to the register button
-			$("#registerButton").bind("click", registerClickHandler);
+			$("#registerButton").unbind("click").bind("click", registerClickHandler);
 			
 			// listen for form submit events, and forward them to the sign in click handler
-			$("#registerFormContainer").bind("submit", function(p_event) {
+			$("#registerFormContainer").unbind("submit").bind("submit", function(p_event) {
 				p_event.preventDefault();
 				registerClickHandler();
 			});

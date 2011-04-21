@@ -557,6 +557,10 @@ textarea.textarea-response-title {
   background-position: 0 0;
   background-repeat: no-repeat;
 }
+.container-activity-detail .mobi-date {
+	font-style: italic;
+	padding-top: 5px;
+}
 
 #pageActivityDetail .ui-btn-left {
 	float: left;	

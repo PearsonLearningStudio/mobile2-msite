@@ -41,16 +41,18 @@
 		<script type="text/javascript" src="scripts/ecollege/preloadUtils.js"></script>
 		<script type="text/javascript" src="scripts/i8ln/en-us/strings.js"></script>
 		<script>
-			
-// Check to see if there is already an access grant of some sort.
-$().mobyConnect("checkAuth");
-
 $(document).ready(function() {
 	// Initialize cross site connector and session manager,
 	// and only once that is done should we do anything else.
 	$().mobyConnect("init", {
 		crossDomainReadyHandler: function() {
-			$().mobyAppInit();
+			// Check for either an existing login cookie or
+			// an authorization grant from email or SSO.
+			$().mobyConnect("checkAuth", {
+				successHandler: function() {
+					$().mobyAppInit();
+				}
+			})
 		},
 		crossDomainErrorHandler: function() {
 			$().mobyAppInit("error");

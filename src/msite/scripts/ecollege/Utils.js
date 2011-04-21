@@ -500,6 +500,14 @@ var friendlyDate = function(myDate) {
 	return strReturn;
 }
 
+var exitApp = function() {
+	if (configSettings.boolEnableSSO) {
+		var strUrl = configSettings.strSSOUrl + "?redirect_url=" + configSettings.strRedirectUrl;
+		$(location).attr("href", strUrl);
+	} else {
+		$(location).attr("href", "login.html");
+	}
+}
 
 
 

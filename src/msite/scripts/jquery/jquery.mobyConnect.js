@@ -57,20 +57,58 @@ var userId;
 
 		},
 		checkAuth : function(options) {
-			// checkAuth checks for an existing authorization cookie.
-			// This method does not require that the init method be called first, 
-			// because it is just checking a cookie.
+			// checkAuth checks for an existing session cookie, an access_grant token (from an email grant)
+			// or a grant_token (from a single-signon redirect).
 			var settings = {
-				redirectUrl : "login.html"
+				successHandler: function() {},
+				errorHandler: function() {
+					exitApp();
+					/*
+					if (configSettings.boolEnableSSO) {
+						var strUrl = configSettings.strSSOUrl + "?redirect_url=" + configSettings.strRedirectUrl;
+						$(location).attr("href", strUrl);
+					} else {
+						$(location).attr("href", settings.redirectUrl);
+					}
+					*/
+				}
 			}
 			if (options) {
 				$.extend(settings, options);
 			}
-			var accessCookie = readCookie("access_grant");
-			if (accessCookie === null) {
-				$(location).attr("href", settings.redirectUrl);
-			} else if (accessCookie.length < 5 ) {
-				$(location).attr("href", settings.redirectUrl);
+			var strEmailToken = getQueryStringValue("access_grant");
+			var strSSOToken = getQueryStringValue("grant_token");
+			var strSessionCookie = readCookie("access_grant");
+			
+			if ((strEmailToken == null) && (strSSOToken === null) && (strSessionCookie === null)) {
+				// We have nothing at all, so bail.
+				settings.errorHandler();
+			}
+			
+			// If there's a session cookie, email token, or SSO token, we can proceed.
+			if (strEmailToken.length > 5) {
+				// Is it a valid email token?
+				sessionManager.loginWithEmailGrant(strEmailToken, function(boolSuccessful, strErrorCode) {
+					if(boolSuccessful) {
+						settings.successHandler();
+					} else {
+						settings.errorHandler();
+					};
+				});
+			} else if (strSSOToken.length > 5) {
+				// Is it a valid SSO token?
+				sessionManager.loginWithEmailGrant(strSSOToken, function(boolSuccessful, strErrorCode) {
+					if(boolSuccessful) {
+						settings.successHandler();
+					} else {
+						settings.errorHandler();
+					};
+				});
+			} else if (strSessionCookie.length > 5) {
+				settings.successHandler();
+			} else {
+				// None of the above, so we need to log in
+				settings.errorHandler();
 			}
 		}
 	}
