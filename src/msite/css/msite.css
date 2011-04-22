@@ -133,20 +133,8 @@ div.layout-header .menu-active {
 	overflow: hidden;
 	margin-bottom: 0.1em;
 }
-.mobi-listview li.dropbox-submission,
-.container-activity-detail .dropbox-submission {
-	background-image: url(../images/icon_dropbox.png);  
-}
 
-.mobi-listview li.exam-submission,
-.container-activity-detail .exam-submission {
-	background-image: url(../images/icon_exam.png);  
-}
-
-.mobi-listview li.person {
-	background-image: url(../images/icon_person.png);  
-}
-/* Icons for list view */
+/* Icon positioning for list view */
 .mobi-listview li.responses,
 .mobi-listview li.no-responses,
 .mobi-listview li.hot-topic,
@@ -205,31 +193,7 @@ div.layout-header .menu-active {
 	background-repeat: no-repeat;
 }
 
-.mobi-listview li.responses,
-.mobi-listview li.thread-topic,
-.topic-header .responses {
-	background-image: url(../images/icon_responses.png);
-}
 
-.mobi-listview li.no-responses,
-.mobi-listview li.thread-post,
-.topic-header .no-responses {
-	background-image: url(../images/icon_no_responses.png);
-}
-
-.mobi-listview li.hot-topic,
-.topic-header .hot-topic {
-	background-image: url(../images/icon_hot_topic.png);
-}
-
-.mobi-listview li.course {
-	background-image: url(../images/icon_course.png);
-}
-
-.mobi-listview li.grade,
-.container-activity-detail .grade {
-	background-image: url(../images/icon_grade.png);
-}
 #pageDiscussionThreadDetail2 .view-discussion,
 #pageDiscussionThreadDetail .view-discussion {
 	font-size: 80%;
@@ -492,7 +456,7 @@ textarea.textarea-response-title {
 
 #pageGradebookDetail .container-activity-detail p,
 #pageGradebookDetail .container-activity-detail div {
-	padding-left: 30px;
+	padding-left: 17px;
 }
 #pageGradebookDetail .container-activity-detail .grade {
 	height: 1.6em;
@@ -552,6 +516,7 @@ textarea.textarea-response-title {
 /* Begin: Activity Detail view */
 .container-activity-detail .dropbox-submission,
 .container-activity-detail .grade,
+.container-activity-detail .detail-grade,
 .container-activity-detail .exam-submission,
 .container-activity-detail .assignment-submission {
   background-position: 0 0;
@@ -582,22 +547,31 @@ textarea.textarea-response-title {
 .detail-header {
 	background: url(../images/background_content.png);
 }
+.detail-header .container-backbutton {
+	margin: 0;
+	padding: 0;
+	margin-left: 10px;
+	width: 60px;
+	float: left;
+}
 
 .container-topicinfo .mobi-course-title {
-	font-size: .8em;
+	font-size: .7em;
+	top: -3px;
 }
 
 .container-topicinfo .mobi-course-title,
 .container-topicinfo .mobi-activity-type {
 	font-weight: bold;
 	margin: 0;
-	padding: 0 0 0.2em;
-	text-transform: capitalize;
+	padding: 0;
+	position: relative;
 }
 
 .container-topicinfo .mobi-activity-type {
 	font-size: 20px;
 	color: #2e3a81;
+	top: -6px;
 }
 
 .container-topicinfo .mobi-student-name {
@@ -619,20 +593,25 @@ textarea.textarea-response-title {
 	padding: 10px;
 }
 
-.container-activity-detail p {
-	 margin: 0 0 0 0;
+.container-activity-detail p,
+.container-activity-detail div {
+	 margin: 0px;
+	 font-size: 95%;
+}
+.container-activity-detail .mobi-activity-title,
+.container-activity-detail p.mobi-letter-grade,
+.container-activity-detail p.mobi-numeric-grade,
+.container-activity-detail div {
+	padding-bottom: 5px;
 }
 
 .container-activity-detail .mobi-activity-title {
-	color: #347BAD;
 	font-weight: bold;
-	margin-bottom: 5px;
-	text-transform: capitalize;
+	font-size: 110%;
 }
 
 #btn-viewall-activity {
 	margin-left: 0;
-	text-transform: capitalize;
 }
 
 /* End: Activity Detail view */
@@ -692,6 +671,8 @@ textarea.textarea-response-title {
 	margin: 5px 0 0;
 	padding-left: 4px;
 	width: 200px;
+	position: relative;
+	top: -4px;
 }
 
 .container-personinfo .mobi-student-name {

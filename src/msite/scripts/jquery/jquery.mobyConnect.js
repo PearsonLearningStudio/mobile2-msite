@@ -80,7 +80,10 @@ var userId;
 			var strSSOToken = getQueryStringValue("grant_token");
 			var strSessionCookie = readCookie("access_grant");
 			
-			if ((strEmailToken == null) && (strSSOToken === null) && (strSessionCookie === null)) {
+			if ((strEmailToken === "") && (strSSOToken === "") && (strSessionCookie === null)) {
+				// We have nothing at all, so bail.
+				settings.errorHandler();
+			}if ((strEmailToken === "") && (strSSOToken === "") && (strSessionCookie === "")) {
 				// We have nothing at all, so bail.
 				settings.errorHandler();
 			}
@@ -104,8 +107,10 @@ var userId;
 						settings.errorHandler();
 					};
 				});
-			} else if (strSessionCookie.length > 5) {
-				settings.successHandler();
+			} else if (strSessionCookie != null) {
+				if (strSessionCookie.length > 5) {
+					settings.successHandler();
+				}
 			} else {
 				// None of the above, so we need to log in
 				settings.errorHandler();

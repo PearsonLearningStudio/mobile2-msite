@@ -659,6 +659,8 @@ div.layout-header .menu-active {
   float: left;
   padding: 0;
   margin: 0 10px 0 0;
+  position: relative;
+  top: -2px;
 }
 
 .my-profile-item-icon .you-banner {
@@ -703,6 +705,7 @@ div.layout-header .menu-active {
   color: #666;
   text-align: center;
   -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
 }
 
 .detail-link-file {
@@ -740,4 +743,50 @@ div.layout-header .menu-active {
   margin: 20px 0 0 5px;
   font-weight: bold;
   color: #66645F;
+}
+
+/* Icons: list view and activity detail */
+.mobi-listview li.responses,
+.mobi-listview li.thread-topic,
+.topic-header .responses {
+	background-image: url(../images/icon_responses.png);
+}
+
+.mobi-listview li.no-responses,
+.mobi-listview li.thread-post,
+.topic-header .no-responses {
+	background-image: url(../images/icon_no_responses.png);
+}
+
+.mobi-listview li.hot-topic,
+.topic-header .hot-topic {
+	background-image: url(../images/icon_hot_topic.png);
+}
+
+.mobi-listview li.course {
+	background-image: url(../images/icon_course.png);
+}
+
+.mobi-listview li.grade,
+.container-activity-detail .grade,
+.container-activity-detail .detail-grade {
+	background-image: url(../images/icon_grade.png);
+}
+.mobi-listview li.dropbox-submission,
+.container-activity-detail .dropbox-submission {
+	background-image: url(../images/icon_dropbox.png);  
+}
+
+.mobi-listview li.exam-submission,
+.container-activity-detail .exam-submission {
+	background-image: url(../images/icon_exam.png);  
+}
+
+.mobi-listview li.person {
+	background-image: url(../images/icon_person.png);  
+}
+
+/* Activity Detail Views */
+.container-activity-detail .mobi-activity-title {
+	color: #347BAD;
 }

@@ -418,32 +418,29 @@ var objGlobalUser = {};
 			$("#pageActivityDetail").live("pageshow", function(event, ui){
 				var $thisView = $(this), url, details = '', comments,
 					$contMessage = $thisView.find('.container-message'),
-					//activityType = arrGlobalActivity[0].split('_')[0],
-					//courseId = arrGlobalActivity[0].split('_')[1],
+					$contInfo = $thisView.find('.container-topicinfo'),
 					refId = arrGlobalActivity[0].split('_')[2],
 					activity = objGlobalResources[refId],
 					activityType = activity.object.objectType;
-					
-					//console.log(objGlobalResources[referenceId]);
-				// We are showing the activity tab.
-				// First, show the loading spinner
+
 				$.mobile.pageLoading();
+				
 				$(".button-menu").unbind("click").bind("click", function() {
 					showMenu(this);
 				})
 				
-				$contMessage.addClass(activityType);
-				$contMessage.html("");
-				
 				//initial data passed via objGlobalResources
 				$thisView.find(".mobi-course-title").html(activity.courseTitle);
-				//$thisView.find(".mobi-activity-type").html(activity.object.objectType.replace('-', ' '));
 				$thisView.find(".mobi-activity-type").html(activity.target.title);
 				//get the details
 				if(activityType === 'grade') {
 					url = '/me/courses/' + activity.target.courseId + '/gradebookItems/' + activity.target.referenceId +'/grade';
+					$contMessage.addClass("detail-grade").removeClass("detail-dropbox");
+					$thisView.find(".mobi-activity-type").html("Grade");
 				} else if(activityType === 'dropbox-submission') {
 					url = '/courses/' + activity.object.courseId + '/dropboxBaskets/' + activity.target.referenceId + '/messages/' + activity.object.referenceId; 
+					$contMessage.removeClass("detail-grade").addClass("detail-dropbox");
+					$thisView.find(".mobi-activity-type").html("Dropbox Submission");
 				}
 				$().mobiQueryApi("get", { 
 					strUrl: configSettings.apiproxy + url,
@@ -1364,9 +1361,16 @@ var objGlobalUser = {};
 					showMenu(this);
 				});
 				$contInfo.find(".mobi-course-title").html(objGlobalCourse.title);
-				$().mobiQueryApi('get', { 
-					strUrl: configSettings.apiproxy + '/me/courseitemgrades?courses=' + objGlobalCourse.id,
-					successHandler: function(jsonResponse){
+				
+				$().mobyCacheManager({
+					boolForceRefresh: true,
+					strQueryUrl: configSettings.apiproxy + '/me/courseitemgrades?courses=' + objGlobalCourse.id,
+					strCacheDate: "grades-"+objGlobalCourse.id+"-timestamp",
+					strCacheInfo: "grades-" + objGlobalCourse.id,
+					objCacheRefresh: {
+						hours: 1
+					},
+					callbackSuccess : function(jsonResponse, intTransactionId) {
 						var objGrades = {};
 						var strHtml = '<ul data-role="listview" class="mobi-listview">';
 						var strListHtml = "";
@@ -1378,7 +1382,6 @@ var objGlobalUser = {};
 							var strPointsGrade = "";
 							var strLetterGrade = "";
 							var strGrade = "";
-							var strFullGrade = "";
 							if (objCurrItem.grade.letterGradeSet) {
 								strLetterGrade = objCurrItem.grade.letterGrade;
 							}
@@ -1387,14 +1390,11 @@ var objGlobalUser = {};
 							}
 							if (strLetterGrade.length>0) {
 								strGrade = strLetterGrade;
-								if (strPointsGrade.length > 0) {
-									strFullGrade = strGrade + " (" + strPointsGrade + ")";
-								}
 							} else {
-								strGrade = strFullGrade = strPointsGrade;
+								strGrade = strPointsGrade;
 							}
 							if (strGrade.length === 0) {
-								strDate = strFullGrade = "No grade yet."
+								strDate = "No grade yet."
 							} else {
 								strItemHtml += '<a href="/gradebook-detail.html" class="listitem-topic">';
 								strCloseAnchor = '</a>';
@@ -1404,7 +1404,8 @@ var objGlobalUser = {};
 							strItemHtml += '<span class="mobi-title">'+objCurrItem.gradebookItem.title+'</span>';
 							strItemHtml += '<span class="mobi-grade">'+strGrade+'</span>';
 							strItemHtml += '<span class="mobi-date">' +strDate+ '</span>';
-							strItemHtml += '<span class="mobi-fullgrade mobi-hidden">' +strFullGrade+ '</span>';
+							strItemHtml += '<span class="mobi-letter-grade mobi-hidden">' +strLetterGrade+ '</span>';
+							strItemHtml += '<span class="mobi-numeric-grade mobi-hidden">' +strPointsGrade+ '</span>';
 							strItemHtml += '<span class="mobi-comments mobi-hidden">' +objCurrItem.grade.comments+ '</span>';
 							strItemHtml += strCloseAnchor + '</li>\n';
 							strListHtml += strItemHtml;
@@ -1419,8 +1420,81 @@ var objGlobalUser = {};
 						$contAnn.find("a.listitem-topic").click(function() {
 							var $this = $(this);
 							objGlobalResources.objGradeItemInfo = {};
-							objGlobalResources.objGradeItemInfo.title = $this.parents("#pageGradeBook").find(" .detail-header .mobi-course-title").text();
-							objGlobalResources.objGradeItemInfo.strGrade = $this.find(".mobi-fullgrade").text();
+							objGlobalResources.objGradeItemInfo.strCourseTitle = $this.parents("#pageGradeBook").find(" .detail-header .mobi-course-title").text();
+							objGlobalResources.objGradeItemInfo.strLetterGrade = $this.find(".mobi-letter-grade").text();
+							objGlobalResources.objGradeItemInfo.strNumericGrade = $this.find(".mobi-numeric-grade").text();
+							objGlobalResources.objGradeItemInfo.strComments = $this.find(".mobi-comments").html();
+							objGlobalResources.objGradeItemInfo.strAssignmentTitle = $this.find(".mobi-title").html();
+							objGlobalResources.objGradeItemInfo.strDate = $this.find(".mobi-date").text();
+						})
+						$.mobile.pageLoading(true);
+						$("#pageGradeBook .container-topicinfo").css("visibility", "visible");
+						$("#pageGradeBook .view-course-grades").css("visibility", "visible");
+					},
+					callbackError: function() {
+						alert('Unable to fetch grade information for this course, please retry.');
+						$.mobile.pageLoading(true);
+						$("#pageGradeBook .container-topicinfo").css("visibility", "visible");
+						$("#pageGradeBook .view-course-grades").css("visibility", "visible");
+					}
+				})
+				
+				/*
+				$().mobiQueryApi('get', { 
+					strUrl: configSettings.apiproxy + '/me/courseitemgrades?courses=' + objGlobalCourse.id,
+					successHandler: function(jsonResponse){
+						var objGrades = {};
+						var strHtml = '<ul data-role="listview" class="mobi-listview">';
+						var strListHtml = "";
+						var strDate = "";
+						for (var i = 0; i < jsonResponse.courseitemgrades.length; i++) {
+							var objCurrItem = jsonResponse.courseitemgrades[i];
+							var strItemHtml = '<li>';
+							var strCloseAnchor = "";
+							var strPointsGrade = "";
+							var strLetterGrade = "";
+							var strGrade = "";
+							if (objCurrItem.grade.letterGradeSet) {
+								strLetterGrade = objCurrItem.grade.letterGrade;
+							}
+							if (objCurrItem.gradebookItem.pointsPossibleSet && objCurrItem.grade.pointsSet) {
+								strPointsGrade = objCurrItem.grade.points + "/" + objCurrItem.gradebookItem.pointsPossible;
+							}
+							if (strLetterGrade.length>0) {
+								strGrade = strLetterGrade;
+							} else {
+								strGrade = strPointsGrade;
+							}
+							if (strGrade.length === 0) {
+								strDate = "No grade yet."
+							} else {
+								strItemHtml += '<a href="/gradebook-detail.html" class="listitem-topic">';
+								strCloseAnchor = '</a>';
+								strDate = friendlyDate(objCurrItem.grade.updatedDate);
+							}
+							
+							strItemHtml += '<span class="mobi-title">'+objCurrItem.gradebookItem.title+'</span>';
+							strItemHtml += '<span class="mobi-grade">'+strGrade+'</span>';
+							strItemHtml += '<span class="mobi-date">' +strDate+ '</span>';
+							strItemHtml += '<span class="mobi-letter-grade mobi-hidden">' +strLetterGrade+ '</span>';
+							strItemHtml += '<span class="mobi-numeric-grade mobi-hidden">' +strPointsGrade+ '</span>';
+							strItemHtml += '<span class="mobi-comments mobi-hidden">' +objCurrItem.grade.comments+ '</span>';
+							strItemHtml += strCloseAnchor + '</li>\n';
+							strListHtml += strItemHtml;
+						}
+						if (strListHtml.length <3) {
+							strListHtml = '<li><span class="mobi-title">No grades for this course.</span></li>';
+						}
+						strHtml += strListHtml + "</ul>\n";
+						$contAnn.html(strHtml);
+						$contAnn.find(".mobi-listview").listview();
+						// Apply click listeners to the list items
+						$contAnn.find("a.listitem-topic").click(function() {
+							var $this = $(this);
+							objGlobalResources.objGradeItemInfo = {};
+							objGlobalResources.objGradeItemInfo.strCourseTitle = $this.parents("#pageGradeBook").find(" .detail-header .mobi-course-title").text();
+							objGlobalResources.objGradeItemInfo.strLetterGrade = $this.find(".mobi-letter-grade").text();
+							objGlobalResources.objGradeItemInfo.strNumericGrade = $this.find(".mobi-numeric-grade").text();
 							objGlobalResources.objGradeItemInfo.strComments = $this.find(".mobi-comments").html();
 							objGlobalResources.objGradeItemInfo.strAssignmentTitle = $this.find(".mobi-title").html();
 							objGlobalResources.objGradeItemInfo.strDate = $this.find(".mobi-date").text();
@@ -1436,6 +1510,7 @@ var objGlobalUser = {};
 						$("#pageGradeBook .view-course-grades").css("visibility", "visible");
 					}
 				});
+				*/
 			});
 
 
@@ -1459,10 +1534,33 @@ var objGlobalUser = {};
 					showMenu(this);
 				});
 				
-				$contInfo.find(".mobi-course-title").text(objGlobalResources.objGradeItemInfo.title);
-				$contInfo.find(".mobi-activity-type").text(objGlobalResources.objGradeItemInfo.strAssignmentTitle);
-				$contAnn.find(".grade").text(objGlobalResources.objGradeItemInfo.strGrade);
-				$contAnn.find(".container-message div.mobi-comments").html(objGlobalResources.objGradeItemInfo.strComments);
+				$contInfo.find(".mobi-course-title").text(objGlobalResources.objGradeItemInfo.strCourseTitle);
+				$contAnn.find(".mobi-activity-title").text(objGlobalResources.objGradeItemInfo.strAssignmentTitle);
+				
+				// If there is a letter grade, show it, otherwise hide that line.
+				if (objGlobalResources.objGradeItemInfo.strLetterGrade != "") {
+					$contAnn.find(".mobi-letter-grade span").text(objGlobalResources.objGradeItemInfo.strLetterGrade);
+					$contAnn.find(".mobi-letter-grade").show();
+				} else {
+					$contAnn.find(".mobi-letter-grade").hide();
+				}
+				
+				// If there is a numeric grade, show it, otherwise hide that line.
+				if (objGlobalResources.objGradeItemInfo.strNumericGrade != "") {
+					$contAnn.find(".mobi-numeric-grade span").text(objGlobalResources.objGradeItemInfo.strNumericGrade);
+					$contAnn.find(".mobi-numeric-grade").show();
+				} else {
+					$contAnn.find(".mobi-numeric-grade").hide();
+				}
+				
+				// If there are comments, show them, otherwise hide that section.
+				if (objGlobalResources.objGradeItemInfo.strComments != "") {
+					$contAnn.find(".container-message div.mobi-comments").html(objGlobalResources.objGradeItemInfo.strComments);
+					$contAnn.find(".container-message .mobi-comments").show();
+				} else {
+					$contAnn.find(".container-message .mobi-comments").hide();
+				}
+				
 				$contAnn.find(".mobi-date").text(objGlobalResources.objGradeItemInfo.strDate);
 				
 				$("#pageGradebookDetail .container-topicinfo").css("visibility", "visible");
