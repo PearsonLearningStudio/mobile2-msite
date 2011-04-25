@@ -8,7 +8,7 @@ configSettings.wmm = {};
 configSettings.wmm.enabled = "true";
 configSettings.intNumberOfActivities = 10;
 configSettings.intCurrentNumberOfActivities = configSettings.intNumberOfActivities;
-configSettings.boolScrollUpdate = false;
+configSettings.boolScrollUpdate = true;
 
 // Single Sign-On
 configSettings.boolEnableSSO = false;

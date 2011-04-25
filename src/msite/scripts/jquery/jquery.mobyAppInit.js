@@ -1,7 +1,7 @@
 /*
  * mobyAppInit:  Plugin for initializing application pages.
  * Each application page will have a set of initialization functions to handle click listeners, page transition handlers, etc.  This is where
- * they live.  
+ * they live.
  * 
  * Methods:
  * 	initIndex:  Initialize the index.html page.  This is the default method for the plugin.
@@ -11,8 +11,11 @@
  * 		strRedirectUrl:  The URL to redirect to when the error happens.
  * 
  */
-boolClicked = true;
+
 var objGlobalUser = {};
+var objGlobalCourse = {};
+var arrGlobalActivity = [];
+var objGlobalResources = {};
 (function($) {
 	var methods = {
 		initIndex : function(options) {
@@ -62,7 +65,7 @@ var objGlobalUser = {};
 			
 			// Initialize click listener for what's due button
 			$(".btn-whatsdue").live('click', function() {
-				$("div.subnav a").removeClass("ui-btn-active");
+				$("#pageHome div.subnav a").removeClass("ui-btn-active");
 				$(this).addClass("ui-btn-active");
 				$(".view-activity").hide();
 				$(".view-whatsdue").show();
@@ -72,7 +75,6 @@ var objGlobalUser = {};
 
 			// Initialize click listener for Activity button
 			$(".btn-activity").die("click").live('click', function() {
-				$(this).addClass("ui-btn-active");
 				activityButtonClickHandler(false);
 			});
 			
@@ -91,7 +93,7 @@ var objGlobalUser = {};
  * Helper Functions
  * ================
  * 
- * click listeners, JSON parsers, etc.
+ * event handlers, JSON parsers, etc.
  */
 			// Helper function to show the menu, which must be bound in every page upon every show no matter what,
 			function showMenu(ptrButton) {
@@ -142,6 +144,7 @@ var objGlobalUser = {};
 				if(opts.refresh) {
 					$.mobile.pageLoading();
 				}
+				
 				$().mobyActivityManager("toHtml", {
 					boolForceRefresh: opts.refresh,			
 					callbackSuccess: function(objReturn){ 
@@ -156,63 +159,67 @@ var objGlobalUser = {};
 						
 						$("#pageHome .view-activity").html(strHtml);
 						$("#pageHome .view-activity .mobi-listview").listview();
+						// add a click event handler to pass correct information to detail view
+						$("#pageHome .view-activity ul li a").click(function() {
+							var $this = $(this);
+							if ($this.parents("li").hasClass("grade")) {
+								objGlobalCourse.id = $this.find(".course-id").text(); 
+								objGlobalCourse.referenceId = $this.find(".grade-reference-id").text();
+							} else if ($this.parents("li").attr("class") === "dropbox-submisstion") {
+								
+							}
+						})
 						$.mobile.pageLoading(true);
+						
+						// When the user taps on an item
+						$(".listitem-activity").die("click.details").live('click.details',  function(e){
+							e.preventDefault();
+							arrGlobalActivity =  this.className.match(/\w+[-]*\w+\d+/ig);
+							activityArray = arrGlobalActivity[0].split('_');
+							activityType = activityArray[0];
+							if(activityType === 'thread-topic'){									
+								arrGlobalTopics.push(strCurrentTopic);
+							} else if(activityType === 'thread-post'){						
+								// The user has tapped on a thread.  We need
+								// to display the thread detail page.
+								// pass the responseId 
+								objInfo = {
+									boolFromActivity: true,
+									strNewId: activityArray[1] + '-' + activityArray[2],
+									strOldId: -1
+								}
+								arrGlobalThreads.push(objInfo);
+							} 
+						});
 					}
 				});
 			}
 			
-			// Click handler for the activity button
-			var activityButtonClickHandler = function(boolForceRefresh) {
-				$(".btn-whatsdue").removeClass("ui-btn-active");
-				$(".view-whatsdue").hide();
-				$(".view-activity").show();
-				
-				// Are there already items on display?
-				if ($(".view-activity li").length < 24) {
-					$.mobile.pageLoading();
-					// Fetch the feed and insert into DOM.
-					getActivities({refresh: boolForceRefresh});
-					//when a user taps on an activity
-					$(".listitem-activity").live('click',  function(e){
-						e.preventDefault();
-						arrGlobalActivity =  this.className.match(/\w+[-]*\w+\d+/ig);
-						activityArray = arrGlobalActivity[0].split('_');
-						activityType = activityArray[0];
-						if(activityType === 'thread-topic'){									
-							arrGlobalTopics.push(strCurrentTopic);
-						} else if(activityType === 'thread-post'){						
-							// The user has tapped on a thread.  We need
-							// to display the thread detail page.
-							// pass the responseId 
-							objInfo = {
-								boolFromActivity: true,
-								strNewId: activityArray[1] + '-' + activityArray[2],
-								strOldId: -1
-							}
-							arrGlobalThreads.push(objInfo);
-						} 
-					}); 
-				}
-				
-				
-				
-				// Add scroll event for infinite scroll and positioning bookmark alert div
-				$(window).unbind("scroll").scroll(function() {
+			// event handler for bookmark popup scroll
+			var handleBookmarkPopupScroll = function() {
+				$(window).unbind("scroll.bookmark").bind("scroll.bookmark", function() {
 					// always position the bookmark popup at the bottom of the viewport
 					if ($("#pageHome .bookmark-popup:visible").length > 0){
 						$("#pageHome .bookmark-popup").positionBottomOfViewport()
 					}
-					
-					// Infinite scroll
+				});
+			}
+			
+			// event handler for infinite scrolling
+			var handleInfiniteScroll = function() {
+				$(window).unbind("scroll.infinite").bind("scroll.infinite", function() {
+
 					if (($(window).scrollTop() + 150) >= ($(document).height() - $(window).height())) {
-						// Get more things
-						if (configSettings.boolScrollUpdate) {
+
+						// Do we have all the things?
+						if (!configSettings.boolScrollUpdate) {
+							$(window).unbind("scroll.infinite");
 							return;
 						}
+						
+						// No!  So lets get more things!
 						configSettings.boolScrollUpdate = true;
 						$.mobile.pageLoading();
-						
-						// Fetch the feed and insert into DOM.
 						var doIt = function() {
 							$().mobyActivityManager("toHtml", {
 								intStartIndex: configSettings.intCurrentNumberOfActivities,
@@ -227,7 +234,7 @@ var objGlobalUser = {};
 									configSettings.intCurrentNumberOfActivities += configSettings.intNumberOfActivities;
 									if (objReturn.boolAllItems) {
 										// All items have been returned and displayed, so unbind the scroll event.
-										$(window).unbind("scroll");
+										$(window).unbind("scroll.infinite");
 									}
 									configSettings.boolScrollUpdate = false;
 								}
@@ -241,14 +248,28 @@ var objGlobalUser = {};
 			
 					}
 				})
-		
-				// Now that we've bound a scroll event listener to the window, we need to unbind it if we change pages, because
-				// other pages do not need it.
-				$("#pageHome").die("pagebeforehide").live("pagebeforehide", function() {
-					$(window).unbind("scroll");
-				})
-
-
+	
+			}
+			
+			// Click handler for the activity button
+			var activityButtonClickHandler = function(boolForceRefresh) {
+				if ($(".btn-whatsdue").hasClass("ui-btn-active")) {
+					// Rebind scroll listener?
+					if (configSettings.boolScrollUpdate) {
+						handleInfiniteScroll();
+					}
+				}
+				$(".view-whatsdue").hide();
+				$(".view-activity").show();
+				$("#pageHome .btn-whatsdue").removeClass("ui-btn-active");
+				$("#pageHome .btn-activity").addClass("ui-btn-active");
+				
+				// Are there already items on display?
+				if ($("#pageHome .view-activity li").length < 5) {
+					$.mobile.pageLoading();
+					// Fetch the feed and insert into DOM.
+					getActivities({refresh: boolForceRefresh});
+				}
 			}
 			
 
@@ -258,7 +279,7 @@ var objGlobalUser = {};
  * Bookmark Popup
  * ==============
  */
-		
+
 			// Check to see if we need to display a bookmark popup
 			var boolShow = false;
 			if (dataStorage.isSupported()) {
@@ -296,34 +317,59 @@ var objGlobalUser = {};
 				}
 				$("#pageHome .bookmark-popup").html(strHtml).width(intWidth).positionBottomOfViewport().show().click(function(){
 					$(this).hide();
+					$(window).unbind('scroll.bookmark');
 					if (dataStorage.isSupported()) {
 						dataStorage.add("popup-shown-date", Date.today());
 					}
 				});
+				
+				// Set up the scroll handler
+				handleBookmarkPopupScroll();
 				
 				// Need to move it in case of orientation change
 				$(document).bind("orientationchange", function() {
 					$("#pageHome .bookmark-popup").positionBottomOfViewport();
 				})
 			}
-			
+
 /*
  * =========
  * Home View
  * =========
  */
 			
-			// Every time we show the home page, we need to show the activities.
-			$(".btn-activity").addClass("ui-btn-active");
+			// When we load this page, we must fill in the activity view.
 			activityButtonClickHandler(true);
+			handleInfiniteScroll();
+			
+			
 			$("#pageHome").die("pageshow").live("pageshow", function() {
-				$(".btn-activity").click();
-				// Highlight the correct tab
+				// What is currently visible?
+
+				if ($("#pageHome .btn-activity").hasClass("ui-btn-active")) {
+					activityButtonClickHandler(false);
+					$(".view-whatsdue").hide();
+					$(".view-activity").show();
+
+					if (configSettings.boolScrollUpdate) {
+						handleInfiniteScroll();
+					}
+				} else {
+					$(".view-whatsdue").show();
+					$(".view-activity").hide();
+				}
+				// Highlight the correct tab in the navbar
 				$(".container-navbar li a").removeClass("ui-btn-active");
 				$(".container-navbar #home").addClass("ui-btn-active");
 				$(".button-menu").unbind("click").bind("click", function() {
 					showMenu(this);
 				})
+			})
+			
+			// Now that we've bound a scroll event listeners to the window, we need to unbind them if we change pages, because
+			// other pages do not need it.
+			$("#pageHome").unbind("pagebeforehide").bind("pagebeforehide", function() {
+				$(window).unbind("scroll.infinite").unbind("scroll.bookmark");
 			})
 /*
  * ===============
@@ -414,57 +460,201 @@ var objGlobalUser = {};
  * Activity Detail View
  * ====================
  */
+
+			$("#pageActivityDetail").live("pagebeforeshow", function(event, ui) {
+				$("#pageActivityDetail .container-topicinfo").css("visibility", "hidden");
+				$("#pageActivityDetail .container-activity-detail").css("visibility", "hidden")
+			})
+						
+			
+			
 			//Page show event for an activity feed detail page
 			$("#pageActivityDetail").live("pageshow", function(event, ui){
 				var $thisView = $(this), url, details = '', comments,
 					$contMessage = $thisView.find('.container-message'),
 					$contInfo = $thisView.find('.container-topicinfo'),
-					refId = arrGlobalActivity[0].split('_')[2],
-					activity = objGlobalResources[refId],
-					activityType = activity.object.objectType;
+					refId = arrGlobalActivity[0].split('_')[2];
+				var	activity = objGlobalResources[refId];
+				var activityType = activity.object.objectType;
 
 				$.mobile.pageLoading();
 				
 				$(".button-menu").unbind("click").bind("click", function() {
 					showMenu(this);
 				})
+				/*
+				 * The Activity Detail view has to display different kinds of 
+				 * activity details: grades, dropbox submissions, etc.
+				 * Each detail type has its own div in the activitydetail.html template,
+				 * and these divs are hidden/shown based on CSS cascade.
+				 * Here, we fill in the appropriate items in the divs and set the CSS classes.
+				 */
 				
-				//initial data passed via objGlobalResources
+				// Initial data passed via objGlobalResources
 				$thisView.find(".mobi-course-title").html(activity.courseTitle);
 				$thisView.find(".mobi-activity-type").html(activity.target.title);
-				//get the details
+				
+				// Get the details
 				if(activityType === 'grade') {
-					url = '/me/courses/' + activity.target.courseId + '/gradebookItems/' + activity.target.referenceId +'/grade';
-					$contMessage.addClass("detail-grade").removeClass("detail-dropbox");
+					$thisView.find(".container-activity-detail").addClass("detail-grade").removeClass("detail-dropbox");
 					$thisView.find(".mobi-activity-type").html("Grade");
+					$contMessage = $thisView.find(".container-grade");
+					// Use the Cache Manager to fetch the gradebook information for the course.
+					$().mobyCacheManager({
+						boolForceRefresh: true,
+						strQueryUrl: configSettings.apiproxy + '/me/courseitemgrades?courses=' + objGlobalCourse.id,
+						strCacheDate: "grades-"+objGlobalCourse.id+"-timestamp",
+						strCacheInfo: "grades-" + objGlobalCourse.id,
+						objCacheRefresh: {
+							hours: 1
+						},
+						callbackSuccess : function(jsonResponse, intTransactionId) {
+							
+							// find the relevant grade from the gradebook information, and then 
+							// insert the information in the DOM.
+							var objGrade = "";
+							for (var i = 0; i < jsonResponse.courseitemgrades.length; i++) {
+								if (jsonResponse.courseitemgrades[i].gradebookItem.id === objGlobalCourse.referenceId) {
+									objGrade = jsonResponse.courseitemgrades[i];
+								}
+							}
+
+							if (objGrade != "") {
+								$contMessage.find(".mobi-activity-title").html(objGrade.gradebookItem.title);
+								// If there is a letter grade, show it, otherwise hide that line.
+								if (objGrade.grade.letterGradeSet) {
+									$contMessage.find(".mobi-letter-grade span").text(objGrade.grade.letterGrade);
+									$contMessage.find(".mobi-letter-grade").show();
+								} else {
+									$contMessage.find(".mobi-letter-grade").hide();
+								}
+								
+								// If there is a numeric grade, show it, otherwise hide that line.
+								if (objGrade.grade.pointsSet) {
+									$contMessage.find(".mobi-numeric-grade span").text(objGrade.grade.points + "/" + objGrade.gradebookItem.pointsPossible);
+									$contMessage.find(".mobi-numeric-grade").show();
+								} else {
+									$contMessage.find(".mobi-numeric-grade").hide();
+								}
+								
+								// If there are comments, show them, otherwise hide that section.
+								if (objGrade.grade.comments != "") {
+									$contMessage.find("div.mobi-comments").html(objGrade.grade.comments);
+									$contMessage.find(".mobi-comments").show();
+								} else {
+									$contMessage.find(".mobi-comments").hide();
+								}
+								
+								$contMessage.find(".mobi-date").text(friendlyDate(objGrade.grade.updatedDate));
+								$.mobile.pageLoading(true);
+								$("#pageActivityDetail .container-topicinfo").css("visibility", "visible");
+								$("#pageActivityDetail .container-activity-detail").css("visibility", "visible")
+								
+							} else {
+								// Something bad happened, we weren't able to get the cache or it didn't have
+								// a match...something.
+								alert('Unable to fetch grade information, please retry.');
+								$.mobile.pageLoading(true);
+								$("#pageActivityDetail .container-topicinfo").css("visibility", "visible");
+								$("#pageActivityDetail .container-activity-detail").css("visibility", "visible")
+							}
+						},
+						callbackError: function() {
+							alert('Unable to fetch grade information, please retry.');
+							$.mobile.pageLoading(true);
+						}
+					})
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
 				} else if(activityType === 'dropbox-submission') {
 					url = '/courses/' + activity.object.courseId + '/dropboxBaskets/' + activity.target.referenceId + '/messages/' + activity.object.referenceId; 
 					$contMessage.removeClass("detail-grade").addClass("detail-dropbox");
 					$thisView.find(".mobi-activity-type").html("Dropbox Submission");
-				}
-				$().mobiQueryApi("get", { 
-					strUrl: configSettings.apiproxy + url,
-					successHandler: function(jsonResponse, intTransactionId) {
-						//console.log(jsonResponse, intTransactionId);
-						details += ' <div class="activity-info-header">';
-						if(activityType === 'grade') { 
-							details += '<p class="mobi-activity-title">Grade: ' + activity.grade + '</p>';
-							details += '<p class="mobi-activity-comments">Comments: '+ jsonResponse.grade.comments + '</p>';
-						} else if(activityType === 'dropbox-submission') {
+					$contMessage = $thisView.find(".container-dropbox");
+					$thisView.find(".container-activity-detail").addClass("detail-dropbox").removeClass("detail-grade");
+					
+					$().mobiQueryApi("get", { 
+						strUrl: configSettings.apiproxy + url,
+						successHandler: function(jsonResponse, intTransactionId) {
+							//console.log(jsonResponse, intTransactionId);
+							$contMessage.find(".mobi-activity-title").html(activity.object.objectType.replace('-', ' '));
+							$contMessage.find(".mobi-posted-by span").text(jsonResponse.messages[0].author.firstName + ' ' +jsonResponse.messages[0].author.lastName);
+							$contMessage.find(".mobi-date").text(friendlyDate(jsonResponse.messages[0].date));
+							
+							
+							// If there are comments, show them, otherwise hide that section.
+							if (jsonResponse.messages[0].comments != "") {
+								$contMessage.find("div.mobi-comments").html(jsonResponse.messages[0].comments);
+								$contMessage.find(".mobi-comments").show();
+							} else {
+								$contMessage.find(".mobi-comments").hide();
+							}
+							
+							
+							
+							
+							/*
+							details += ' <div class="activity-info-header">';
 							details += '<p class="mobi-activity-title">' + activity.object.objectType.replace('-', ' ') + '</p>';
 							details += '<p class="mobi-activity-author">Posted by: ' + jsonResponse.messages[0].author.firstName + ' ' +jsonResponse.messages[0].author.lastName + '</p>';
 							details += '<p class="mobi-activity-comments">Comments: '+ jsonResponse.messages[0].comments + '</p>';
+							details += '<p class="mobi-date">' + activity.time + '</p>';
+							details += '</div>';
+							details += '<div class="activity-detail-links"><p><a id="btn-viewall-activity" class="detail-link ui-link" data-transition="slide" data-direction="reverse" data-role="button" href="#">View All Course ' + activity.object.objectType.replace('-', ' ') + 's</a></p></div>';	
+							$contMessage.html(details);	
+							*/
+							$.mobile.pageLoading(true);
+							$("#pageActivityDetail .container-topicinfo").css("visibility", "visible");
+							$("#pageActivityDetail .container-activity-detail").css("visibility", "visible")
+						},
+						errorHandler: function() {
+							alert("Unable to display the dropbox information.  Please try again.");
+							$.mobile.pageLoading(true);
 						}
-						details += '<p class="mobi-date">' + activity.time + '</p>';
-						details += '</div>';
-						details += '<div class="activity-detail-links"><p><a id="btn-viewall-activity" class="detail-link ui-link" data-transition="slide" data-direction="reverse" data-role="button" href="#">View All Course ' + activity.object.objectType.replace('-', ' ') + 's</a></p></div>';	
-						$contMessage.html(details);	
-						$.mobile.pageLoading(true);
-					},
-					errorHandler: function() {
-						//alert("Unable to fetch the topic's responses. Please try again.");
-					}
-				});   
+					}); 
+				}  
 			} );
 			
 			//discussion topic and detail response

@@ -4,7 +4,7 @@
 		<a class="button-menu">Menu</a>
 		<div class="clear"></div>
 		<ul data-role="listview" data-inset="true">
-			<li class="home"><a href="/index.html" data-transition="slide" data-direction="reverse">Home</a></li>
+			<li class="home"><a href="#pageHome" data-transition="slide" data-direction="reverse">Home</a></li>
 			<li class="my_profile"><a href="/profile.html" data-transition="slide">My Profile</a></li>
 			<li class="settings"><a href="/settings.html" data-transition="slide">Settings</a></li>
 			<li class="signout"><a href="#" class="menu-logout">Logout</a></li>
@@ -21,10 +21,29 @@
 	  	</div>
   	</div>
 	<div data-role="content">
-		<div class="container-activity-detail">
-			<div class="container-message container-message-open">
-				<p>Tell us a little about yourself. Include your name and major.  Also, this needs to be long so that we can see what extra text looks like lorem ipsum dolor sit amet requisciat in pace.  Lorem ipsum dolor sit amet.  Lorem. Ipsum dolor sit amet requisciat in pache domini.</p>
-			</div>										
+		<div class="container-activity-detail detail-grade">
+			<div class="container-message container-message-open container-grade">
+				<p class="mobi-activity-title">Grade Item Title</p>
+				<p class="mobi-letter-grade">Letter Grade: <span>A</span></p>
+				<p class="mobi-numeric-grade">Numeric Grade: <span>10/10</span></p>
+				<p class="mobi-comments">Comments:</p>
+				<div class="mobi-comments">Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.</div>
+				<p class="mobi-date">Friendly Date</p>
+				<div class="activity-detail-links">
+					<p><a id="btn-viewall-activity" class="detail-link ui-link" href="/gradebook.html">View All Course Grades</a></p>
+				</div>
+			</div>
+			
+			<div class="container-message container-message-open container-dropbox">
+				<p class="mobi-activity-title">Dropbox Item Title</p>
+				<p class="mobi-posted-by">Posted by: <span></span></p>
+				<p class="mobi-comments">Comments:</p>
+				<div class="mobi-comments">Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.</div>
+				<p class="mobi-date">Friendly Date</p>
+				<div class="activity-detail-links">
+					<p><a id="btn-viewall-activity" class="detail-link ui-link" href="#">View All Course Dropbox Items</a></p>
+				</div>
+			</div>	
 		</div>
 	</div>
 </div>

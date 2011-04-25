@@ -164,6 +164,9 @@ div.layout-header .menu-active {
 .activity-info-header {
 	padding: 0 0 0 40px;
 }
+.view-activity {
+	position: relative;
+}
 .view-activity .mobi-listview li.responses,
 .view-activity .mobi-listview li.no-responses,
 .view-activity .mobi-listview li.hot-topic,
@@ -613,6 +616,34 @@ textarea.textarea-response-title {
 #btn-viewall-activity {
 	margin-left: 0;
 }
+
+#pageActivityDetail .container-activity-detail p,
+#pageActivityDetail .container-activity-detail div {
+	padding-left: 17px;
+}
+
+#pageActivityDetail .container-activity-detail div.activity-detail-links p {
+	padding: 0px;
+}
+
+/* Hiding and showing different kinds of details */
+#pageActivityDetail .detail-grade .container-grade {
+	display: block;
+}
+#pageActivityDetail .detail-grade .container-dropbox {
+	display: none;
+}
+
+#pageActivityDetail .detail-dropbox .container-grade {
+	display: none;
+}
+#pageActivityDetail .detail-dropbox .container-dropbox {
+	display: block;
+}
+.detail-dropbox .mobi-activity-title {
+	text-transform: capitalize;
+}
+
 
 /* End: Activity Detail view */
 

@@ -64,6 +64,8 @@ var arrGlobalActivity = [],
 						strHtml += "</span><span class='mobi-summary'>";
 						strHtml += grade  = GetGrade(item);
 						strHtml += "</span>";
+						strHtml += '<span class="mobi-hidden course-id">' +item.object.courseId+ '</span>';
+						strHtml += '<span class="mobi-hidden grade-reference-id">' +item.target.referenceId + '</span>';
 					} else if (type === "dropbox-submission") {
 						strHtml += '<li class="' + type +'"><a class="listitem-activity dropbox-submission_' + item.object.courseId + '_'  + item.object.referenceId + '" href="/activitydetail.html">';
 						strHtml += '<span class="mobi-title">';
@@ -169,7 +171,8 @@ var arrGlobalActivity = [],
 				$().mobyCacheManager({
 					boolForceRefresh: settings.boolForceRefresh,
 					//strQueryUrl: configSettings.apiproxy + "/me/whatshappeningfeed",
-					strQueryUrl: configSettings.apiproxy + "/me/whatshappeningfeed" + "?types=thread-topic,thread-post,grade,dropbox-submission",
+					//strQueryUrl: configSettings.apiproxy + "/me/whatshappeningfeed" + "?types=thread-topic,thread-post,grade,dropbox-submission",
+					strQueryUrl: configSettings.apiproxy + "/me/whatshappeningfeed" + "?types=grade,dropbox-submission",
 					strQueryType: "get",
 					strQueryData: "",
 					strCacheDate: "activities-timestamp",
