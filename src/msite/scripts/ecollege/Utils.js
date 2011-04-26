@@ -435,7 +435,10 @@ var dataStorage = {
     },
     remove: function(key) {
     	return localStorage.removeItem(key);
-    }
+    },
+	clear: function() {
+		return localStorage.clear();
+	}
 };
 
 // detectDevice: detect the device via user agent sniffing.

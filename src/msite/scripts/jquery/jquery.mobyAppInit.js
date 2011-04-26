@@ -70,7 +70,8 @@ var objGlobalResources = {};
 				$(".view-activity").hide();
 				$(".view-whatsdue").show();
 				$(window).unbind("scroll");
-			}).click(); // default view for page, set on load.
+				getUpcomingFeed();
+			});
 
 
 			// Initialize click listener for Activity button
@@ -88,6 +89,42 @@ var objGlobalResources = {};
 				// force refresh
 				getActivities( { refresh: true } );
 			});
+			
+			// If this is a new login, we need to clear out any previous information stored in localStorage,
+			// otherwise the new user might gain access to the previous user's data.
+			// Obviously we only need to do this if local storage is supported.
+			if (dataStorage.isSupported) {
+				// If we have different client strings then we definitely need to reset the cache.
+				var strStoredClientString = dataStorage.get("clientstring");
+				if (strStoredClientString === null) {
+					dataStorage.clear();
+					dataStorage.add("clientstring", configSettings.clientstring);
+				} else if (strStoredClientString != configSettings.clientstring) {
+					dataStorage.clear();
+					dataStorage.add("clientstring")
+				} else {
+					// well, the client strings match, but do the user names?
+					$().mobiQueryApi({
+						strUrl : configSettings.apiproxy + "/me",
+						successHandler : function(jsonResponse, intTransactionId) {
+							var strCurrentUserName = jsonResponse.me.userName;
+							var strStoredUserName = dataStorage.get("username");
+							if (strStoredUserName === null) {
+								// Just to be sure, let's clear the cache anyway.
+								dataStorage.clear();
+								dataStorage.add("username", strCurrentUserName);
+							} else if (strCurrentUserName != strStoredUserName) {
+								dataStorage.clear();
+								dataStorage.add("username", strCurrentUserName);
+							}
+						},
+						errorHandler : function() {
+							// Fail silently and clear the cache anyway.
+							dataStorage.clear();
+						}
+					});
+				}
+			}
 /*
  * ================
  * Helper Functions
@@ -193,6 +230,15 @@ var objGlobalResources = {};
 						});
 					}
 				});
+			}
+			
+			// Get the Upcoming Feed
+			var getUpcomingFeed = function() {
+				$().mobyUpcomingEventsManager("fetch", {
+					callbackSuccess: function(jsonResponse, intIndex) {
+						//alert(jsonResponse);
+					}
+				})
 			}
 			
 			// event handler for bookmark popup scroll
@@ -564,50 +610,7 @@ var objGlobalResources = {};
 							$.mobile.pageLoading(true);
 						}
 					})
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
+
 				} else if(activityType === 'dropbox-submission') {
 					url = '/courses/' + activity.object.courseId + '/dropboxBaskets/' + activity.target.referenceId + '/messages/' + activity.object.referenceId; 
 					$contMessage.removeClass("detail-grade").addClass("detail-dropbox");
@@ -631,20 +634,7 @@ var objGlobalResources = {};
 							} else {
 								$contMessage.find(".mobi-comments").hide();
 							}
-							
-							
-							
-							
-							/*
-							details += ' <div class="activity-info-header">';
-							details += '<p class="mobi-activity-title">' + activity.object.objectType.replace('-', ' ') + '</p>';
-							details += '<p class="mobi-activity-author">Posted by: ' + jsonResponse.messages[0].author.firstName + ' ' +jsonResponse.messages[0].author.lastName + '</p>';
-							details += '<p class="mobi-activity-comments">Comments: '+ jsonResponse.messages[0].comments + '</p>';
-							details += '<p class="mobi-date">' + activity.time + '</p>';
-							details += '</div>';
-							details += '<div class="activity-detail-links"><p><a id="btn-viewall-activity" class="detail-link ui-link" data-transition="slide" data-direction="reverse" data-role="button" href="#">View All Course ' + activity.object.objectType.replace('-', ' ') + 's</a></p></div>';	
-							$contMessage.html(details);	
-							*/
+
 							$.mobile.pageLoading(true);
 							$("#pageActivityDetail .container-topicinfo").css("visibility", "visible");
 							$("#pageActivityDetail .container-activity-detail").css("visibility", "visible")

@@ -83,7 +83,8 @@ var userId;
 			if ((strEmailToken === "") && (strSSOToken === "") && (strSessionCookie === null)) {
 				// We have nothing at all, so bail.
 				settings.errorHandler();
-			}if ((strEmailToken === "") && (strSSOToken === "") && (strSessionCookie === "")) {
+			}
+			if ((strEmailToken === "") && (strSSOToken === "") && (strSessionCookie === "")) {
 				// We have nothing at all, so bail.
 				settings.errorHandler();
 			}
