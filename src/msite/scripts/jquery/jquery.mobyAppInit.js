@@ -181,7 +181,7 @@ var objGlobalResources = {};
 				if(opts.refresh) {
 					$.mobile.pageLoading();
 				}
-				
+
 				$().mobyActivityManager("toHtml", {
 					boolForceRefresh: opts.refresh,			
 					callbackSuccess: function(objReturn){ 
@@ -253,17 +253,16 @@ var objGlobalResources = {};
 			
 			// event handler for infinite scrolling
 			var handleInfiniteScroll = function() {
-				$(window).unbind("scroll.infinite").bind("scroll.infinite", function() {
-
+				$(window).unbind("scrollstop.infinite").bind("scrollstop.infinite", function() {
 					if (($(window).scrollTop() + 150) >= ($(document).height() - $(window).height())) {
 
 						// Do we have all the things?
 						if (!configSettings.boolScrollUpdate) {
-							$(window).unbind("scroll.infinite");
+							$(window).unbind("scrollstop.infinite");
 							return;
 						}
 						
-						// No!  So lets get more things!
+						// No!  Get more things!
 						configSettings.boolScrollUpdate = true;
 						$.mobile.pageLoading();
 						var doIt = function() {
@@ -280,17 +279,17 @@ var objGlobalResources = {};
 									configSettings.intCurrentNumberOfActivities += configSettings.intNumberOfActivities;
 									if (objReturn.boolAllItems) {
 										// All items have been returned and displayed, so unbind the scroll event.
-										$(window).unbind("scroll.infinite");
+										$(window).unbind("scrollstop.infinite");
+										configSettings.boolScrollUpdate = false;
 									}
-									configSettings.boolScrollUpdate = false;
 								}
 							});
-							
 						}
+						
 						// We have to do this on a brief delay for older iphones, otherwise events happen crazy out of order.
 						var otherDelay = setTimeout(function(){
 							doIt()
-						}, 500);
+						}, 200);
 			
 					}
 				})
@@ -415,7 +414,7 @@ var objGlobalResources = {};
 			// Now that we've bound a scroll event listeners to the window, we need to unbind them if we change pages, because
 			// other pages do not need it.
 			$("#pageHome").unbind("pagebeforehide").bind("pagebeforehide", function() {
-				$(window).unbind("scroll.infinite").unbind("scroll.bookmark");
+				$(window).unbind("scrollstop.infinite").unbind("scroll.bookmark");
 			})
 /*
  * ===============
@@ -963,8 +962,8 @@ var objGlobalResources = {};
 						}					
 						$thisView.find('.container-topicinfo').addClass(iconClass);
 						// Fill in the thread detail information
-						$thisView.find(".header-discussion-detail .mobi-title").text(objThread.strTitle);
-						$thisView.find(".container-discussion-detail .container-topicinfo .mobi-title").text(objThread.strTitle);
+						$thisView.find(".header-discussion-detail .mobi-title").html(objThread.strTitle);
+						$thisView.find(".container-discussion-detail .container-topicinfo .mobi-title").html(objThread.strTitle);
 						$thisView.find(".container-discussion-detail .container-topicinfo .mobi-author").text(objThread.strAuthorName);
 						$thisView.find(".container-discussion-detail .container-topicinfo .mobi-total-responses").text(objThread.strTotalResponseString);
 						$thisView.find(".container-discussion-detail .container-topicinfo .mobi-date").text(objThread.strDate);
@@ -1016,6 +1015,10 @@ var objGlobalResources = {};
 											} );
 											$theseThreads.find(".mobi-listview").listview();
 											$.mobile.pageLoading(true);
+											$thisView.find(".container-topicinfo").css("visibility", "visible");
+											$thisView.find(".header-discussion-detail .mobi-title").css("visibility", "visible");
+											$thisView.find(".container-discussion-detail").css("visibility", "visible");
+											$thisView.find(".container-threads").css("visibility", "visible");
 											// Tap event listener
 											$(".listitem-response").die("click").live('click', function() {
 												// The user has tapped on a thread.  We need
@@ -1034,6 +1037,10 @@ var objGlobalResources = {};
 								} else {
 									$theseThreads.html("<h4>No responses.</h4>");
 									$.mobile.pageLoading(true);
+									$thisView.find(".container-topicinfo").css("visibility", "visible");
+									$thisView.find(".header-discussion-detail .mobi-title").css("visibility", "visible");
+									$thisView.find(".container-discussion-detail").css("visibility", "visible");
+									$thisView.find(".container-threads").css("visibility", "visible");
 								}
 							},
 							errorHandler: function(){
@@ -1052,8 +1059,9 @@ var objGlobalResources = {};
  */	
 			
 			$("#pageDiscussionThreadDetail").live("pagebeforeshow", function(event, ui) {
+				$("#pageDiscussionThreadDetail .container-topicinfo").css("visibility", "hidden");
+				$("#pageDiscussionThreadDetail .header-discussion-detail .mobi-title").css("visibility", "hidden");
 				$("#pageDiscussionThreadDetail .container-discussion-detail").css("visibility", "hidden");
-				$("#pageDiscussionThreadDetail .header-discussion-detail").css("visibility", "hidden");
 				$("#pageDiscussionThreadDetail .container-threads").css("visibility", "hidden");
 			})
 			
@@ -1063,9 +1071,6 @@ var objGlobalResources = {};
 					showMenu(this);
 				})
 				discussionThreadDetail( $(this) );
-				$("#pageDiscussionThreadDetail .container-discussion-detail").css("visibility", "visible");
-				$("#pageDiscussionThreadDetail .header-discussion-detail").css("visibility", "visible")
-				$("#pageDiscussionThreadDetail .container-threads").css("visibility", "visible");
 				// Back button:  If we tap the back button, it will take us back to the prior screen.
 				// We must therefore remove the current element from the array.
 				$("#pageDiscussionThreadDetail #back-thread-detail").unbind(".myclick").bind("click.myclick", function() {
@@ -1075,8 +1080,9 @@ var objGlobalResources = {};
 			});
 			
 			$("#pageDiscussionThreadDetail2").live("pagebeforeshow", function(event, ui) {
+				$("#pageDiscussionThreadDetail2 .container-topicinfo").css("visibility", "hidden");
+				$("#pageDiscussionThreadDetail2 .header-discussion-detail .mobi-title").css("visibility", "hidden");
 				$("#pageDiscussionThreadDetail2 .container-discussion-detail").css("visibility", "hidden");
-				$("#pageDiscussionThreadDetail2 .header-discussion-detail").css("visibility", "hidden")
 				$("#pageDiscussionThreadDetail2 .container-threads").css("visibility", "hidden");
 			})
 			
@@ -1086,10 +1092,6 @@ var objGlobalResources = {};
 					showMenu(this);
 				})
 				discussionThreadDetail( $(this) );
-				
-				$("#pageDiscussionThreadDetail2 .container-discussion-detail").css("visibility", "visible");
-				$("#pageDiscussionThreadDetail2 .header-discussion-detail").css("visibility", "visible");
-				$("#pageDiscussionThreadDetail2 .container-threads").css("visibility", "visible");
 				// Back button:  If we tap the back button, it will take us back to the prior screen.
 				// We must therefore remove the current element from the array.
 				$("#pageDiscussionThreadDetail2 #back-thread-detail-2").unbind(".myclick").bind("click.myclick", function() {
