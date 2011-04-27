@@ -64,13 +64,16 @@ var objGlobalResources = {};
 			});
 			
 			// Initialize click listener for what's due button
-			$(".btn-whatsdue").live('click', function() {
+			$(".btn-whatsdue").die("click").live('click', function() {
 				$("#pageHome div.subnav a").removeClass("ui-btn-active");
 				$(this).addClass("ui-btn-active");
 				$(".view-activity").hide();
 				$(".view-whatsdue").show();
-				$(window).unbind("scroll");
-				getUpcomingFeed();
+				$(window).unbind("scrollstop.infinite");
+				if ($("#pageHome .view-whatsdue ul").length === 0) {
+					getUpcomingFeed();
+				}
+				
 			});
 
 
@@ -234,9 +237,10 @@ var objGlobalResources = {};
 			
 			// Get the Upcoming Feed
 			var getUpcomingFeed = function() {
-				$().mobyUpcomingEventsManager("fetch", {
-					callbackSuccess: function(jsonResponse, intIndex) {
-						//alert(jsonResponse);
+				$().mobyUpcomingEventsManager({
+					callbackSuccess: function(strHtml){
+						$("#pageHome .view-whatsdue").html(strHtml);
+						$("#pageHome .view-whatsdue .mobi-listview").listview();
 					}
 				})
 			}
@@ -1019,6 +1023,9 @@ var objGlobalResources = {};
 											$thisView.find(".header-discussion-detail .mobi-title").css("visibility", "visible");
 											$thisView.find(".container-discussion-detail").css("visibility", "visible");
 											$thisView.find(".container-threads").css("visibility", "visible");
+											if ((objThread.strUnreadResponseString === 0)||(objThread.strUnreadResponseString === "")) {
+												$thisView.find(".container-discussion-detail .container-topicinfo .mobi-unread-responses").hide();
+											}
 											// Tap event listener
 											$(".listitem-response").die("click").live('click', function() {
 												// The user has tapped on a thread.  We need
@@ -1041,6 +1048,9 @@ var objGlobalResources = {};
 									$thisView.find(".header-discussion-detail .mobi-title").css("visibility", "visible");
 									$thisView.find(".container-discussion-detail").css("visibility", "visible");
 									$thisView.find(".container-threads").css("visibility", "visible");
+									if ((objThread.strUnreadResponseString === 0)||(objThread.strUnreadResponseString === "")) {
+										$thisView.find(".container-discussion-detail .container-topicinfo .mobi-unread-responses").hide();
+									}
 								}
 							},
 							errorHandler: function(){
