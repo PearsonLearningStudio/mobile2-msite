@@ -6,13 +6,13 @@
  *    or if the cache is empty or out of date, from the service.  This is the default method.
  *      boolForceRefresh: force the manager to get a fresh feed from the service. (defaults to false)
  *  	objFeed: an Activity Feed JSON object to use, otherwise the plugin will query the cache or the service as appropriate
- *  	intDaysOut: How many days out to fetch in the feed (defaults to 14)
+ *  	intDaysOut: How many days out to fetch in the feed (defaults to 14, all = get all items)
  *  	strExpand: An expand parameter to pass to the service (defaults to "")
  *  	callbackSuccess:  The callback to execute upon successful generation of the HTML.
  *  	callbackError:  The callback to execute if an error occurs.
  *  fetch: fetch a feed object from either the cache or the service.
  *      boolForceRefresh:  Force the manager to get a fresh feed from the service (defaults to false)
- *      intDaysOut: How many days out to fetch the feed (defaults to 14)
+ *      intDaysOut: How many days out to fetch the feed (defaults to 14, all = get all items)
  *      strExpand: an expand parameter to pass to the service (defaults to "")
  *      callbackSuccess:  The callback to execute upon successful fetching of the feed
  *      callbackError: the callback to execute if an eerror occurs.
@@ -25,6 +25,8 @@
 				boolForceRefresh: false,
 				objFeed : false,
 				intDaysOut: 14,
+				intSkip: 0,
+				strLastDivider : "",
 				strExpand: false,
 				callbackSuccess: function(strFeedHtml) {
 					return strFeedHtml;
@@ -36,15 +38,16 @@
 			if ( options ) {
 				$.extend( settings, options );
 			}
+			
 			var strFeedHtml = "";
 			if (!options.objFeed) {
 				$().mobyUpcomingEventsManager("fetch", {
-					boolForceRefresh: options.boolForceRefresh,
-					intDaysOut: options.intDaysOut,
+					boolForceRefresh: settings.boolForceRefresh,
+					intDaysOut: settings.intDaysOut,
 					strExpand: false,
 					callbackSuccess: function(jsonResponse, intIndex) {
 						strFeedHtml = produceHtml(jsonResponse);
-						options.callbackSuccess(strFeedHtml);
+						settings.callbackSuccess(strFeedHtml);
 					},
 					callbackError: function() {
 						alert("Unable to get your upcoming activities. Please try again.");
@@ -52,7 +55,7 @@
 				})
 			} else {
 				strFeedHtml = produceHtml(objFeed);
-				options.callbackSuccess(strFeedHtml);
+				settings.callbackSuccess(strFeedHtml);
 			}
 			
 			var produceHtml = function(jsonResponse) {
@@ -67,6 +70,14 @@
 					if (date1 < date2) return -1;
 					return 0;
 				})
+				
+				// Next we need to remove the items that we need to skip
+				if (settings.intSkip >0) {
+					var newArray = arrItems.slice(settings.intSkip, -1);
+					arrItems = newArray;
+				}
+				
+				// Helper function for parsing the date and returning a useful string
 				var parseDateGroup = function(objDate) { 
 					if (objDate < Date.today().add({days: 1})) {
 						return "Today";
@@ -88,11 +99,16 @@
 					}
 					return "Later";
 				}
+				
+				// Helper function for translating an upcoming event JSON object into HTML
 				var objItemToHtml = function(objItem) {
 					var strReturnHtml = "";
 					var dateItem = Date.parseExact(objItem.when.time, "yyyy-MM-ddTHH:mm:ssZ").setTimezone('GMT');
 					var strDate ="";
 					var strSuffix = " AM";
+					var strIconClass = "";
+					
+					// Get the correct date string
 					// AM or PM?
 					if (parseInt(dateItem.toString("HH")) > 12) {
 						strSuffix = " PM";
@@ -102,7 +118,14 @@
 					} else {
 						strDate = dateItem.toString("MMMM d hh:mm") + strSuffix;
 					}
-					strReturnHtml += '<li class="dropbox-submission">';
+					// Get the correct icon type
+					if ((objItem.type === "HTML") || (objItem.type === "MANAGED_OD") || (objItem.type === "MANAGED_HTML")) {
+						strIconClass = "assignment";
+					} else if ((objItem.type === "THREAD") || ( objItem.type === "MANAGED_THREADS") || (objItem.type === "IQT")) {
+						strIconClass = "exam-submission";
+					} else {
+					}
+					strReturnHtml += '<li class="'+strIconClass+'">';
 					strReturnHtml += '<a class="listitem-activity" href="#">';
 					strReturnHtml += '<span class="mobi-title">' + objItem.title + '</span>';
 					strReturnHtml += '<span class="mobi-summary">' + objItem.category.charAt(0).toUpperCase() + objItem.category.slice(1) + " at " + strDate + '</span>'
@@ -110,8 +133,8 @@
 					return strReturnHtml;
 				}
 				
-				// build the HTML for what is happening when.
-				var strHtml = '<ul class="mobi-listview" data-role="listview">\n';
+				// build the HTML.
+				var strHtml = "";
 				var strTodayHtml = ""; // for things happening today.
 				var strTomorrowHtml = ""; // for things happening tomorrow.
 				var str2DayHtml = ""; // for things happening in 2 days.
@@ -138,55 +161,70 @@
 					}
 				}
 				
+				// Only include dividers if we haven't already.
 				if (strTodayHtml != "") {
-					strHtml += '<li data-role="list-divider">Today</li>\n';
+					if (settings.strLastDivider != "Today") {
+						strHtml += '<li data-role="list-divider">Today</li>\n';
+					}
 					strHtml += strTodayHtml;
 				}
 				if (strTomorrowHtml != "") {
-					strHtml += '<li data-role="list-divider">Tomorrow</li>\n';
+					if (settings.strLastDivider != "Tomorrow") {
+						strHtml += '<li data-role="list-divider">Tomorrow</li>\n';
+					}
 					strHtml += strTomorrowHtml;
 				}
 				if (str2DayHtml != "") {
-					strHtml += '<li data-role="list-divider">2 Days</li>\n';
+					if (settings.strLastDivider != "2 Days") {
+						strHtml += '<li data-role="list-divider">2 Days</li>\n';
+					}
 					strHtml += str2DayHtml;
 				}
 				if (str3DayHtml != "") {
-					strHtml += '<li data-role="list-divider">3 Days</li>\n';
+					if (settings.strLastDivider != "3 Days") {
+						strHtml += '<li data-role="list-divider">3 Days</li>\n';
+					}
 					strHtml += str3DayHtml;
 				}
 				if (str4DayHtml != "") {
-					strHtml += '<li data-role="list-divider">4 Days</li>\n';
+					if (settings.strLastDivider != "4 Days") {
+						strHtml += '<li data-role="list-divider">4 Days</li>\n';
+					}
 					strHtml += str4DayHtml;
 				}
 				if (str5DayHtml != "") {
-					strHtml += '<li data-role="list-divider">5 Days</li>\n';
+					if (settings.strLastDivider != "5 Days") {
+						strHtml += '<li data-role="list-divider">5 Days</li>\n';
+					}
 					strHtml += str5DayHtml;
 				}
 				if (strLaterHtml != "") {
-					strHtml += '<li data-role="list-divider">Later</li>\n';
+					if (settings.strLastDivider != "Later") {
+						strHtml += '<li data-role="list-divider">Later</li>\n';
+					}
 					strHtml += strLaterHtml;
 				}
-				strHtml += "</ul>\n";
 				return strHtml;
 				
 				
 				
-										/*
-		 var strCourseId = jsonResponse.upcomingEvents[0].links[1].href.split("/courses/")[1];
-		 var strNewUrl = configSettings.apiproxy + "/courses/" +strCourseId+ "/textMultimedias/" + jsonResponse.upcomingEvents[0].id + "/content.html";
-		 $().mobiQueryApi({
-		 
-		 strUrl : strNewUrl,
-		 successHandler : function(jsonResponse, intTransactionId) {
-		 alert(jsonResponse)
-		 },
-		 errorHandler : function() {}
-		 })
-		 },
-		 callbackError: function() {
-		 alert("Unable to get upcoming activities, please try again.");
-		 
-		 }	*/
+					/*
+					var strCourseId = jsonResponse.upcomingEvents[0].links[1].href.split("/courses/")[1];
+					var strNewUrl = configSettings.apiproxy + "/courses/" +strCourseId+ "/textMultimedias/" + jsonResponse.upcomingEvents[0].id + "/content.html";
+					$().mobiQueryApi({
+					
+					strUrl : strNewUrl,
+					successHandler : function(jsonResponse, intTransactionId) {
+					alert(jsonResponse)
+					},
+					errorHandler : function() {}
+					})
+					},
+					callbackError: function() {
+					alert("Unable to get upcoming activities, please try again.");
+					
+					}	
+					*/
 			}
 
 		},
@@ -207,21 +245,31 @@
 			};
 			
 			var getFeedFromService = function() {
-				$().mobiQueryApi({
-					strUrl : strEventsUrl,
-					successHandler: function(jsonResponse, intIndex) {
-						settings.callbackSuccess(jsonResponse);
-					},
-					errorHandler: function() {
-						settings.callbackError();
-					}
-				})
+				$().mobyCacheManager({
+						boolForceRefresh: true,
+						strQueryUrl: strEventsUrl,
+						strQueryType: "get",
+						strCacheDate: "upcoming-timestamp",
+						strCacheInfo: "upcoming",
+						objCacheRefresh: {
+							hours: 1
+						},
+						callbackSuccess : function(jsonResponse, intTransactionId) {
+							if (dataStorage.isSupported) {
+								dataStorage.add("upcoming-days", jsonResponse.upcomingEvents.length);
+							}
+							settings.callbackSuccess(jsonResponse, intTransactionId);
+						},
+						callbackError: function() {
+							settings.callbackError();
+						}						
+				});
 			}
 			
 			// Build a query string
 			var strEventsUrl = configSettings.apiproxy + "/me/upcomingevents";
 			var strQueryString = "";
-			if (settings.intDaysOut) {
+			if (settings.intDaysOut != "all") {
 				var strDate = Date.today().add({days: settings.intDaysOut}).toString("M/d/yyyy");
 				strQueryString = "?until=" + strDate;
 			}
@@ -237,15 +285,17 @@
 			// First, is perhaps what we need stored in the cache?
 			if (dataStorage.isSupported) {
 				// What is currently stored? Anything?
-				var intCachedDays = dataStorage.get("upcoming-days");
-				if (intCachedDays === null) {
+				var intCachedDays = dataStorage.get("upcoming-days"); 
+				if (intCachedDays === undefined) {
 					// Nothing currently stored, so get the feed.
 					getFeedFromService();
-				}
-				if (options.intDaysOut <= intCachedDays) {
+				} else if (intCachedDays === null) {
+					// Nothing currently stored, so get the feed.
+					getFeedFromService();
+				} else if (settings.intDaysOut === intCachedDays) {
 					// We can probably get the feed from the cache.
 					$().mobyCacheManager({
-							boolForceRefresh: options.boolForceRefresh,
+							boolForceRefresh: settings.boolForceRefresh,
 							strQueryUrl: strEventsUrl,
 							strQueryType: "get",
 							strCacheDate: "upcoming-timestamp",
@@ -254,15 +304,35 @@
 								hours: 1
 							},
 							callbackSuccess : function(jsonResponse, intTransactionId) {
-								options.callbackSuccess(jsonResponse, intTransactionId);
+								settings.callbackSuccess(jsonResponse, intTransactionId);
+								dataStorage.add("upcoming-days", settings.intDaysOut);
 							},
 							callbackError: function() {
-								options.callbackError();
+								settings.callbackError();
 							}						
 					});
-					
-					// Update the local storage information with the new storage info.
-					dataStorage.set("upcoming-days", options.intDaysOut);
+				} else if (settings.intDaysOut < intCachedDays) {
+					// We can probably get the feed from the cache.
+					$().mobyCacheManager({
+							boolForceRefresh: settings.boolForceRefresh,
+							strQueryUrl: strEventsUrl,
+							strQueryType: "get",
+							strCacheDate: "upcoming-timestamp",
+							strCacheInfo: "upcoming",
+							objCacheRefresh: {
+								hours: 1
+							},
+							callbackSuccess : function(jsonResponse, intTransactionId) {
+								settings.callbackSuccess(jsonResponse, intTransactionId);
+								dataStorage.add("upcoming-days", settings.intDaysOut);
+							},
+							callbackError: function() {
+								settings.callbackError();
+							}						
+					});
+				} else {
+					// Need something more than what we have in cache
+					getFeedFromService();
 				}
 				
 			} else {

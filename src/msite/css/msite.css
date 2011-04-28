@@ -144,7 +144,8 @@ div.layout-header .menu-active {
 .mobi-listview li.thread-topic,
 .mobi-listview li.dropbox-submission,
 .mobi-listview li.exam-submission,
-.mobi-listview li.person {
+.mobi-listview li.person,
+.mobi-listview li.assignment {
   padding: 0 0 0 30px;
   background-position: 10px 10px;
   background-repeat: no-repeat;
@@ -176,7 +177,8 @@ div.layout-header .menu-active {
 .view-activity .mobi-listview li.thread-topic,
 .view-activity .mobi-listview li.dropbox-submission,
 .view-activity .mobi-listview li.exam-submission,
-.view-activity .mobi-listview li.person {
+.view-activity .mobi-listview li.person,
+.view-activity .mobi-listview li.assignment {
 	background-position: 10px 16px;
 }
 
@@ -186,6 +188,21 @@ div.layout-header .menu-active {
 }
 /* End: List View overrides for activity view */
 
+/* Begin: List View overrides for Upcoming view */
+.view-whatsdue .mobi-listview li.responses,
+.view-whatsdue .mobi-listview li.no-responses,
+.view-whatsdue .mobi-listview li.hot-topic,
+.view-whatsdue .mobi-listview li.course,
+.view-whatsdue .mobi-listview li.grade,
+.view-whatsdue .mobi-listview li.thread-post,
+.view-whatsdue .mobi-listview li.thread-topic,
+.view-whatsdue .mobi-listview li.dropbox-submission,
+.view-whatsdue .mobi-listview li.exam-submission,
+.view-whatsdue .mobi-listview li.person,
+.view-whatsdue .mobi-listview li.assignment {
+	background-position: 10px 16px;
+}
+/* End: List View overrides for Upcoming view */
 
 
 /* Begin: Discussions views (discussion topics, discussion topic detail, discussion thread detail) */

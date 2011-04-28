@@ -790,6 +790,10 @@ div.layout-header .menu-active {
 	background-image: url(../images/icon_person.png);  
 }
 
+.mobi-listview li.assignment {
+	background-image: url(../images/icon_assignment.png);
+}
+
 /* Activity Detail Views */
 .container-activity-detail .mobi-activity-title {
 	color: #347BAD;

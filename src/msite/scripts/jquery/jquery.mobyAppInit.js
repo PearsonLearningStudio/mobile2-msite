@@ -70,12 +70,45 @@ var objGlobalResources = {};
 				$(".view-activity").hide();
 				$(".view-whatsdue").show();
 				$(window).unbind("scrollstop.infinite");
-				if ($("#pageHome .view-whatsdue ul").length === 0) {
-					getUpcomingFeed();
-				}
 				
+				if ($("#pageHome .view-whatsdue ul").length === 0) {
+					$.mobile.pageLoading();
+					$(".view-whatsdue .container-backbutton").hide();
+					$().mobyUpcomingEventsManager({
+						intDaysOut: 14,
+						boolForceRefresh: false,
+						callbackSuccess: function(strHtml){
+							var listView = '<ul class="mobi-listview" data-role="listview">\n' + strHtml + "</ul>\n";
+							$("#pageHome .view-whatsdue .container-content").html(listView);
+							$("#pageHome .view-whatsdue .container-content .mobi-listview").listview();
+							$.mobile.pageLoading(true);
+							$(".view-whatsdue .container-backbutton").show();
+						}
+					})
+				}
 			});
+			
+			// Click listener for upcoming feed's "get all" button 
+			$(".view-whatsdue .container-backbutton a").unbind("click").click(function() {
+				$.mobile.pageLoading();
+				// Already have some items in list, we can skip getting those
+				var intSkipThese = $(".view-whatsdue .container-content .mobi-title").length -1;
+				
+				// Also need to know what was the last divider label 
+				strLastDividerText = $(".view-whatsdue .container-content .ui-li-divider:last").text();
 
+				$().mobyUpcomingEventsManager({
+					intDaysOut: "all",
+					intSkip: intSkipThese,
+					strLastDivider: strLastDividerText,
+					callbackSuccess: function(strHtml){
+						$("#pageHome .view-whatsdue .container-content ul").append(strHtml);
+						$("#pageHome .view-whatsdue .container-content .mobi-listview").listview("refresh");
+						$.mobile.pageLoading(true);
+					}
+				})
+				$(".view-whatsdue .container-backbutton").hide();
+			})
 
 			// Initialize click listener for Activity button
 			$(".btn-activity").die("click").live('click', function() {
@@ -87,10 +120,26 @@ var objGlobalResources = {};
 				showMenu(this);
 			})
 			
+			// Activity feed and Upcoming feed refresh button
 			$('.btn-refresh').live('click', function() { 
-				// Fetch the feed and insert into DOM.
-				// force refresh
-				getActivities( { refresh: true } );
+				// Which one do we need to refresh? Activities or Upcoming?
+				if ($(".activity-toggle .btn-activity").hasClass("ui-btn-active")) {
+					getActivities( { refresh: true } );
+				} else {
+					$.mobile.pageLoading();
+					$(".view-whatsdue .container-backbutton").hide();
+					$().mobyUpcomingEventsManager({
+						intDaysOut: 14,
+						boolForceRefresh: false,
+						callbackSuccess: function(strHtml){
+							var listView = '<ul class="mobi-listview" data-role="listview">\n' + strHtml + "</ul>\n";
+							$("#pageHome .view-whatsdue .container-content").html(listView);
+							$("#pageHome .view-whatsdue .container-content .mobi-listview").listview();
+							$.mobile.pageLoading(true);
+							$(".view-whatsdue .container-backbutton").show();
+						}
+					})
+				}
 			});
 			
 			// If this is a new login, we need to clear out any previous information stored in localStorage,
@@ -233,16 +282,6 @@ var objGlobalResources = {};
 						});
 					}
 				});
-			}
-			
-			// Get the Upcoming Feed
-			var getUpcomingFeed = function() {
-				$().mobyUpcomingEventsManager({
-					callbackSuccess: function(strHtml){
-						$("#pageHome .view-whatsdue").html(strHtml);
-						$("#pageHome .view-whatsdue .mobi-listview").listview();
-					}
-				})
 			}
 			
 			// event handler for bookmark popup scroll
