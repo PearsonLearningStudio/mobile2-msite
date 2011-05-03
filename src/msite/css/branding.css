@@ -754,6 +754,7 @@ div.layout-header .menu-active {
 
 .mobi-listview li.no-responses,
 .mobi-listview li.thread-post,
+.view-whatsdue .mobi-listview li.discussion,
 .topic-header .no-responses {
 	background-image: url(../images/icon_no_responses.png);
 }

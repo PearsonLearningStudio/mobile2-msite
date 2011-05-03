@@ -75,14 +75,19 @@ var objGlobalResources = {};
 					$.mobile.pageLoading();
 					$(".view-whatsdue .container-backbutton").hide();
 					$().mobyUpcomingEventsManager({
-						intDaysOut: 14,
+						boolReturnFirstSet: true,
 						boolForceRefresh: false,
-						callbackSuccess: function(strHtml){
-							var listView = '<ul class="mobi-listview" data-role="listview">\n' + strHtml + "</ul>\n";
+						callbackSuccess: function(objReturn){
+							var listView = '<ul class="mobi-listview" data-role="listview">\n' + objReturn.strHtml + "</ul>\n";
 							$("#pageHome .view-whatsdue .container-content").html(listView);
 							$("#pageHome .view-whatsdue .container-content .mobi-listview").listview();
 							$.mobile.pageLoading(true);
-							$(".view-whatsdue .container-backbutton").show();
+							if (!objReturn.boolAllItems) {
+								$(".view-whatsdue .container-backbutton").show();
+							} else {
+								$(".view-whatsdue .container-backbutton").hide();
+							}
+							upcomingItemTapHandler();
 						}
 					})
 				}
@@ -98,13 +103,13 @@ var objGlobalResources = {};
 				strLastDividerText = $(".view-whatsdue .container-content .ui-li-divider:last").text();
 
 				$().mobyUpcomingEventsManager({
-					intDaysOut: "all",
-					intSkip: intSkipThese,
+					boolReturnFirstSet: false,
 					strLastDivider: strLastDividerText,
-					callbackSuccess: function(strHtml){
-						$("#pageHome .view-whatsdue .container-content ul").append(strHtml);
+					callbackSuccess: function(objReturn){
+						$("#pageHome .view-whatsdue .container-content ul").append(objReturn.strHtml);
 						$("#pageHome .view-whatsdue .container-content .mobi-listview").listview("refresh");
 						$.mobile.pageLoading(true);
+						upcomingItemTapHandler();
 					}
 				})
 				$(".view-whatsdue .container-backbutton").hide();
@@ -130,13 +135,18 @@ var objGlobalResources = {};
 					$(".view-whatsdue .container-backbutton").hide();
 					$().mobyUpcomingEventsManager({
 						intDaysOut: 14,
-						boolForceRefresh: false,
-						callbackSuccess: function(strHtml){
-							var listView = '<ul class="mobi-listview" data-role="listview">\n' + strHtml + "</ul>\n";
+						boolForceRefresh: true,
+						callbackSuccess: function(objReturn){
+							var listView = '<ul class="mobi-listview" data-role="listview">\n' + objReturn.strHtml + "</ul>\n";
 							$("#pageHome .view-whatsdue .container-content").html(listView);
 							$("#pageHome .view-whatsdue .container-content .mobi-listview").listview();
 							$.mobile.pageLoading(true);
-							$(".view-whatsdue .container-backbutton").show();
+							if (!objReturn.boolAllItems) {
+								$(".view-whatsdue .container-backbutton").show();
+							} else {
+								$(".view-whatsdue .container-backbutton").hide();
+							}
+							upcomingItemTapHandler();
 						}
 					})
 				}
@@ -147,35 +157,28 @@ var objGlobalResources = {};
 			// Obviously we only need to do this if local storage is supported.
 			if (dataStorage.isSupported) {
 				// If we have different client strings then we definitely need to reset the cache.
-				var strStoredClientString = dataStorage.get("clientstring");
-				if (strStoredClientString === null) {
-					dataStorage.clear();
-					dataStorage.add("clientstring", configSettings.clientstring);
-				} else if (strStoredClientString != configSettings.clientstring) {
-					dataStorage.clear();
-					dataStorage.add("clientstring")
-				} else {
-					// well, the client strings match, but do the user names?
-					$().mobiQueryApi({
-						strUrl : configSettings.apiproxy + "/me",
-						successHandler : function(jsonResponse, intTransactionId) {
-							var strCurrentUserName = jsonResponse.me.userName;
-							var strStoredUserName = dataStorage.get("username");
-							if (strStoredUserName === null) {
-								// Just to be sure, let's clear the cache anyway.
-								dataStorage.clear();
-								dataStorage.add("username", strCurrentUserName);
-							} else if (strCurrentUserName != strStoredUserName) {
-								dataStorage.clear();
-								dataStorage.add("username", strCurrentUserName);
-							}
-						},
-						errorHandler : function() {
-							// Fail silently and clear the cache anyway.
+				$().mobiQueryApi({
+					strUrl : configSettings.apiproxy + "/me",
+					successHandler : function(jsonResponse, intTransactionId) {
+						var strCurrentUserName = jsonResponse.me.userName;
+						var strStoredClientString = dataStorage.get("clientstring");
+						var strStoredUserName = dataStorage.get("username");
+						// What matches?
+						if ((strStoredClientString === null) || (strStoredUserName === null)) {
 							dataStorage.clear();
+							dataStorage.add("clientstring", configSettings.clientstring);
+							dataStorage.add("username", strCurrentUserName);
+						} else if ((strStoredClientString != configSettings.clientstring) || (strStoredUserName != strCurrentUserName)) {
+							dataStorage.clear();
+							dataStorage.add("clientstring", configSettings.clientstring);
+							dataStorage.add("username", strCurrentUserName);
 						}
-					});
-				}
+					},
+					errorHandler : function() {
+						// Fail silently and clear the cache anyway.
+						dataStorage.clear();
+					}
+				});
 			}
 /*
  * ================
@@ -227,6 +230,29 @@ var objGlobalResources = {};
 				arrGlobalThreads.push(objInfo);
 			}
 			
+			// Upcoming item tap event handler
+			function upcomingItemTapHandler() {
+				$(".view-whatsdue .listitem-activity").die("click.details").live('click.details',  function(e){
+					e.preventDefault();
+					arrGlobalActivity =  this.className.match(/\w+[-]*\w+\d+/ig);
+					activityArray = arrGlobalActivity[0].split('_');
+					activityType = activityArray[0];
+					if(activityType === 'thread-topic'){									
+						arrGlobalTopics.push(strCurrentTopic);
+					} else if(activityType === 'thread-post'){						
+						// The user has tapped on a thread.  We need
+						// to display the thread detail page.
+						// pass the responseId 
+						objInfo = {
+							boolFromActivity: true,
+							strNewId: activityArray[1] + '-' + activityArray[2],
+							strOldId: -1
+						}
+						arrGlobalThreads.push(objInfo);
+					}
+				});
+			}
+			
 			// Refresh the Activities feed
 			function getActivities(options) { 
 				var opts = options || {};
@@ -261,9 +287,10 @@ var objGlobalResources = {};
 						$.mobile.pageLoading(true);
 						
 						// When the user taps on an item
-						$(".listitem-activity").die("click.details").live('click.details',  function(e){
+						$(".view-activity .listitem-activity").die("click.details").live('click.details',  function(e){
 							e.preventDefault();
 							arrGlobalActivity =  this.className.match(/\w+[-]*\w+\d+/ig);
+
 							activityArray = arrGlobalActivity[0].split('_');
 							activityType = activityArray[0];
 							if(activityType === 'thread-topic'){									
@@ -577,116 +604,173 @@ var objGlobalResources = {};
 				 * and these divs are hidden/shown based on CSS cascade.
 				 * Here, we fill in the appropriate items in the divs and set the CSS classes.
 				 */
-				
-				// Initial data passed via objGlobalResources
-				$thisView.find(".mobi-course-title").html(activity.courseTitle);
-				$thisView.find(".mobi-activity-type").html(activity.target.title);
-				
-				// Get the details
-				if(activityType === 'grade') {
-					$thisView.find(".container-activity-detail").addClass("detail-grade").removeClass("detail-dropbox");
-					$thisView.find(".mobi-activity-type").html("Grade");
-					$contMessage = $thisView.find(".container-grade");
-					// Use the Cache Manager to fetch the gradebook information for the course.
-					$().mobyCacheManager({
-						boolForceRefresh: true,
-						strQueryUrl: configSettings.apiproxy + '/me/courseitemgrades?courses=' + objGlobalCourse.id,
-						strCacheDate: "grades-"+objGlobalCourse.id+"-timestamp",
-						strCacheInfo: "grades-" + objGlobalCourse.id,
-						objCacheRefresh: {
-							hours: 1
-						},
-						callbackSuccess : function(jsonResponse, intTransactionId) {
-							
-							// find the relevant grade from the gradebook information, and then 
-							// insert the information in the DOM.
-							var objGrade = "";
-							for (var i = 0; i < jsonResponse.courseitemgrades.length; i++) {
-								if (jsonResponse.courseitemgrades[i].gradebookItem.id === objGlobalCourse.referenceId) {
-									objGrade = jsonResponse.courseitemgrades[i];
+
+				if (activityType === "assignment") {
+					var strClass = "detail-" + activityType;
+					var strType = activityType.charAt(0).toUpperCase() + activityType.slice(1)
+					$thisView.find(".container-activity-detail").removeClass("detail-dropbox detail-exam detail-assignment detail-grade").addClass(strClass);
+					$thisView.find(".mobi-activity-type").html(strType);
+					var intCourseId = arrGlobalActivity[0].split("_")[1];
+					var intItemId = arrGlobalActivity[0].split("_")[2];
+					var $thisContainer = $thisView.find(".container-assignment");
+					var strTemplateHtml = '<p class="mobi-activity-title"></p><p class="mobi-comments"></p><div class="activity-detail-links mobi-hidden"><p><a id="btn-viewall-activity" class="detail-link ui-link" href="#">View All Course Assignments</a></p></div>';
+					$thisContainer.html(strTemplateHtml);
+					
+					// Get the course information
+					$().mobyCourseManager({
+						strSort: "title",
+						callbackSuccess: function(arrCourses) {
+							for (var i = 0; i < arrCourses.length; i++) {
+								if (arrCourses[i].id = intCourseId) {
+									$thisView.find(".mobi-course-title").html(arrCourses[i].title);
 								}
 							}
+						},
+						callbackError: function(){
+						}
+					})
+					
+					var strNewUrl = configSettings.apiproxy + "/courses/" +intCourseId+ "/textMultimedias/" + intItemId + "/content.html";
 
-							if (objGrade != "") {
-								$contMessage.find(".mobi-activity-title").html(objGrade.gradebookItem.title);
-								// If there is a letter grade, show it, otherwise hide that line.
-								if (objGrade.grade.letterGradeSet) {
-									$contMessage.find(".mobi-letter-grade span").text(objGrade.grade.letterGrade);
-									$contMessage.find(".mobi-letter-grade").show();
-								} else {
-									$contMessage.find(".mobi-letter-grade").hide();
-								}
+					$().mobiQueryApi({
+					
+						strUrl : strNewUrl,
+						successHandler : function(strHtml, intTransactionId) {
+							if ((typeof(strHtml) === "string") && (strHtml.length > 10)) {
+								$thisContainer.html(strHtml);
+								$thisContainer.find("meta, title, link").remove();
+								$("#pageActivityDetail .container-topicinfo").css("visibility", "visible");
+								$("#pageActivityDetail .container-activity-detail").css("visibility", "visible")
+								$.mobile.pageLoading(true);
+							} else {
+								$thisContainer.find(".mobi-activity-title").text("Error Fetching Information");
+								$thisContainer.find(".mobi-comments").text("Unable to fetch the information for this assignment from the server. Please try again.");
+								$("#pageActivityDetail .container-topicinfo").css("visibility", "visible");
+								$("#pageActivityDetail .container-activity-detail").css("visibility", "visible")
+								$.mobile.pageLoading(true);
+							}
+						},
+						errorHandler : function() {
+							$thisContainer.find(".mobi-activity-title").text("Error Fetching Information");
+							$thisContainer.find(".mobi-comments").text("Unable to fetch the information for this assignment from the server. Please try again.");
+							$("#pageActivityDetail .container-topicinfo").css("visibility", "visible");
+							$("#pageActivityDetail .container-activity-detail").css("visibility", "visible")
+							$.mobile.pageLoading(true);
+						}
+					})
+				} else {
+					// Initial data passed via objGlobalResources
+					$thisView.find(".mobi-course-title").html(activity.courseTitle);
+					$thisView.find(".mobi-activity-type").html(activity.target.title);
+					
+					// Get the details
+					if(activityType === 'grade') {
+						$thisView.find(".container-activity-detail").addClass("detail-grade").removeClass("detail-dropbox detail-exam detail-assignment");
+						$thisView.find(".mobi-activity-type").html("Grade");
+						$contMessage = $thisView.find(".container-grade");
+						// Use the Cache Manager to fetch the gradebook information for the course.
+						$().mobyCacheManager({
+							boolForceRefresh: false,
+							strQueryUrl: configSettings.apiproxy + '/me/courseitemgrades?courses=' + objGlobalCourse.id,
+							strCacheDate: "grades-"+objGlobalCourse.id+"-timestamp",
+							strCacheInfo: "grades-" + objGlobalCourse.id,
+							objCacheRefresh: {
+								hours: 1
+							},
+							callbackSuccess : function(jsonResponse, intTransactionId) {
 								
-								// If there is a numeric grade, show it, otherwise hide that line.
-								if (objGrade.grade.pointsSet) {
-									$contMessage.find(".mobi-numeric-grade span").text(objGrade.grade.points + "/" + objGrade.gradebookItem.pointsPossible);
-									$contMessage.find(".mobi-numeric-grade").show();
-								} else {
-									$contMessage.find(".mobi-numeric-grade").hide();
+								// find the relevant grade from the gradebook information, and then 
+								// insert the information in the DOM.
+								var objGrade = "";
+								for (var i = 0; i < jsonResponse.courseitemgrades.length; i++) {
+									if (jsonResponse.courseitemgrades[i].gradebookItem.id === objGlobalCourse.referenceId) {
+										objGrade = jsonResponse.courseitemgrades[i];
+									}
 								}
+	
+								if (objGrade != "") {
+									$contMessage.find(".mobi-activity-title").html(objGrade.gradebookItem.title);
+									// If there is a letter grade, show it, otherwise hide that line.
+									if (objGrade.grade.letterGradeSet) {
+										$contMessage.find(".mobi-letter-grade span").text(objGrade.grade.letterGrade);
+										$contMessage.find(".mobi-letter-grade").show();
+									} else {
+										$contMessage.find(".mobi-letter-grade").hide();
+									}
+									
+									// If there is a numeric grade, show it, otherwise hide that line.
+									if (objGrade.grade.pointsSet) {
+										$contMessage.find(".mobi-numeric-grade span").text(objGrade.grade.points + "/" + objGrade.gradebookItem.pointsPossible);
+										$contMessage.find(".mobi-numeric-grade").show();
+									} else {
+										$contMessage.find(".mobi-numeric-grade").hide();
+									}
+									
+									// If there are comments, show them, otherwise hide that section.
+									if (objGrade.grade.comments != "") {
+										$contMessage.find("div.mobi-comments").html(objGrade.grade.comments);
+										$contMessage.find(".mobi-comments").show();
+									} else {
+										$contMessage.find(".mobi-comments").hide();
+									}
+									
+									$contMessage.find(".mobi-date").text(friendlyDate(objGrade.grade.updatedDate));
+									$.mobile.pageLoading(true);
+									$("#pageActivityDetail .container-topicinfo").css("visibility", "visible");
+									$("#pageActivityDetail .container-activity-detail").css("visibility", "visible")
+									
+								} else {
+									// Something bad happened, we weren't able to get the cache or it didn't have
+									// a match...something.
+									alert('Unable to fetch grade information, please retry.');
+									$.mobile.pageLoading(true);
+									$("#pageActivityDetail .container-topicinfo").css("visibility", "visible");
+									$("#pageActivityDetail .container-activity-detail").css("visibility", "visible")
+								}
+							},
+							callbackError: function() {
+								alert('Unable to fetch grade information, please retry.');
+								$.mobile.pageLoading(true);
+							}
+						})
+	
+					} else if(activityType === 'dropbox-submission') {
+						url = '/courses/' + activity.object.courseId + '/dropboxBaskets/' + activity.target.referenceId + '/messages/' + activity.object.referenceId; 
+						$contMessage.removeClass("detail-grade detail-exam detail-assignment").addClass("detail-dropbox");
+						$thisView.find(".mobi-activity-type").html("Dropbox Submission");
+						$contMessage = $thisView.find(".container-dropbox");
+						$thisView.find(".container-activity-detail").addClass("detail-dropbox").removeClass("detail-grade");
+						
+						$().mobiQueryApi("get", { 
+							strUrl: configSettings.apiproxy + url,
+							successHandler: function(jsonResponse, intTransactionId) {
+								//console.log(jsonResponse, intTransactionId);
+								$contMessage.find(".mobi-activity-title").html(activity.object.objectType.replace('-', ' '));
+								$contMessage.find(".mobi-posted-by span").text(jsonResponse.messages[0].author.firstName + ' ' +jsonResponse.messages[0].author.lastName);
+								$contMessage.find(".mobi-date").text(friendlyDate(jsonResponse.messages[0].date));
+								
 								
 								// If there are comments, show them, otherwise hide that section.
-								if (objGrade.grade.comments != "") {
-									$contMessage.find("div.mobi-comments").html(objGrade.grade.comments);
+								if (jsonResponse.messages[0].comments != "") {
+									$contMessage.find("div.mobi-comments").html(jsonResponse.messages[0].comments);
 									$contMessage.find(".mobi-comments").show();
 								} else {
 									$contMessage.find(".mobi-comments").hide();
 								}
-								
-								$contMessage.find(".mobi-date").text(friendlyDate(objGrade.grade.updatedDate));
+	
 								$.mobile.pageLoading(true);
 								$("#pageActivityDetail .container-topicinfo").css("visibility", "visible");
 								$("#pageActivityDetail .container-activity-detail").css("visibility", "visible")
-								
-							} else {
-								// Something bad happened, we weren't able to get the cache or it didn't have
-								// a match...something.
-								alert('Unable to fetch grade information, please retry.');
+							},
+							errorHandler: function() {
+								alert("Unable to display the dropbox information.  Please try again.");
 								$.mobile.pageLoading(true);
-								$("#pageActivityDetail .container-topicinfo").css("visibility", "visible");
-								$("#pageActivityDetail .container-activity-detail").css("visibility", "visible")
 							}
-						},
-						callbackError: function() {
-							alert('Unable to fetch grade information, please retry.');
-							$.mobile.pageLoading(true);
-						}
-					})
+						}); 
+					}  
+				}
+				
 
-				} else if(activityType === 'dropbox-submission') {
-					url = '/courses/' + activity.object.courseId + '/dropboxBaskets/' + activity.target.referenceId + '/messages/' + activity.object.referenceId; 
-					$contMessage.removeClass("detail-grade").addClass("detail-dropbox");
-					$thisView.find(".mobi-activity-type").html("Dropbox Submission");
-					$contMessage = $thisView.find(".container-dropbox");
-					$thisView.find(".container-activity-detail").addClass("detail-dropbox").removeClass("detail-grade");
-					
-					$().mobiQueryApi("get", { 
-						strUrl: configSettings.apiproxy + url,
-						successHandler: function(jsonResponse, intTransactionId) {
-							//console.log(jsonResponse, intTransactionId);
-							$contMessage.find(".mobi-activity-title").html(activity.object.objectType.replace('-', ' '));
-							$contMessage.find(".mobi-posted-by span").text(jsonResponse.messages[0].author.firstName + ' ' +jsonResponse.messages[0].author.lastName);
-							$contMessage.find(".mobi-date").text(friendlyDate(jsonResponse.messages[0].date));
-							
-							
-							// If there are comments, show them, otherwise hide that section.
-							if (jsonResponse.messages[0].comments != "") {
-								$contMessage.find("div.mobi-comments").html(jsonResponse.messages[0].comments);
-								$contMessage.find(".mobi-comments").show();
-							} else {
-								$contMessage.find(".mobi-comments").hide();
-							}
-
-							$.mobile.pageLoading(true);
-							$("#pageActivityDetail .container-topicinfo").css("visibility", "visible");
-							$("#pageActivityDetail .container-activity-detail").css("visibility", "visible")
-						},
-						errorHandler: function() {
-							alert("Unable to display the dropbox information.  Please try again.");
-							$.mobile.pageLoading(true);
-						}
-					}); 
-				}  
 			} );
 			
 			//discussion topic and detail response
@@ -1186,6 +1270,41 @@ var objGlobalResources = {};
 					}
 				} );
 			}
+
+
+
+/*
+ * ==================
+ * Thread Topics View
+ * ==================
+ */
+			$("#pageThreadTopics").live("pagebeforeshow", function() {
+				$("#pageThreadTopics .container-topicinfo").css("visibility", "hidden");
+				$("#pageThreadTopics .container-activity-detail").css("visibility", "hidden");
+				
+			});
+			
+			$("#pageThreadTopics").live("pageshow", function() {
+				var $this = $(this), info, instructor, announcement, 
+				$contInfo = $this.find('.container-topicinfo'),
+				$contAnn = $this.find('.container-announcement');
+				$.mobile.pageLoading();
+				$(".button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
+				$.mobile.pageLoading(true);
+				$("#pageThreadTopics .container-topicinfo").css("visibility", "visible");
+				$("#pageThreadTopics .container-activity-detail").css("visibility", "visible");
+			});
+
+
+
+
+
+
+
+
+
 /*
  * ============
  * Classes View
@@ -1594,7 +1713,7 @@ var objGlobalResources = {};
 				$contInfo.find(".mobi-course-title").html(objGlobalCourse.title);
 				
 				$().mobyCacheManager({
-					boolForceRefresh: true,
+					boolForceRefresh: false,
 					strQueryUrl: configSettings.apiproxy + '/me/courseitemgrades?courses=' + objGlobalCourse.id,
 					strCacheDate: "grades-"+objGlobalCourse.id+"-timestamp",
 					strCacheInfo: "grades-" + objGlobalCourse.id,

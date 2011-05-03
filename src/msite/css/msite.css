@@ -145,6 +145,7 @@ div.layout-header .menu-active {
 .mobi-listview li.dropbox-submission,
 .mobi-listview li.exam-submission,
 .mobi-listview li.person,
+.mobi-listview li.discussion, 
 .mobi-listview li.assignment {
   padding: 0 0 0 30px;
   background-position: 10px 10px;
@@ -199,8 +200,13 @@ div.layout-header .menu-active {
 .view-whatsdue .mobi-listview li.dropbox-submission,
 .view-whatsdue .mobi-listview li.exam-submission,
 .view-whatsdue .mobi-listview li.person,
+.view-whatsdue .mobi-listview li.discussion,
 .view-whatsdue .mobi-listview li.assignment {
 	background-position: 10px 16px;
+}
+
+.view-whatsdue .mobi-listview li.exam-submission span.ui-icon {
+	display: none;
 }
 /* End: List View overrides for Upcoming view */
 
@@ -647,16 +653,40 @@ textarea.textarea-response-title {
 #pageActivityDetail .detail-grade .container-grade {
 	display: block;
 }
-#pageActivityDetail .detail-grade .container-dropbox {
+#pageActivityDetail .detail-grade .container-dropbox,
+#pageActivityDetail .detail-grade .container-assignment,
+#pageActivityDetail .detail-grade .container-exam {
 	display: none;
 }
 
-#pageActivityDetail .detail-dropbox .container-grade {
-	display: none;
-}
+
 #pageActivityDetail .detail-dropbox .container-dropbox {
 	display: block;
 }
+#pageActivityDetail .detail-dropbox .container-grade,
+#pageActivityDetail .detail-dropbox .container-assignment,
+#pageActivityDetail .detail-dropbox .container-exam {
+	display: none;
+}
+
+#pageActivityDetail .detail-assignment .container-assignment {
+	display: block;
+}
+#pageActivityDetail .detail-assignment .container-grade,
+#pageActivityDetail .detail-assignment .container-dropbox,
+#pageActivityDetail .detail-assignment .container-exam {
+	display: none;
+}
+
+#pageActivityDetail .detail-exam .container-exam {
+	display: block;
+}
+#pageActivityDetail .detail-exam .container-grade,
+#pageActivityDetail .detail-exam .container-dropbox,
+#pageActivityDetail .detail-exam .container-assignment {
+	display: none;
+}
+
 .detail-dropbox .mobi-activity-title {
 	text-transform: capitalize;
 }

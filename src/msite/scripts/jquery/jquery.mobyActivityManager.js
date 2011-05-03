@@ -12,8 +12,7 @@
  *  	callbackError:  The callback to execute if an error occurs.
  */
  
-var arrGlobalActivity = [],
- 	objGlobalResources = {};
+
 
 (function($) {
 	var methods = {
