@@ -25,6 +25,8 @@
 				boolReturnFirstSet: true,
 				boolForceRefresh: false,
 				strLastDivider : "",
+				intStartIndex: 0,
+				intEndIndex: configSettings.intNumberOfUpcomingEvents,
 				callbackSuccess: function(objReturn) {
 					return objReturn;
 				},
@@ -50,16 +52,16 @@
 					return "Tomorrow";
 				}
 				if (objDate < Date.today().add({days: 3})) {
-					return "2 Days";
+					return "In 2 Days";
 				}
 				if (objDate < Date.today().add({days: 4})) {
-					return "3 Days";
+					return "In 3 Days";
 				}
 				if (objDate < Date.today().add({days: 5})) {
-					return "4 Days";
+					return "In 4 Days";
 				}
 				if (objDate < Date.today().add({days: 6})) {
-					return "5 Days";
+					return "In 5 Days";
 				}
 				return "Later";
 			}
@@ -73,16 +75,33 @@
 				var strIconClass = "";
 				var strHref = "#";
 				var strLinkClass = "";
+				var strCourseId = objItem.links[1].href.split("/courses/")[1];
+				var strCourseNumber = "";
+				
+				// Get the correct course information
+				$().mobyCourseManager({
+					callbackSuccess: function(arrCourses) {
+						for (var l = 0; l < arrCourses.length; l++) {
+							if (arrCourses[l].id === parseInt(strCourseId)) {
+								strCourseNumber = arrCourses[l].title;
+							}
+						}
+					}
+				})
 				
 				// Get the correct date string
 				// AM or PM?
 				if (parseInt(dateItem.toString("HH")) > 12) {
 					strSuffix = " PM";
 				}
+				var strTime = dateItem.toString("h:mm");
+				if (strTime === "0:00") {
+					strTime = "12:00";
+				}
 				if (parseDateGroup(dateItem) === "Today") {
-					strDate = "Today " + dateItem.toString("hh:mm") + strSuffix;
+					strDate = "Today " + strTime + strSuffix;
 				} else {
-					strDate = dateItem.toString("MMMM d hh:mm") + strSuffix;
+					strDate = strTime + strSuffix;
 				}
 				// Get the correct icon type
 				if ((objItem.type === "HTML") || (objItem.type === "MANAGED_OD") || (objItem.type === "MANAGED_HTML")) {
@@ -111,6 +130,7 @@
 				strReturnHtml += '<a class="listitem-activity '+strLinkClass+'" href="'+strHref+'">';
 				strReturnHtml += '<span class="mobi-title">' + objItem.title + '</span>';
 				strReturnHtml += '<span class="mobi-summary">' + objItem.category.charAt(0).toUpperCase() + objItem.category.slice(1) + " at " + strDate + '</span>'
+				strReturnHtml += '<span class="mobi-course-title">' + strCourseNumber + '</span>';
 				strReturnHtml += '</a></li>\n';
 				
 				
@@ -131,6 +151,7 @@
 					return 0;
 				})
 				
+				/*
 				// Next we need to remove the items that we need to skip
 				if (settings.boolReturnFirstSet) {
 					// We're only returning the first set.  But what if the feed has less than intNumberOfUpcomingEvents?
@@ -145,7 +166,7 @@
 					arrItems = newArray;
 					boolAllItems = true;
 				}
-				
+				*/
 				// build the HTML.
 				var strHtml = "";
 				var strTodayHtml = ""; // for things happening today.
@@ -155,19 +176,28 @@
 				var str4DayHtml = ""; // for things happening in 4 days.
 				var str5DayHtml = ""; // for things happening in 5 days.
 				var strLaterHtml = ""; // for things happening later.
+				var intEnd = settings.intEndIndex;
+				var strEndHtml = '<li data-role="list-divider" class="upcoming-scroll-indicator">Loading more...</li>\n';
 				
-				for (var i = 0; i < arrItems.length; i++) {
+				
+				if ((intEnd > arrItems.length)|| (intEnd === -1)) {
+					intEnd = arrItems.length;
+					boolAllItems = true;
+					strEndHtml += "";
+				}
+				
+				for (var i = settings.intStartIndex; i < intEnd; i++) {
 					if (parseDateGroup(arrItems[i]) === "Today"){
 						strTodayHtml += objItemToHtml(arrItems[i].objItem);
 					} else if (parseDateGroup(arrItems[i]) === "Tomorrow") {
 						strTomorrowHtml += objItemToHtml(arrItems[i].objItem);
-					} else if (parseDateGroup(arrItems[i]) === "2 Days") {
+					} else if (parseDateGroup(arrItems[i]) === "In 2 Days") {
 						str2DayHtml += objItemToHtml(arrItems[i].objItem);
-					} else if (parseDateGroup(arrItems[i]) === "3 Days") {
+					} else if (parseDateGroup(arrItems[i]) === "In 3 Days") {
 						str3DayHtml += objItemToHtml(arrItems[i].objItem);
-					} else if (parseDateGroup(arrItems[i]) === "4 Days") {
+					} else if (parseDateGroup(arrItems[i]) === "In 4 Days") {
 						str4DayHtml += objItemToHtml(arrItems[i].objItem);
-					} else if (parseDateGroup(arrItems[i]) === "5 Days") {
+					} else if (parseDateGroup(arrItems[i]) === "In 5 Days") {
 						str5DayHtml += objItemToHtml(arrItems[i].objItem);
 					} else {
 						strLaterHtml += objItemToHtml(arrItems[i].objItem);
@@ -188,25 +218,25 @@
 					strHtml += strTomorrowHtml;
 				}
 				if (str2DayHtml != "") {
-					if (settings.strLastDivider != "2 Days") {
+					if (settings.strLastDivider != "In 2 Days") {
 						strHtml += '<li data-role="list-divider">2 Days</li>\n';
 					}
 					strHtml += str2DayHtml;
 				}
 				if (str3DayHtml != "") {
-					if (settings.strLastDivider != "3 Days") {
+					if (settings.strLastDivider != "In 3 Days") {
 						strHtml += '<li data-role="list-divider">3 Days</li>\n';
 					}
 					strHtml += str3DayHtml;
 				}
 				if (str4DayHtml != "") {
-					if (settings.strLastDivider != "4 Days") {
+					if (settings.strLastDivider != "In 4 Days") {
 						strHtml += '<li data-role="list-divider">4 Days</li>\n';
 					}
 					strHtml += str4DayHtml;
 				}
 				if (str5DayHtml != "") {
-					if (settings.strLastDivider != "5 Days") {
+					if (settings.strLastDivider != "In 5 Days") {
 						strHtml += '<li data-role="list-divider">5 Days</li>\n';
 					}
 					strHtml += str5DayHtml;
@@ -217,6 +247,7 @@
 					}
 					strHtml += strLaterHtml;
 				}
+				strHtml += strEndHtml;
 				return strHtml;
 
 			}
@@ -226,7 +257,7 @@
 				$().mobyUpcomingEventsManager("fetch", {
 					boolForceRefresh: settings.boolForceRefresh,
 					callbackSuccess: function(jsonResponse, intIndex) {
-						objReturn.strHtml = produceHtml(jsonResponse);
+						objReturn.strFeedHtml = produceHtml(jsonResponse);
 						objReturn.boolAllItems = boolAllItems;
 						settings.callbackSuccess(objReturn);
 					},

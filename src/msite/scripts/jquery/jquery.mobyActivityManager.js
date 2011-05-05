@@ -80,7 +80,7 @@
 						strHtml += GetSummary(item);
 						strHtml += "</span>";
 					} else if (type === "thread-topic") {
-						strHtml += '<li class="' + type +'"><a class="listitem-activity thread-topic_' + item.object.courseId + '_'  + item.object.referenceId + '" href="discussiontopicdetail.html">';
+						strHtml += '<li class="' + type +'"><a class="listitem-activity thread-topic_' + item.object.courseId + '_'  + item.object.referenceId + '" href="/discussiontopicdetail.html">';
 						strHtml += '<span class="mobi-title">';
 						strHtml += "Topic: " + item.object.title;
 						strHtml += "</span><span class='mobi-summary'>";

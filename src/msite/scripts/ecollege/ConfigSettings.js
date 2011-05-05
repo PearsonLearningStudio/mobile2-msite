@@ -11,7 +11,9 @@ configSettings.intNumberOfActivities = 10;
 configSettings.intCurrentNumberOfActivities = configSettings.intNumberOfActivities;
 // Default number of upcoming events to show in the first view of the Upcoming view.
 configSettings.intNumberOfUpcomingEvents = 10;
+configSettings.intCurrentNumberOfUpcomingEvents = configSettings.intNumberOfUpcomingEvents;
 configSettings.boolScrollUpdate = true;
+configSettings.boolScrollUpcoming = true;
 
 // Single Sign-On
 configSettings.boolEnableSSO = false;

@@ -777,7 +777,7 @@ div.layout-header .menu-active {
 }
 .mobi-listview li.dropbox-submission,
 .container-activity-detail .dropbox-submission,
-.container-activity-detail .detail-dropbox {
+.container-activity-detail .container-dropbox {
 	background-image: url(../images/icon_dropbox.png);
 	background-repeat: no-repeat;
 }

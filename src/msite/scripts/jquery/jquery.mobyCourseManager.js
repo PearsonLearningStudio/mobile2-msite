@@ -170,6 +170,35 @@
 				// Now call the success callback.
 				settings.callbackSuccess(arrSortedCourses);
 			}
+		},
+		getCourseInfo: function(options){
+			var settings = {
+				boolForceRefresh: false,
+				strSingleCourseId: "",
+				callbackSuccess: function(objCourseInfo){
+					return objCourseInfo;
+				},
+				callbackError: function(){
+					alert("Unable to fetch course information.");
+				}
+			};
+			if (options) {
+				$.extend(settings, options);
+			}
+			$().mobyCourseManager({
+				boolForceRefresh: settings.boolForceRefresh,
+				callbackSuccess: function(arrCourses) {
+					for (var i = 0; i < arrCourses.length; i++) {
+						if (arrCourses[i].id === parseInt(settings.strSingleCourseId)) {
+							settings.callbackSuccess(arrCourses[i]);
+						}
+					}
+				},
+				callbackError: function() {
+					alert("Unable to fetch course information.");
+				}
+				
+			})
 		}
 	}
 	

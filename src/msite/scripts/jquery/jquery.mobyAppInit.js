@@ -16,6 +16,7 @@ var objGlobalUser = {};
 var objGlobalCourse = {};
 var arrGlobalActivity = [];
 var objGlobalResources = {};
+var arrSemaphore = [];
 (function($) {
 	var methods = {
 		initIndex : function(options) {
@@ -70,29 +71,27 @@ var objGlobalResources = {};
 				$(".view-activity").hide();
 				$(".view-whatsdue").show();
 				$(window).unbind("scrollstop.infinite");
+				if (configSettings.boolScrollUpcoming) {
+					handleUpcomingScroll();
+				}
 				
 				if ($("#pageHome .view-whatsdue ul").length === 0) {
 					$.mobile.pageLoading();
 					$(".view-whatsdue .container-backbutton").hide();
 					$().mobyUpcomingEventsManager({
-						boolReturnFirstSet: true,
 						boolForceRefresh: false,
 						callbackSuccess: function(objReturn){
-							var listView = '<ul class="mobi-listview" data-role="listview">\n' + objReturn.strHtml + "</ul>\n";
+							var listView = '<ul class="mobi-listview" data-role="listview">\n' + objReturn.strFeedHtml + "</ul>\n";
 							$("#pageHome .view-whatsdue .container-content").html(listView);
 							$("#pageHome .view-whatsdue .container-content .mobi-listview").listview();
 							$.mobile.pageLoading(true);
-							if (!objReturn.boolAllItems) {
-								$(".view-whatsdue .container-backbutton").show();
-							} else {
-								$(".view-whatsdue .container-backbutton").hide();
-							}
 							upcomingItemTapHandler();
 						}
 					})
 				}
 			});
 			
+			/*
 			// Click listener for upcoming feed's "get all" button 
 			$(".view-whatsdue .container-backbutton a").unbind("click").click(function() {
 				$.mobile.pageLoading();
@@ -114,6 +113,7 @@ var objGlobalResources = {};
 				})
 				$(".view-whatsdue .container-backbutton").hide();
 			})
+			*/
 
 			// Initialize click listener for Activity button
 			$(".btn-activity").die("click").live('click', function() {
@@ -132,20 +132,19 @@ var objGlobalResources = {};
 					getActivities( { refresh: true } );
 				} else {
 					$.mobile.pageLoading();
+					// Update pagination variables so that we start over
+					configSettings.intCurrentNumberOfUpcomingEvents = configSettings.intNumberOfUpcomingEvents;
+					configSettings.boolScrollUpcoming = true;
+					
+					handleUpcomingScroll();
 					$(".view-whatsdue .container-backbutton").hide();
 					$().mobyUpcomingEventsManager({
-						intDaysOut: 14,
 						boolForceRefresh: true,
 						callbackSuccess: function(objReturn){
-							var listView = '<ul class="mobi-listview" data-role="listview">\n' + objReturn.strHtml + "</ul>\n";
+							var listView = '<ul class="mobi-listview" data-role="listview">\n' + objReturn.strFeedHtml + "</ul>\n";
 							$("#pageHome .view-whatsdue .container-content").html(listView);
 							$("#pageHome .view-whatsdue .container-content .mobi-listview").listview();
 							$.mobile.pageLoading(true);
-							if (!objReturn.boolAllItems) {
-								$(".view-whatsdue .container-backbutton").show();
-							} else {
-								$(".view-whatsdue .container-backbutton").hide();
-							}
 							upcomingItemTapHandler();
 						}
 					})
@@ -201,7 +200,6 @@ var objGlobalResources = {};
 				// The user has tapped on a thread.  We need
 				// to display the thread detail page.
 				$.mobile.pageLoading();
-				
 				var responseId = $this.attr("id").split("_")[1],
 					objInfo = {};
 				//if response about to be viewed is unread...mark as read
@@ -227,6 +225,7 @@ var objGlobalResources = {};
 					strDescription: $this.find(".mobi-description").data("description"),
 					strDate: $this.find(".mobi-date").text()
 				}
+				// alert(JSON.stringify(objInfo))
 				arrGlobalThreads.push(objInfo);
 			}
 			
@@ -239,7 +238,7 @@ var objGlobalResources = {};
 					activityType = activityArray[0];
 					if(activityType === 'thread-topic'){									
 						arrGlobalTopics.push(strCurrentTopic);
-					} else if(activityType === 'thread-post'){						
+					} else if(activityType === 'thread'){						
 						// The user has tapped on a thread.  We need
 						// to display the thread detail page.
 						// pass the responseId 
@@ -321,9 +320,9 @@ var objGlobalResources = {};
 				});
 			}
 			
-			// event handler for infinite scrolling
+			// event handler for infinite scrolling in Activity Feed
 			var handleInfiniteScroll = function() {
-				$(window).unbind("scrollstop.infinite").bind("scrollstop.infinite", function() {
+				$(window).unbind("scrollstop.infinite").unbind("scrollstop.upcoming").bind("scrollstop.infinite", function() {
 					if (($(window).scrollTop() + 150) >= ($(document).height() - $(window).height())) {
 
 						// Do we have all the things?
@@ -340,7 +339,7 @@ var objGlobalResources = {};
 								intStartIndex: configSettings.intCurrentNumberOfActivities,
 								intEndIndex: configSettings.intCurrentNumberOfActivities + configSettings.intNumberOfActivities,
 								callbackSuccess: function(objReturn) {
-									$(".activity-scroll-indicator").remove();
+									$(".view-activity .activity-scroll-indicator").remove();
 									var strFeedHtml = objReturn.strFeedHtml;
 							
 									$("#pageHome .view-activity .mobi-listview").append(strFeedHtml);
@@ -366,8 +365,57 @@ var objGlobalResources = {};
 	
 			}
 			
+			// event handler for infinite scrolling in Upcoming Feed
+			var handleUpcomingScroll = function() {
+				$(window).unbind("scrollstop.upcoming").unbind("scrollstop.infinite").bind("scrollstop.upcoming", function() {
+					if (($(window).scrollTop() + 150) >= ($(document).height() - $(window).height())) {
+
+						// Do we have all the things?
+						if (!configSettings.boolScrollUpdate) {
+							$(window).unbind("scrollstop.upcoming");
+							return;
+						}
+						
+						// No!  Get more things!
+						configSettings.boolScrollUpcoming = true;
+						$.mobile.pageLoading();
+						// Also need to know what was the last divider label 
+						var strLastDividerText = $(".view-whatsdue .container-content .ui-li-divider").eq(-2).text();
+						var doIt = function() {
+							$().mobyUpcomingEventsManager("toHtml", {
+								strLastDivider : strLastDividerText,
+								intStartIndex: configSettings.intCurrentNumberOfUpcomingEvents,
+								intEndIndex: configSettings.intCurrentNumberOfUpcomingEvents + configSettings.intNumberOfUpcomingEvents,
+								callbackSuccess: function(objReturn) {
+									$(".view-whatsdue .upcoming-scroll-indicator").remove();
+									var strFeedHtml = objReturn.strFeedHtml;
+									$("#pageHome .view-whatsdue .mobi-listview").append(strFeedHtml);
+									$("#pageHome .view-whatsdue .mobi-listview").listview("refresh");
+									$.mobile.pageLoading(true);
+									configSettings.intCurrentNumberOfUpcomingEvents += configSettings.intNumberOfUpcomingEvents;
+									if (objReturn.boolAllItems) {
+										// All items have been returned and displayed, so unbind the scroll event.
+										$(window).unbind("scrollstop.upcoming");
+										$(".view-whatsdue .upcoming-scroll-indicator").remove();
+										configSettings.boolScrollUpcoming = false;
+									}
+								}
+							});
+						}
+						
+						// We have to do this on a brief delay for older iphones, otherwise events happen crazy out of order.
+						var otherDelay = setTimeout(function(){
+							doIt()
+						}, 200);
+			
+					}
+				})
+	
+			}			
+			
 			// Click handler for the activity button
 			var activityButtonClickHandler = function(boolForceRefresh) {
+				$(window).unbind("scrollstop.upcoming");
 				if ($(".btn-whatsdue").hasClass("ui-btn-active")) {
 					// Rebind scroll listener?
 					if (configSettings.boolScrollUpdate) {
@@ -472,6 +520,10 @@ var objGlobalResources = {};
 				} else {
 					$(".view-whatsdue").show();
 					$(".view-activity").hide();
+
+					if (configSettings.boolScrollUpcoming) {
+						handleUpcomingScroll();
+					}
 				}
 				// Highlight the correct tab in the navbar
 				$(".container-navbar li a").removeClass("ui-btn-active");
@@ -484,7 +536,7 @@ var objGlobalResources = {};
 			// Now that we've bound a scroll event listeners to the window, we need to unbind them if we change pages, because
 			// other pages do not need it.
 			$("#pageHome").unbind("pagebeforehide").bind("pagebeforehide", function() {
-				$(window).unbind("scrollstop.infinite").unbind("scroll.bookmark");
+				$(window).unbind("scrollstop.infinite").unbind("scrollstop.upcoming").unbind("scroll.bookmark");
 			})
 /*
  * ===============
@@ -556,7 +608,7 @@ var objGlobalResources = {};
 									//trying to prevent page refresh on Pre 
 									return false;
 								} );
-								$(".listitem-topic").live('click', function() {
+								$("#pageDiscuss .listitem-topic").unbind("click.discuss").bind('click.discuss', function() {
 									// The user has tapped a topic to drill down.
 									// Store the topic information in the global topics array.
 									var strCurrentTopic = $(this).attr("id").split("_")[1];
@@ -621,7 +673,7 @@ var objGlobalResources = {};
 						strSort: "title",
 						callbackSuccess: function(arrCourses) {
 							for (var i = 0; i < arrCourses.length; i++) {
-								if (arrCourses[i].id = intCourseId) {
+								if (arrCourses[i].id === parseInt(intCourseId)) {
 									$thisView.find(".mobi-course-title").html(arrCourses[i].title);
 								}
 							}
@@ -736,10 +788,11 @@ var objGlobalResources = {};
 	
 					} else if(activityType === 'dropbox-submission') {
 						url = '/courses/' + activity.object.courseId + '/dropboxBaskets/' + activity.target.referenceId + '/messages/' + activity.object.referenceId; 
-						$contMessage.removeClass("detail-grade detail-exam detail-assignment").addClass("detail-dropbox");
+						$thisView.find(".container-activity-detail").addClass("detail-dropbox").removeClass("detail-grade detail-exam detail-assignment")
+						//$contMessage.removeClass("detail-grade detail-exam detail-assignment").addClass("detail-dropbox");
 						$thisView.find(".mobi-activity-type").html("Dropbox Submission");
 						$contMessage = $thisView.find(".container-dropbox");
-						$thisView.find(".container-activity-detail").addClass("detail-dropbox").removeClass("detail-grade");
+						$thisView.find(".container-activity-detail").addClass("detail-dropbox").removeClass("detail-grade detail-exam detail-assignment");
 						
 						$().mobiQueryApi("get", { 
 							strUrl: configSettings.apiproxy + url,
@@ -865,7 +918,7 @@ var objGlobalResources = {};
 									match = numResponses.match(/\d+/);
 									$totResponses.html( numResponses.replace( match, +match + 1 ) );
 								}
-								$(".listitem-response").live('click', function() { 
+								$("#pageActivityDetail .listitem-response").unbind("click.activity").bind('click.activity', function() { 
 									// The user has tapped on a thread.  We need
 									// to display the thread detail page.
 									//moved click handler to external function to remove 
@@ -998,7 +1051,7 @@ var objGlobalResources = {};
 											$theseThreads.find(".mobi-listview").listview();
 											
 											// Tap event listener
-											$(".listitem-response").die("click").live('click', function() {
+											$("#pageDiscussionTopicDetail .listitem-response").unbind("click.discussiontopicdetail").bind('click.discussiontopicdetail', function() {
 												// The user has tapped on a thread.  We need
 												// to display the thread detail page.
 												//moved click handler to external function to remove 
@@ -1150,7 +1203,7 @@ var objGlobalResources = {};
 												$thisView.find(".container-discussion-detail .container-topicinfo .mobi-unread-responses").hide();
 											}
 											// Tap event listener
-											$(".listitem-response").die("click").live('click', function() {
+											$("#pageDiscussionTopicDetail .listitem-response").unbind("click.discussiontopicdetail").bind('click.discussiontopicdetail', function() {
 												// The user has tapped on a thread.  We need
 												// to display the next detail page.
 												// moved click handler to external function to remove 
@@ -1283,18 +1336,117 @@ var objGlobalResources = {};
 				$("#pageThreadTopics .container-activity-detail").css("visibility", "hidden");
 				
 			});
+			/*
+			 * 
+						objInfo = {
+							boolFromActivity: true,
+							strNewId: activityArray[1] + '-' + activityArray[2],
+							strOldId: -1
+						}
+			 * 
+			 */
 			
 			$("#pageThreadTopics").live("pageshow", function() {
 				var $this = $(this), info, instructor, announcement, 
 				$contInfo = $this.find('.container-topicinfo'),
-				$contAnn = $this.find('.container-announcement');
+				$contDiscussion = $this.find('.view-discussion');
 				$.mobile.pageLoading();
 				$(".button-menu").unbind("click").bind("click", function() {
 					showMenu(this);
 				})
-				$.mobile.pageLoading(true);
-				$("#pageThreadTopics .container-topicinfo").css("visibility", "visible");
-				$("#pageThreadTopics .container-activity-detail").css("visibility", "visible");
+				
+				var intIndex = arrGlobalThreads.length -1;
+				var strCourseId = arrGlobalThreads[intIndex].strNewId.split("-")[0];
+				var strThreadId = arrGlobalThreads[intIndex].strNewId.split("-")[1];
+				var strServiceUrl = configSettings.apiproxy + "/me/userTopics?courses=" + strCourseId;
+				
+				// Get the course information
+				$().mobyCourseManager("getCourseInfo", {
+					strSingleCourseId: strCourseId,
+					callbackSuccess: function(objCourseInfo) {
+						$contInfo.find(".mobi-course-title").html(objCourseInfo.title);
+					}
+				})
+				
+				// Helper function for producing HTML for a topic
+				var createTopicHtml = function(objTopic) {
+					// Build the text for "total responses"
+					strTotalResponsesText = "";
+					tempHtml = "";
+					if (objTopic.childResponseCounts.totalResponseCount === 0) {
+						strTotalResponsesText = "No responses";
+						iconClass = 'no-responses';
+					} else if (objTopic.childResponseCounts.totalResponseCount === 1) {
+						strTotalResponsesText = "1 response";
+						iconClass = 'responses';
+					} else {
+						strTotalResponsesText = objTopic.childResponseCounts.totalResponseCount + " total responses";
+						if(objTopic.childResponseCounts.last24HourResponseCount >= 10){
+							iconClass = 'hot-topic';
+						} else {
+							iconClass = 'responses';
+						}
+					}
+					// read = uResponses[i].markedAsRead ? 'read' : 'not-read';
+					tempHtml += '<li class="' + iconClass + ' response-'+objTopic.topic.id+'">';
+					//tempHtml += '<a href="discussiontopicdetail.html" class="listitem-response ' + read  + '" id="response_'+uResponses[i].id+'">';				
+					tempHtml += '<a href="/discussiontopicdetail.html" class="listitem-response" id="response_'+objTopic.id+'">';				
+					tempHtml += '<span class="mobi-title">'+objTopic.topic.title+'</span>';
+					tempHtml += '<span class="mobi-total-responses">' + strTotalResponsesText + '</span>';
+					tempHtml += '<span class="mobi-summary">' +stripTags(objTopic.topic.description)+ '</span>';
+					//tempHtml += '<span class="mobi-description" style="display: block">' + objTopic.topic.description + '</span>';
+					
+					var intNumberOfUnreadResponses = objTopic.childResponseCounts.unreadResponseCount;
+					if (intNumberOfUnreadResponses > 0) {
+						tempHtml += '<span class="mobi-icon-response-count">'+intNumberOfUnreadResponses+'</span>';
+					}
+					var strDate = objTopic.topic.postedDate;
+					//tempHtml += '<span class="mobi-date">'+friendlyDate(strDate)+'</span>';
+					//tempHtml += '<span class="mobi-icon-arrow-r">&gt;</span>';
+					tempHtml += '</a></li>\n';
+					return tempHtml;
+
+				}
+				
+				$().mobiQueryApi({
+					strUrl : strServiceUrl,
+					successHandler : function(jsonResponse, intTransactionId) {
+
+						for (var i = 0; i < jsonResponse.userTopics.length; i++) {
+							if (jsonResponse.userTopics[i].topic.containerInfo.contentItemID === parseInt(strThreadId)) {
+								var strHtml = '<ul class="mobi-listview" data-role="listview">';
+								strHtml += createTopicHtml(jsonResponse.userTopics[i]);
+								strHtml += "</ul>"
+								$contDiscussion.html(strHtml);
+								$contDiscussion.find(".mobi-listview").listview();
+								$.mobile.pageLoading(true);
+								$("#pageThreadTopics .container-topicinfo").css("visibility", "visible");
+								$("#pageThreadTopics .container-activity-detail").css("visibility", "visible");
+							}
+						}
+						
+						$("#pageThreadTopics .listitem-response").unbind("click.response").bind('click.response', function() { 
+							// The user has tapped on a thread.  We need
+							// to display the thread detail page.
+							var strCurrentTopic = $(this).attr("id").split("_")[1];
+							arrGlobalTopics.push(strCurrentTopic);
+							responseClickHandler($(this));
+						})
+						
+						// Back button:  If we tap the back button, it will take us back to the prior screen.
+						// We must therefore remove the current element from the array.
+						$("#pageThreadTopics .container-backbutton a").unbind(".myclick").bind("click.myclick", function() {
+							arrGlobalThreads = [];
+						})
+						
+					},
+					errorHandler: function() {
+						$.mobile.pageLoading(true);
+						$("#pageThreadTopics .container-topicinfo").css("visibility", "visible");
+						$("#pageThreadTopics .container-activity-detail").css("visibility", "visible");
+					}
+				})
+
 			});
 
 
@@ -1675,7 +1827,7 @@ var objGlobalResources = {};
 							}, 200)
 							
 							// Add a click listener to the link so that we pass needed info on to the next page
-							$("#pageCoursePeople .listitem-topic").click(function() {
+							$("#pageCoursePeople .listitem-topic").unbind("click").click(function() {
 								var $this = $(this);
 								objGlobalUser = {};
 								objGlobalUser.name = $this.find(".mobi-title").text();
@@ -1767,7 +1919,7 @@ var objGlobalResources = {};
 						$contAnn.html(strHtml);
 						$contAnn.find(".mobi-listview").listview();
 						// Apply click listeners to the list items
-						$contAnn.find("a.listitem-topic").click(function() {
+						$contAnn.find("a.listitem-topic").unbind("click").click(function() {
 							var $this = $(this);
 							objGlobalResources.objGradeItemInfo = {};
 							objGlobalResources.objGradeItemInfo.strCourseTitle = $this.parents("#pageGradeBook").find(" .detail-header .mobi-course-title").text();
