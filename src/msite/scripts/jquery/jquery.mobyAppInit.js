@@ -614,6 +614,12 @@ var arrSemaphore = [];
 									var strCurrentTopic = $(this).attr("id").split("_")[1];
 									arrGlobalTopics.push(strCurrentTopic);
 								} );
+								$("#pageDiscuss .listitem-viewall").unbind("click.viewall").bind('click.viewall', function() {
+									// The user has tapped a topic to drill down.
+									// Store the topic information in the global topics array. 
+									objGlobalCourse.id = $(this).attr("id").split("-")[1];
+									objGlobalCourse.name = $(this).find(".mobi-course-name").html();
+								} );
 							}
 						} );						
 						
@@ -621,6 +627,59 @@ var arrSemaphore = [];
 					}
 				})
 			});
+			
+			
+/*
+ * ====================
+ * Discussion Full View
+ * ====================
+ * 
+ */
+
+
+			$("#pageDiscussionFullview").live("pagebeforeshow", function(event, ui) {
+				$("#pageDiscussionFullview .container-topicinfo").css("visibility", "hidden");
+				$("#pageDiscussionFullview .view-discussion").css("visibility", "hidden")
+			})
+			
+			$("#pageDiscussionFullview").die("pageshow").live("pageshow", function() {
+				
+				// We are showing the Discussion tab.
+				// First, show the loading spinner
+				$.mobile.pageLoading();
+				$("pageDiscussionFullview .button-menu").unbind("click").bind("click", function() {
+					showMenu(this);
+				})
+				
+				// Reinitialize the navigation arrays.
+				// This starts us over from scratch
+				arrGlobalTopics = [];
+				arrGlobalThreads = [];
+				$("#pageDiscussionFullview .container-topicinfo .mobi-course-title").html(objGlobalCourse.name);
+				
+				$().mobyDiscussionManager("userTopicsToHtml",  {
+					boolOnlyActive: false,
+					strCourseId: objGlobalCourse.id,
+					callbackSuccess : function(strDiscussionHtml) {
+						var strHtml = '<ul data-role="listview" class="mobi-listview">';
+						strHtml += strDiscussionHtml;
+						strHtml += "</ul>";
+						$("#pageDiscussionFullview .view-discussion").html(strHtml);
+						$("#pageDiscussionFullview .view-discussion .mobi-listview").listview();
+						$.mobile.pageLoading(true);
+						$("#pageDiscussionFullview .container-topicinfo").css("visibility", "visible");
+						$("#pageDiscussionFullview .view-discussion").css("visibility", "visible");
+						$("#pageDiscussionFullview .listitem-topic").unbind("click.discuss").bind('click.discuss', function() {
+							// The user has tapped a topic to drill down.
+							// Store the topic information in the global topics array.
+							var strCurrentTopic = $(this).attr("id").split("_")[1];
+							arrGlobalTopics.push(strCurrentTopic);
+						} );
+					}
+				})
+			});
+			
+			
 
 /*
  * ====================
@@ -918,7 +977,7 @@ var arrSemaphore = [];
 									match = numResponses.match(/\d+/);
 									$totResponses.html( numResponses.replace( match, +match + 1 ) );
 								}
-								$("#pageActivityDetail .listitem-response").unbind("click.activity").bind('click.activity', function() { 
+								$thisView.find("listitem-response").unbind("click.activity").bind('click.activity', function() { 
 									// The user has tapped on a thread.  We need
 									// to display the thread detail page.
 									//moved click handler to external function to remove 
@@ -1110,6 +1169,7 @@ var arrSemaphore = [];
 					numResponses,					
 					$thisMessage = $thisView.find(".container-discussion-detail .container-message"),
 					$responseInput = $thisView.find("#textarea-response");	
+				var strCurrentId = $thisView.attr("id");
 				$.mobile.pageLoading();
 				// get a single response. will simply return if single response is from the 
 				// discussion page where all the info was already passed in
@@ -1203,7 +1263,7 @@ var arrSemaphore = [];
 												$thisView.find(".container-discussion-detail .container-topicinfo .mobi-unread-responses").hide();
 											}
 											// Tap event listener
-											$("#pageDiscussionTopicDetail .listitem-response").unbind("click.discussiontopicdetail").bind('click.discussiontopicdetail', function() {
+											$thisView.find(".listitem-response").unbind("click.discussiontopicdetail").bind('click.discussiontopicdetail', function() {
 												// The user has tapped on a thread.  We need
 												// to display the next detail page.
 												// moved click handler to external function to remove 
