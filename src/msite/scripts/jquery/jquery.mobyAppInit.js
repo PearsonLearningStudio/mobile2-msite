@@ -16,7 +16,7 @@ var objGlobalUser = {};
 var objGlobalCourse = {};
 var arrGlobalActivity = [];
 var objGlobalResources = {};
-var arrSemaphore = [];
+var objGlobalDetail = {};
 (function($) {
 	var methods = {
 		initIndex : function(options) {
@@ -31,6 +31,9 @@ var arrSemaphore = [];
  * Generic Initialization for index.html
  * =====================================
  */
+
+
+			
 			// Be sure the dropdown menu is hidden each time we change a page
 			$(".container-page").die("pagebeforeshow pagebeforehide").live("pagebeforeshow pagebeforehide", function() {
 				$.mobile.pageLoading();
@@ -151,34 +154,6 @@ var arrSemaphore = [];
 				}
 			});
 			
-			// If this is a new login, we need to clear out any previous information stored in localStorage,
-			// otherwise the new user might gain access to the previous user's data.
-			// Obviously we only need to do this if local storage is supported.
-			if (dataStorage.isSupported) {
-				// If we have different client strings then we definitely need to reset the cache.
-				$().mobiQueryApi({
-					strUrl : configSettings.apiproxy + "/me",
-					successHandler : function(jsonResponse, intTransactionId) {
-						var strCurrentUserName = jsonResponse.me.userName;
-						var strStoredClientString = dataStorage.get("clientstring");
-						var strStoredUserName = dataStorage.get("username");
-						// What matches?
-						if ((strStoredClientString === null) || (strStoredUserName === null)) {
-							dataStorage.clear();
-							dataStorage.add("clientstring", configSettings.clientstring);
-							dataStorage.add("username", strCurrentUserName);
-						} else if ((strStoredClientString != configSettings.clientstring) || (strStoredUserName != strCurrentUserName)) {
-							dataStorage.clear();
-							dataStorage.add("clientstring", configSettings.clientstring);
-							dataStorage.add("username", strCurrentUserName);
-						}
-					},
-					errorHandler : function() {
-						// Fail silently and clear the cache anyway.
-						dataStorage.clear();
-					}
-				});
-			}
 /*
  * ================
  * Helper Functions
@@ -236,9 +211,9 @@ var arrSemaphore = [];
 					arrGlobalActivity =  this.className.match(/\w+[-]*\w+\d+/ig);
 					activityArray = arrGlobalActivity[0].split('_');
 					activityType = activityArray[0];
-					if(activityType === 'thread-topic'){									
-						arrGlobalTopics.push(strCurrentTopic);
-					} else if(activityType === 'thread'){						
+					objGlobalDetail = {};
+					objGlobalDetail.endsAt = $(this).find(".mobi-summary").html();
+					if(activityType === 'thread'){						
 						// The user has tapped on a thread.  We need
 						// to display the thread detail page.
 						// pass the responseId 
@@ -289,12 +264,13 @@ var arrSemaphore = [];
 						$(".view-activity .listitem-activity").die("click.details").live('click.details',  function(e){
 							e.preventDefault();
 							arrGlobalActivity =  this.className.match(/\w+[-]*\w+\d+/ig);
-
 							activityArray = arrGlobalActivity[0].split('_');
 							activityType = activityArray[0];
-							if(activityType === 'thread-topic'){									
-								arrGlobalTopics.push(strCurrentTopic);
-							} else if(activityType === 'thread-post'){						
+							//alert(activityType + " " + activityArray[0] + " " + activityArray[1] + " " + activityArray[2]);
+							if(activityType === 'thread-topic'){
+								arrGlobalTopics.push(globalUserId + "-" + activityArray[2]);
+							} else 
+							if(activityType === 'thread-post'){						
 								// The user has tapped on a thread.  We need
 								// to display the thread detail page.
 								// pass the responseId 
@@ -705,6 +681,9 @@ var arrSemaphore = [];
 
 				$.mobile.pageLoading();
 				
+				$contInfo.find(".mobi-ends-at").empty().html(objGlobalDetail.endsAt);
+				objGlobalDetail = {};
+				
 				$(".button-menu").unbind("click").bind("click", function() {
 					showMenu(this);
 				})
@@ -852,7 +831,15 @@ var arrSemaphore = [];
 						$thisView.find(".mobi-activity-type").html("Dropbox Submission");
 						$contMessage = $thisView.find(".container-dropbox");
 						$thisView.find(".container-activity-detail").addClass("detail-dropbox").removeClass("detail-grade detail-exam detail-assignment");
-						
+						var strTemplateHtml = '<p class="mobi-activity-title">Dropbox Item Title</p>';
+						strTemplateHtml += '<p class="mobi-posted-by">Posted by: <span></span></p>'
+						strTemplateHtml += '<p class="mobi-comments">Comments:</p>'
+						strTemplateHtml += '<div class="mobi-comments"></div>'
+						strTemplateHtml += '<p class="mobi-date">Friendly Date</p>'
+						strTemplateHtml += '<div class="activity-detail-links">'
+						strTemplateHtml += '<p><a id="btn-viewall-activity" class="detail-link ui-link" href="#">View All Course Dropbox Items</a></p>'
+						strTemplateHtml += '</div>'
+						$contMessage.html(strTemplateHtml);
 						$().mobiQueryApi("get", { 
 							strUrl: configSettings.apiproxy + url,
 							successHandler: function(jsonResponse, intTransactionId) {
@@ -1031,6 +1018,7 @@ var arrSemaphore = [];
 					 strCurrentUrl = configSettings.apiproxy + "/me/usertopics/" + arrGlobalTopics[intLast],
 					 $contTopicInfo = $thisView.find('.container-topicinfo'), totResponses;
 				$thisView.find(".container-discussion-detail .container-message").html("");
+
 				$().mobiQueryApi("get", {
 					strUrl: strCurrentUrl,
 					successHandler: function(jsonResponse, intTransactionId) {
@@ -1394,6 +1382,7 @@ var arrSemaphore = [];
 			$("#pageThreadTopics").live("pagebeforeshow", function() {
 				$("#pageThreadTopics .container-topicinfo").css("visibility", "hidden");
 				$("#pageThreadTopics .container-activity-detail").css("visibility", "hidden");
+				$("#pageThreadTopics .view-discussion").css("visibility", "hidden");
 				
 			});
 			/*
@@ -1414,7 +1403,8 @@ var arrSemaphore = [];
 				$(".button-menu").unbind("click").bind("click", function() {
 					showMenu(this);
 				})
-				
+				$contInfo.find(".mobi-ends-at").html(objGlobalDetail.endsAt);
+				objGlobalDetail = {};
 				var intIndex = arrGlobalThreads.length -1;
 				var strCourseId = arrGlobalThreads[intIndex].strNewId.split("-")[0];
 				var strThreadId = arrGlobalThreads[intIndex].strNewId.split("-")[1];
@@ -1450,10 +1440,18 @@ var arrSemaphore = [];
 					// read = uResponses[i].markedAsRead ? 'read' : 'not-read';
 					tempHtml += '<li class="' + iconClass + ' response-'+objTopic.topic.id+'">';
 					//tempHtml += '<a href="discussiontopicdetail.html" class="listitem-response ' + read  + '" id="response_'+uResponses[i].id+'">';				
-					tempHtml += '<a href="/discussiontopicdetail.html" class="listitem-response" id="response_'+objTopic.id+'">';				
+					tempHtml += '<a href="/discussiontopicdetail.html" class="listitem-topic" id="response_'+objTopic.id+'">';				
 					tempHtml += '<span class="mobi-title">'+objTopic.topic.title+'</span>';
-					tempHtml += '<span class="mobi-total-responses">' + strTotalResponsesText + '</span>';
-					tempHtml += '<span class="mobi-summary">' +stripTags(objTopic.topic.description)+ '</span>';
+					tempHtml += '<span class="mobi-response-count">' + strTotalResponsesText + '</span>';
+					
+					// Build the "your responses" string
+					if (objTopic.childResponseCounts.personalResponseCount === 1) {
+						tempHtml += '<span class="mobi-your-responses">' + objTopic.childResponseCounts.personalResponseCount + ' response by you</span>';
+						
+					} else if (objTopic.childResponseCounts.personalResponseCount > 1) {
+						tempHtml += '<span class="mobi-your-responses">' + objTopic.childResponseCounts.personalResponseCount + ' responses by you</span>';
+					}
+					
 					//tempHtml += '<span class="mobi-description" style="display: block">' + objTopic.topic.description + '</span>';
 					
 					var intNumberOfUnreadResponses = objTopic.childResponseCounts.unreadResponseCount;
@@ -1461,7 +1459,7 @@ var arrSemaphore = [];
 						tempHtml += '<span class="mobi-icon-response-count">'+intNumberOfUnreadResponses+'</span>';
 					}
 					var strDate = objTopic.topic.postedDate;
-					//tempHtml += '<span class="mobi-date">'+friendlyDate(strDate)+'</span>';
+					// tempHtml += '<span class="mobi-date">'+friendlyDate(strDate)+'</span>';
 					//tempHtml += '<span class="mobi-icon-arrow-r">&gt;</span>';
 					tempHtml += '</a></li>\n';
 					return tempHtml;
@@ -1482,10 +1480,11 @@ var arrSemaphore = [];
 								$.mobile.pageLoading(true);
 								$("#pageThreadTopics .container-topicinfo").css("visibility", "visible");
 								$("#pageThreadTopics .container-activity-detail").css("visibility", "visible");
+								$("#pageThreadTopics .view-discussion").css("visibility", "visible");
 							}
 						}
 						
-						$("#pageThreadTopics .listitem-response").unbind("click.response").bind('click.response', function() { 
+						$("#pageThreadTopics .listitem-topic").unbind("click.response").bind('click.response', function() { 
 							// The user has tapped on a thread.  We need
 							// to display the thread detail page.
 							var strCurrentTopic = $(this).attr("id").split("_")[1];
@@ -1504,6 +1503,7 @@ var arrSemaphore = [];
 						$.mobile.pageLoading(true);
 						$("#pageThreadTopics .container-topicinfo").css("visibility", "visible");
 						$("#pageThreadTopics .container-activity-detail").css("visibility", "visible");
+						$("#pageThreadTopics .view-discussion").css("visibility", "visible");
 					}
 				})
 
@@ -1908,16 +1908,18 @@ var arrSemaphore = [];
  * Gradebook List View
  * ===================
  */
-			$("#pageGradeBook").live("pagebeforeshow", function() {
+			$("#pageGradeBook").die("pagebeforeshow").live("pagebeforeshow", function() {
 				$("#pageGradeBook .container-topicinfo").css("visibility", "hidden");
 				$("#pageGradeBook .view-course-grades").css("visibility", "hidden");
 				
 			});
 			
-			$("#pageGradeBook").live("pageshow", function() {
+			$("#pageGradeBook").die("pagebeforeshow").live("pageshow", function() {
 				var $this = $(this), info, instructor, announcement, 
 				$contInfo = $this.find('.container-topicinfo'),
 				$contAnn = $this.find('.view-course-grades');
+				var arrItems = [];
+				$contAnn.empty();
 				$.mobile.pageLoading();
 				$(".button-menu").unbind("click").bind("click", function() {
 					showMenu(this);
@@ -1958,7 +1960,7 @@ var arrSemaphore = [];
 							if (strGrade.length === 0) {
 								strDate = "No grade yet."
 							} else {
-								strItemHtml += '<a href="/gradebook-detail.html" class="listitem-topic">';
+								strItemHtml += '<a href="/gradebook-detail.html" class="listitem-topic" id="item-'+i+'">';
 								strCloseAnchor = '</a>';
 								strDate = friendlyDate(objCurrItem.grade.updatedDate);
 							}
@@ -1966,11 +1968,18 @@ var arrSemaphore = [];
 							strItemHtml += '<span class="mobi-title">'+objCurrItem.gradebookItem.title+'</span>';
 							strItemHtml += '<span class="mobi-grade">'+strGrade+'</span>';
 							strItemHtml += '<span class="mobi-date">' +strDate+ '</span>';
-							strItemHtml += '<span class="mobi-letter-grade mobi-hidden">' +strLetterGrade+ '</span>';
-							strItemHtml += '<span class="mobi-numeric-grade mobi-hidden">' +strPointsGrade+ '</span>';
-							strItemHtml += '<span class="mobi-comments mobi-hidden">' +objCurrItem.grade.comments+ '</span>';
+							//strItemHtml += '<span class="mobi-letter-grade mobi-hidden">' +strLetterGrade+ '</span>';
+							//strItemHtml += '<span class="mobi-numeric-grade mobi-hidden">' +strPointsGrade+ '</span>';
+							//strItemHtml += '<span class="mobi-comments mobi-hidden">' +objCurrItem.grade.comments+ '</span>';
 							strItemHtml += strCloseAnchor + '</li>\n';
 							strListHtml += strItemHtml;
+							// Because the comments could contain HTML, we will put it (and other needed info) into an array
+							// which maintains state in the closure.
+							var objItem = {};
+							objItem.letterGrade=strLetterGrade;
+							objItem.pointsGrade = strPointsGrade;
+							objItem.comments = objCurrItem.grade.comments;
+							arrItems.push(objItem);
 						}
 						if (strListHtml.length <3) {
 							strListHtml = '<li><span class="mobi-title">No grades for this course.</span></li>';
@@ -1981,11 +1990,20 @@ var arrSemaphore = [];
 						// Apply click listeners to the list items
 						$contAnn.find("a.listitem-topic").unbind("click").click(function() {
 							var $this = $(this);
+							// Pull the information we need to pass out of the closure array
+							var intCounter = parseInt($this.attr("id").split("-")[1]);							
 							objGlobalResources.objGradeItemInfo = {};
 							objGlobalResources.objGradeItemInfo.strCourseTitle = $this.parents("#pageGradeBook").find(" .detail-header .mobi-course-title").text();
-							objGlobalResources.objGradeItemInfo.strLetterGrade = $this.find(".mobi-letter-grade").text();
-							objGlobalResources.objGradeItemInfo.strNumericGrade = $this.find(".mobi-numeric-grade").text();
-							objGlobalResources.objGradeItemInfo.strComments = $this.find(".mobi-comments").html();
+							//objGlobalResources.objGradeItemInfo.strLetterGrade = $this.find(".mobi-letter-grade").text();
+							//objGlobalResources.objGradeItemInfo.strNumericGrade = $this.find(".mobi-numeric-grade").text();
+							//objGlobalResources.objGradeItemInfo.strComments = $this.find(".mobi-comments").html();
+							
+							
+							objGlobalResources.objGradeItemInfo.strLetterGrade = arrItems[intCounter].letterGrade;
+							objGlobalResources.objGradeItemInfo.strNumericGrade = arrItems[intCounter].pointsGrade;
+							objGlobalResources.objGradeItemInfo.strComments = arrItems[intCounter].comments;
+							
+							
 							objGlobalResources.objGradeItemInfo.strAssignmentTitle = $this.find(".mobi-title").html();
 							objGlobalResources.objGradeItemInfo.strDate = $this.find(".mobi-date").text();
 						})
@@ -2001,78 +2019,6 @@ var arrSemaphore = [];
 					}
 				})
 				
-				/*
-				$().mobiQueryApi('get', { 
-					strUrl: configSettings.apiproxy + '/me/courseitemgrades?courses=' + objGlobalCourse.id,
-					successHandler: function(jsonResponse){
-						var objGrades = {};
-						var strHtml = '<ul data-role="listview" class="mobi-listview">';
-						var strListHtml = "";
-						var strDate = "";
-						for (var i = 0; i < jsonResponse.courseitemgrades.length; i++) {
-							var objCurrItem = jsonResponse.courseitemgrades[i];
-							var strItemHtml = '<li>';
-							var strCloseAnchor = "";
-							var strPointsGrade = "";
-							var strLetterGrade = "";
-							var strGrade = "";
-							if (objCurrItem.grade.letterGradeSet) {
-								strLetterGrade = objCurrItem.grade.letterGrade;
-							}
-							if (objCurrItem.gradebookItem.pointsPossibleSet && objCurrItem.grade.pointsSet) {
-								strPointsGrade = objCurrItem.grade.points + "/" + objCurrItem.gradebookItem.pointsPossible;
-							}
-							if (strLetterGrade.length>0) {
-								strGrade = strLetterGrade;
-							} else {
-								strGrade = strPointsGrade;
-							}
-							if (strGrade.length === 0) {
-								strDate = "No grade yet."
-							} else {
-								strItemHtml += '<a href="/gradebook-detail.html" class="listitem-topic">';
-								strCloseAnchor = '</a>';
-								strDate = friendlyDate(objCurrItem.grade.updatedDate);
-							}
-							
-							strItemHtml += '<span class="mobi-title">'+objCurrItem.gradebookItem.title+'</span>';
-							strItemHtml += '<span class="mobi-grade">'+strGrade+'</span>';
-							strItemHtml += '<span class="mobi-date">' +strDate+ '</span>';
-							strItemHtml += '<span class="mobi-letter-grade mobi-hidden">' +strLetterGrade+ '</span>';
-							strItemHtml += '<span class="mobi-numeric-grade mobi-hidden">' +strPointsGrade+ '</span>';
-							strItemHtml += '<span class="mobi-comments mobi-hidden">' +objCurrItem.grade.comments+ '</span>';
-							strItemHtml += strCloseAnchor + '</li>\n';
-							strListHtml += strItemHtml;
-						}
-						if (strListHtml.length <3) {
-							strListHtml = '<li><span class="mobi-title">No grades for this course.</span></li>';
-						}
-						strHtml += strListHtml + "</ul>\n";
-						$contAnn.html(strHtml);
-						$contAnn.find(".mobi-listview").listview();
-						// Apply click listeners to the list items
-						$contAnn.find("a.listitem-topic").click(function() {
-							var $this = $(this);
-							objGlobalResources.objGradeItemInfo = {};
-							objGlobalResources.objGradeItemInfo.strCourseTitle = $this.parents("#pageGradeBook").find(" .detail-header .mobi-course-title").text();
-							objGlobalResources.objGradeItemInfo.strLetterGrade = $this.find(".mobi-letter-grade").text();
-							objGlobalResources.objGradeItemInfo.strNumericGrade = $this.find(".mobi-numeric-grade").text();
-							objGlobalResources.objGradeItemInfo.strComments = $this.find(".mobi-comments").html();
-							objGlobalResources.objGradeItemInfo.strAssignmentTitle = $this.find(".mobi-title").html();
-							objGlobalResources.objGradeItemInfo.strDate = $this.find(".mobi-date").text();
-						})
-						$.mobile.pageLoading(true);
-						$("#pageGradeBook .container-topicinfo").css("visibility", "visible");
-						$("#pageGradeBook .view-course-grades").css("visibility", "visible");
-					},
-					errorHandler: function() {
-						alert('Unable to fetch grade information for this course, please retry.');
-						$.mobile.pageLoading(true);
-						$("#pageGradeBook .container-topicinfo").css("visibility", "visible");
-						$("#pageGradeBook .view-course-grades").css("visibility", "visible");
-					}
-				});
-				*/
 			});
 
 
@@ -2218,10 +2164,12 @@ var arrSemaphore = [];
 				}
 				
 				$.mobile.pageLoading();
+				var strUserId = $("#userId").val();
+				createCookie("login_username", strUserId, 10);
 				clientStringManager.setClientString(cs);	// just in case the user clears their cookies after page loads
 				// get only the client string part of the entire client sort string (the text before the first ".")
 				var epClientString = cs.split(".", 1)[0];
-				sessionManager.logIn(epClientString, $("#userId").val(), $("#password").val(), $("#rememberMe")[0].checked, signInHandler);
+				sessionManager.logIn(epClientString, strUserId, $("#password").val(), $("#rememberMe")[0].checked, signInHandler);
 			};
 			
 			/**
@@ -2235,7 +2183,16 @@ var arrSemaphore = [];
 					eraseCookie("currentPage");
 					$.mobyProfileManager( {
 						callbackSuccess: function() {
-							$(location).attr("href", "index.html");
+							
+							var strUrl = "index.html";
+							
+							// Get the query string value.
+							cs = getQueryStringValue("cs");
+							if (cs != "") {
+								strUrl += "?cs=" + cs;
+							}
+							
+							$(location).attr("href", strUrl);
 						}
 					} );
 					return;

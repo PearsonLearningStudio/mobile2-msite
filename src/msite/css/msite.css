@@ -42,17 +42,36 @@ msite.css: Main CSS file for msite.
 	width: 50%;
 }
 
-.ui-fluid .ui-btn .ui-btn-inner { width: 100%; padding: 0.6em 0px; }
+.ui-fluid .ui-btn .ui-btn-inner { 
+	width: 100%; 
+	padding: 0.6em 0px; 
+}
 
-.ui-fluid .ui-controlgroup-controls { width: 100%; display: table; }
-.ui-fluid .ui-checkbox, .ui-fluid .ui-radio { display: table-cell; }
-.ui-fluid .ui-checkbox label, .ui-fluid .ui-radio label { width: 100%;display: block; text-align: center; }
+.ui-fluid .ui-controlgroup-controls { 
+	width: 100%; 
+	display: table; 
+}
+.ui-fluid .ui-checkbox, .ui-fluid .ui-radio { 
+	display: table-cell; 
+}
+.ui-fluid .ui-checkbox label, .ui-fluid .ui-radio label { 
+	width: 100%;
+	display: block; 
+	text-align: center; 
+}
 
 .ui-controlgroup {
   margin: 8px 0 0 0;
 }
+
 .ui-icon-dropdown {
   background: url(../images/icon_dropdown_arrow.png) center 6px no-repeat;
+	/*
+  background-image: url(../images/icon_sprite_arrow.png); 
+  background-repeat: no-repeat;
+  background-position: center 6px;
+  */
+  overflow: hidden;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
@@ -63,6 +82,76 @@ msite.css: Main CSS file for msite.
 	-webkit-border-radius: 0;
 	border-radius: 0;
 }
+
+/* Begin: Login page */
+#loginFormSection h1.signon_logo {
+	width: 201px;
+	height: 100px;
+	text-indent: -9999px;
+	margin: 0 auto;
+}
+#loginForm .authFields ul li,
+#registerPage .authFields ul li {
+	background: none;
+	border: none;
+}
+
+#loginForm .authFields ul li label,
+#registerPage .authFields ul li label {
+	padding-left: 2px;
+	font-weight: bold;
+	line-height: 40px;
+}
+
+#loginForm .authFields ul li .ui-checkbox label {
+	background: transparent;
+	border: none;
+	margin: -30px 0 0 0;
+	width: 110%;
+}
+
+#loginForm .authFields ul li .ui-checkbox label .ui-btn-text {
+    padding-left: 15px;
+    position: relative;
+    top: 7px;
+}
+
+#loginForm .authFields ul li .ui-checkbox label .ui-icon-checkbox-on,
+#loginForm .authFields ul li .ui-checkbox label .ui-icon-checkbox-off {
+	width: 33px;
+	height: 33px;
+	background-size: 32px 33px;
+}
+
+/* Sign On Button */
+#loginFormContainer .ui-btn-up-c,
+#registerPage .ui-btn-up-c {
+	border: none;
+	font-weight: bold;
+	cursor: pointer;
+	text-decoration: none;
+}
+/* End: Login page */
+
+/* Begin: Registration Page */
+#registerPage ul.steps {
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	padding-top: 15px;
+	padding-right: 15px;
+}
+#registerPage ul.steps li {
+	padding-bottom: 15px;
+	text-shadow: none;
+}
+
+#registerPage p {
+	text-shadow: none;
+	font-weight: bold;
+}
+/* End: Registration Page */
+
 
 /* Begin: Application Header */
 div.layout-header {
@@ -87,6 +176,7 @@ div.layout-header .button-menu {
 	height: 40px;
 	line-height: 40px;
 	padding: 0 8px;
+	font-size: .9em;
 }
 div.layout-header .menu-active {
 	background-color: #fff;
@@ -95,15 +185,140 @@ div.layout-header .menu-active {
 	-moz-border-radius: 0px;
 	-webkit-border-radius: 0;
 	border-radius: 0px;
+	border: none;
+	text-shadow: none;
 }
+.layout-header li.home .ui-btn-text {
+	line-height: 25px;
+	padding: 0 0 0 32px;
+}
+
+.layout-header li.my_profile .ui-btn-text {
+	line-height: 26px;
+	padding: 0 0 0 32px;
+}
+.layout-header li.settings {
+	display: none;
+}
+.layout-header li.settings .ui-btn-text {
+	line-height: 26px;
+	padding: 0 0 0 32px;
+}
+
+.layout-header li.signout .ui-btn-text {
+	line-height: 26px;
+	padding: 0 0 0 32px;
+}
+.layout-header li.ui-btn-hover-c,
+.layout-header li.ui-btn-up-c,
+.layout-header li.ui-btn-down-c {
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+	text-shadow: none;
+}
+.layout-header li.ui-btn-hover-c .ui-btn-text a,
+.layout-header li.ui-btn-down-c .ui-btn-text a {
+	text-shadow: none;
+}
+
+.layout-header li .ui-btn-inner span.ui-icon {
+	display: none;
+}
+
 /* End: Application Header */
+
+/* Begin: Navigation Bar and dropdown menu */
+
+.container-navbar .ui-select {
+	width: 100%;
+}
+.container-navbar .ui-field-contain {
+	padding: 0px;
+	margin: 0px;
+}
+.container-navbar .ui-select,
+.container-navbar .ui-select > *  {
+	margin: 0px;
+}
+.container-navbar .ui-btn-corner-all {
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+}
+.container-navbar .ui-shadow {	
+	box-shadow: 0px 0px 0px 	rgba(0,0,0,.3);
+	-moz-box-shadow: 0px 0px 0px rgba(0,0,0,.3);
+	-webkit-box-shadow: 0px 0px 0px 	rgba(0,0,0,.3);
+}
+.container-navbar .ui-icon {
+	margin-top: -10px;
+}
+.container-navbar ul {
+	padding: 4px 4px 0 4px;
+}
+
+.container-navbar ul li {
+	padding: 2px;
+}
+
+.container-navbar ul li .ui-btn-active,
+.container-navbar ul li .ui-btn-up-c,
+.container-navbar ul li .ui-btn-over-c,
+.container-navbar ul li .ui-btn-hover-c {
+	-webkit-border-radius: 4px 4px 0 0;
+	-moz-border-radius: 4px 4px 0 0;
+	border-radius: 4px 4px 0 0;
+	text-indent: -9999px;
+	height: 38px;
+}
+
+.container-navbar ul li .ui-btn-up-c,
+.container-navbar ul li .ui-btn-over-c,
+.container-navbar ul li .ui-btn-hover-c,
+.container-navbar ul li .ui-btn-down-c {
+	background: none;
+	border: none;
+}
+
+.container-navbar ul li .ui-icon,
+.container-navbar ul li .ui-btn-active .ui-icon,
+.container-navbar ul li .ui-btn-up-c .ui-icon,
+.container-navbar ul li .ui-btn-over-c .ui-icon,
+.container-navbar ul li .ui-btn-hover-c .ui-icon,
+.container-navbar ul li .ui-btn-down-c .ui-icon {
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	border-radius: 0px;
+	margin: 0 auto;
+	padding: 0;
+}
+
+.container-navbar ul li .ui-btn-text {
+	display: none;
+}
+.container-navbar ul .ui-btn-inner {
+	position: relative;
+}
+.container-navbar ul li .ui-icon {
+	position: relative;
+	left: 0px;
+	top: -70%;
+	display: block;
+}
+
+/* grid c (25/25/25/25) */
+.container-navbar .ui-grid-c .ui-block-a, 
+.container-navbar .ui-grid-c .ui-block-b, 
+.container-navbar .ui-grid-c .ui-block-c, 
+.container-navbar .ui-grid-c .ui-block-d { 
+	width: 25%; 
+	padding: 0; 
+}
+/* End: Navigation Bar and dropdown menu */
 
 
 /* Begin: Mobile List View base classes*/
-.mobi-listview li {
-	border-top: solid 1px #CCC;
-}
-
 .mobi-listview li a {
 	display: block;
 	width: 100%;
@@ -122,7 +337,7 @@ div.layout-header .menu-active {
 	color: #333;
 }
 .mobi-listview .ui-btn-text {
-  text-shadow: none;
+	text-shadow: none;
 }
 
 .mobi-listview .mobi-title,
@@ -132,6 +347,48 @@ div.layout-header .menu-active {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	margin-bottom: 0.1em;
+}
+.mobi-listview .listitem-viewall .mobi-title {
+	position: relative;
+	top: 0px;
+}
+.mobi-listview li span.mobi-grade {
+	position: absolute;
+	right: 40px;
+	top: 20px;
+	font-weight: bold;
+}
+
+.mobi-listview li .mobi-response-count {
+	padding-left: 16px;
+	display: block;
+}
+
+.mobi-instructor-name {
+	padding-left: 16px;
+	display: block;
+	font-size: 70%;
+	font-weight: bold;
+	margin: 0;
+	padding-bottom: 10px;
+}
+
+.mobi-student-role{
+	display: block;
+	font-size: 70%;
+	font-weight: bold;
+	margin: 0 0 5px 0;
+}
+.mobi-listview li.ui-li-divider {
+	padding-left: 10px;
+}
+
+.mobi-listview li .mobi-author {
+	padding-left: 18px;
+	font-style: italic;
+}
+.topic-header {
+  padding-top: 10px;
 }
 
 /* Icon positioning for list view */
@@ -261,28 +518,26 @@ div.layout-header .menu-active {
 	color: #333;
 }
 .view-discussion .mobi-icon-response-count {
-	position: absolute;
-	color: #fff;
-	background-color: #333884;	
+	position: absolute;	
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
 	border-radius: 8px;
 	right: 30px;
 	top: 39%;
-	padding-left: 4px;
+	padding-left: 3px;
 	padding-right: 4px;
 	padding-bottom: 1px;
+	padding-top: 1px;
 	font-size: 90%;
 	min-width: 20px;
 	text-align: center;
+	font-weight: bold;
 }
 .view-discussion .mobi-icon-arrow-r {
 	position: absolute;
-	color: #666;
 	font-weight: bold;
 	right: 10px;
 	top: 28%;
-	background: url(../images/icon_list_arrow.png) center center no-repeat;
 }
 
 li .ui-icon-arrow-r {
@@ -359,8 +614,6 @@ li .ui-icon-arrow-r {
 }
 .container-discussion-detail .mobi-unread-responses {
 	position: absolute;
-	color: #fff;
-	background-color: #333884;	
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
 	border-radius: 8px;
@@ -397,20 +650,24 @@ li .ui-icon-arrow-r {
 	margin-bottom: 0.2em;
 	line-height: 1.2em;
 }
-.container-discussion-detail div {
-}
 .container-discussion-detail .container-message div.layout-button-expand {
 	position: absolute;
 	top: 10px;
 	right: 10px;
-	width: 20px;
-	height: 20px;
+	width: 22px;
+	height: 21px;
 	color: #fff;
-	background: url(../images/icon_expand_up.png) 0px 0px no-repeat;
+	background: url(../images/icon_sprite_arrow.png) 2px 5px no-repeat;
 	overflow: hidden;
 	text-align: center;
-	line-height: 24px;
 	cursor: pointer;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	background-color: #ccc;
+}
+.container-discussion-detail .container-message-open div.layout-button-expand {
+	background-position: 2px -17px;
 }
 
 .container-discussion-detail .container-response {
@@ -434,6 +691,9 @@ li .ui-icon-arrow-r {
 	width: 95%;
 }
 
+#textarea-response {
+  width: 95%;
+}
 textarea.textarea-response-title {
 	height: 1.5em;
 	overflow: hidden;
@@ -468,12 +728,12 @@ textarea.textarea-response-title {
 	overflow: hidden;
 }
 #pageDiscuss .ui-select .ui-btn {
-  margin: 0;
-  padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 #pageDiscuss .ui-select .ui-btn .ui-btn-text {
-  padding: 6px 0 0 4px;
+	padding: 6px 0 0 4px;
 }
 
 /* End: Discussions views (discussion topics, discussion topic detail, discussion thread detail) */
@@ -487,6 +747,13 @@ textarea.textarea-response-title {
 #pageGradebookDetail .container-activity-detail .grade {
 	height: 1.6em;
 	font-weight: bold;
+}
+
+#pageGradebookDetail .container-activity-detail .activity-detail-links {
+	padding-left: 0px;
+}
+#pageGradebookDetail .container-activity-detail .activity-detail-links p {
+    margin-left: -2px;
 }
 /* End: Grade Book Detail view */
 
@@ -537,9 +804,15 @@ textarea.textarea-response-title {
 }
 /* End: Course Announcements List view */
 
-
-
 /* Begin: Activity Detail view */
+
+.detail-link-file {
+	padding: 8px 8px 8px 40px;
+}
+
+.detail-link {
+  padding: 8px;
+}
 .container-activity-detail .dropbox-submission,
 .container-activity-detail .grade,
 .container-activity-detail .detail-grade,
@@ -557,7 +830,17 @@ textarea.textarea-response-title {
 	float: left;	
 	width: 85px;
 }
+#pageActivityDetail .detail-header .ui-btn-left {
+	width: 60px;
+}
 
+#pageActivityDetail .detail-header .ui-btn-left {
+	font-size: .9em;
+}
+
+.ui-content {
+	clear: both;
+}
 #pageActivityDetail .ui-content {
 	padding: 6px;
 }
@@ -570,9 +853,6 @@ textarea.textarea-response-title {
 	padding-left: 4px;
 }
 
-.detail-header {
-	background: url(../images/background_content.png);
-}
 .detail-header .container-backbutton {
 	margin: 0;
 	padding: 0;
@@ -584,6 +864,14 @@ textarea.textarea-response-title {
 .container-topicinfo .mobi-course-title {
 	font-size: .7em;
 	top: -3px;
+}
+.container-topicinfo .mobi-ends-at {
+	font-size: 0.7em;
+	font-weight: bold;
+	margin: 0px;
+	padding: 0px;
+	position: relative;
+	top: -5px;
 }
 
 .container-topicinfo .mobi-course-title,
@@ -602,19 +890,14 @@ textarea.textarea-response-title {
 
 .container-topicinfo .mobi-student-name {
 	font-size: 20px;
-	color: #2e3a81;
 	font-weight: bold;
 	margin: 0;
 }
 
 .container-activity-detail {
-	background-color: #fff;
-	border: 1px solid #fff;
+	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
-	-webkit-box-shadow: rgba(0,0,0,.3) 0 0 5px;
-	-moz-box-shadow: #7c7e79 5px 5px 5px;
-	box-shadow: #7c7e79 5px 5px 5px;
 	clear: left;
 	padding: 10px;
 }
@@ -643,6 +926,23 @@ textarea.textarea-response-title {
 #pageActivityDetail .container-activity-detail p,
 #pageActivityDetail .container-activity-detail div {
 	padding-left: 17px;
+}
+
+
+.activity-detail-links {
+	clear: both;
+	padding: 16px 0 0 0;
+}
+
+.activity-detail-links .ui-link {
+	display: block;
+	font-size: .9em;
+	text-decoration: none;
+	margin: 0 0 8px 0;
+	text-align: center;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
 }
 
 #pageActivityDetail .container-activity-detail div.activity-detail-links p {
@@ -694,33 +994,7 @@ textarea.textarea-response-title {
 
 /* End: Activity Detail view */
 
-/* Begin: Navigation Bar and dropdown menu */
 
-.container-navbar .ui-select {
-	width: 100%;
-}
-.container-navbar .ui-field-contain {
-	padding: 0px;
-	margin: 0px;
-}
-.container-navbar .ui-select,
-.container-navbar .ui-select > *  {
-	margin: 0px;
-}
-.container-navbar .ui-btn-corner-all {
-	-moz-border-radius: 0;
-	-webkit-border-radius: 0;
-	border-radius: 0;
-}
-.container-navbar .ui-shadow {	
-	box-shadow: 0px 0px 0px 	rgba(0,0,0,.3);
-	-moz-box-shadow: 0px 0px 0px rgba(0,0,0,.3);
-	-webkit-box-shadow: 0px 0px 0px 	rgba(0,0,0,.3);
-}
-.container-navbar .ui-icon {
-	margin-top: -10px;
-}
-/* End: Navigation Bar and dropdown menu */
 
 /* Begin: Profile page */
  
@@ -736,12 +1010,170 @@ textarea.textarea-response-title {
  #pageProfile span.mobi-your-course {
  	font-weight: normal;
  }
+ 
+#profile-classes-list .course {
+	background-image: none;
+	padding-left: 0px;
+}
+
+.list-header {
+	margin: 20px 0 0 5px;
+	font-weight: bold;
+}
 /* End: Profile page */
+
+/* Begin: Subnavigation bar */
+.subnav {
+	padding: 6px;
+	margin: 0;
+	line-height: 10px;
+	clear: both;
+}
+
+#pageHome .subnav {
+	height: 40px;
+	padding-top: 0;
+}
+
+#pageCoursePeople .subnav  {
+	padding-top: 1px;
+	padding-bottom: 8px;
+}
+
+
+.subnav .btn-refresh {
+	float: right;
+	width: 26px;
+	height: 26px;
+	padding: 0;
+}
+
+.subnav .activity-toggle {
+	float: left;
+	width: 87%;
+}
+
+.subnav .btn-refresh {
+	float: right;
+	width: 29px;
+	height: 29px;
+	padding: 0;
+}
+
+.subnav .btn-refresh .ui-icon {
+	margin: 4px 6px;
+}
+.subnav .announcement-subject,
+.subnav .announcement-message,
+.subnav .announcement-subject a,
+.subnav .announcement-message a {
+	margin: 0;
+	padding: 4px;
+}
+
+.subnav .announcement-subject a,
+.subnav .announcement-message a {
+	background-image: none;
+	background-color: transparent;
+	font-weight: inherit;
+	border-width: 0px;
+	text-decoration: none;
+	-moz-box-shadow: none;
+}
+
+.subnav .announcement-message {
+	font-size: .8em;
+}
+
+.subnav .ui-select {
+	width: 100%;
+	text-align: left;
+}
+
+.subnav .ui-select span.ui-btn-text {
+	text-align: left;
+}
+
+.subnav a.ui-btn-active .ui-btn-inner .ui-btn-text,
+.subnav a .ui-btn-inner .ui-btn-text {
+	font-size: .9em;
+}
+
+.subnav .ui-select .ui-btn {
+	background: none;
+	border: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
+
+.subnav .ui-select .ui-btn-inner {
+	background: none;
+	border: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+	padding: 4px 0;
+}
+
+.subnav .ui-select .ui-btn-text {
+	float: left;
+}
+
+.subnav .container-announcement {
+	text-indent: -4px;
+	line-height: 1.0em;
+}
+.subnav .container-announcement a {
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
+/* End: Subnavigation bar */
+
  
 /* Begin: Person page*/
+.item-icon {
+	background: #FFF;
+	border: #CCC;
+	width: 60px;
+	height: 60px;
+}
 
+.my-profile-item-icon {
+  width: 36px;
+  height: 36px;
+  float: left;
+  padding: 0;
+  margin: 0 10px 0 0;
+  position: relative;
+  top: -2px;
+}
+
+.my-profile-item-icon .you-banner {
+  width: 34px;
+  height: 34px;
+  display: block;
+  text-indent: -9999px;
+  position: relative;
+  top: -6px;
+  left: -6px;
+}
+
+.my-profile-item-icon .person {
+	display: none;
+}
+
+.detail-header {
+  width: 100%;
+  padding: 0px;
+}
 #pagePerson .view-profile {
 	padding: 3px 5px 4px;
+}
+
+.view-profile {
+   padding: 10px 10px 4px 10px;
 }
 
  .container-personinfo {
@@ -755,13 +1187,11 @@ textarea.textarea-response-title {
 
 .container-personinfo .mobi-student-name {
 	font-size: 20px;
-	color: #2e3a81;
 	font-weight: bold;
 	margin: 0;
 }
 
 #pagePerson .mobi-student-class {
-	color: #333333;
 	display: block;
 	font-size: 70%;
 	font-weight: bold;

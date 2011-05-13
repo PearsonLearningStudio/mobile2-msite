@@ -12,7 +12,6 @@
 		<link rel="stylesheet" href="css/jquery.mobile-1.0a4.css" />
 		<link rel="stylesheet" href="css/custom-theme.css" />
 		<link rel="stylesheet" href="css/msite.css" />
-		<link rel="stylesheet" href="css/branding.css" />
 		<script type="text/javascript" src="scripts/jquery/jquery-1.5.2.min.js"></script>
 		<!-- <script type="text/javascript" src="scripts/jquery/jquery.mobile-1.0a4.js"></script> -->
 		<script type="text/javascript" src="scripts/jquery/jquery.mobile-1.0a4.1.min.js"></script>
@@ -42,6 +41,8 @@
 		<script type="text/javascript" src="scripts/ecollege/preloadUtils.js"></script>
 		<script type="text/javascript" src="scripts/i8ln/en-us/strings.js"></script>
 		<script>
+
+
 $(document).ready(function() {
 	// Initialize cross site connector and session manager,
 	// and only once that is done should we do anything else.
@@ -51,7 +52,65 @@ $(document).ready(function() {
 			// an authorization grant from email or SSO.
 			$().mobyConnect("checkAuth", {
 				successHandler: function() {
-					$().mobyAppInit();
+					
+					
+					// Make sure that the service thinks we're logged in as who we think we are
+					var checkUserName = function(boolForceRefresh) {
+						$().mobiQueryApi({
+							strUrl : configSettings.apiproxy + "/me",
+							successHandler : function(jsonResponse, intTransactionId) {
+								userName = jsonResponse.me.userName;
+								globalUserId = jsonResponse.me.id;
+								loginUsername = readCookie("login_username");
+								
+								// In case of forced hard refresh, cookies get borked.
+								// However, in this case, chances are we're going to get a fresh
+								// response from the server.
+								if (loginUsername === null) {
+									createCookie("login_username", userName);
+								}
+								
+								// If the service is lagging, it will return a different username
+								// than the one we used to authenticate.
+								if ((userName != loginUsername) && (boolForceRefresh)) {
+									// try again in 1 second
+									var ptrTime = setTimeout(function() {
+										checkUserName(true)
+									}, 1000);
+								} else {
+									// If this is a new login, we need to clear out any previous information stored in localStorage,
+									// otherwise the new user might gain access to the previous user's data.
+									// Obviously we only need to do this if local storage is supported.
+									if (dataStorage.isSupported) {
+										// If we have different client strings or usernames then we definitely need to reset the cache.
+										var strCurrentUserName = readCookie("login_username");
+										var strStoredClientString = dataStorage.get("clientstring");
+										var strStoredUserName = dataStorage.get("username");
+										// What matches?
+										if ((strStoredClientString === null) || (strStoredUserName === null)) {
+											dataStorage.clear();
+											dataStorage.add("clientstring", configSettings.clientstring);
+											dataStorage.add("username", strCurrentUserName);
+										} else if ((strStoredClientString != configSettings.clientstring) || (strStoredUserName != strCurrentUserName)) {
+											dataStorage.clear();
+											dataStorage.add("clientstring", configSettings.clientstring);
+											dataStorage.add("username", strCurrentUserName);
+										}
+										$().mobyAppInit();
+									} else {
+										$().mobyAppInit();
+									}
+								}
+							},
+							errorHandler : function() {
+								alert('Unable to log in to server, please check your network connection and try again.');
+							}
+						});
+					}
+					
+					checkUserName(true);
+
+
 				}
 			})
 		},

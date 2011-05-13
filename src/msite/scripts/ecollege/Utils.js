@@ -504,11 +504,26 @@ var friendlyDate = function(myDate) {
 }
 
 var exitApp = function() {
-	if (configSettings.boolEnableSSO) {
-		var strUrl = configSettings.strSSOUrl + "?redirect_url=" + configSettings.strRedirectUrl;
-		$(location).attr("href", strUrl);
+	
+	if (configSettings.boolEnableLogoutRedirect) {
+		$(location).attr("href", configSettings.strLogoutRedirectUrl);
 	} else {
-		$(location).attr("href", "login.html");
+		var strQueryString = "";
+		
+		// Get the query string value.
+		cs = getQueryStringValue("cs");
+		if (configSettings.boolEnableSSO) {
+			if (cs != "") {
+				strQueryString = "&query_string=" + cs;
+			}
+			var strUrl = configSettings.strSSOUrl + "?redirect_url=" + configSettings.strRedirectUrl + strQueryString;
+			$(location).attr("href", strUrl);
+		} else {
+			if (cs != "") {
+				strQueryString = "?cs=" + cs;
+			}
+			$(location).attr("href", "login.html" + strQueryString);
+		}
 	}
 }
 

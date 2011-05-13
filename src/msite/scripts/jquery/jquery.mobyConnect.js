@@ -21,7 +21,7 @@ var sessionManager;
 var clientStringManager;
 var cs;
 var userId;
-
+var globalUserId = "";
 (function($) {
 
 	var methods = {
@@ -40,15 +40,33 @@ var userId;
 			sessionManager.serviceLocation = configSettings[SERVICE_DOMAIN_PROXY];
 			
 			clientStringManager = ClientStringManager.getInstance();
-			cs = getQueryStringValue("cs");
-			if (cs == null || cs == undefined || cs == "") {
-			    cs = configSettings.clientstring;
-			}
 			
+			// Get the query string value.
+			cs = getQueryStringValue("cs");
+			
+			// Validate query string value
+			if (cs === "") {
+				// No query string value, so substitute the one defined in configSettings
+				cs = configSettings.clientstring;
+				
+				// Apply the default branding for sandbox
+				var headElement = document.getElementsByTagName("head")[0];
+				var cssNode = document.createElement('link');
+				cssNode.type = 'text/css';
+				cssNode.rel = 'stylesheet';
+				cssNode.href = 'css/epcustom/sandbox/style.css';
+				cssNode.media = 'screen';
+				headElement.appendChild(cssNode);
+			} else {
+				// Valid query string, so apply appropriate branding.
+				applyBrandingToPage(cs);
+			}
 			if (cs == null || cs == undefined || cs == "") {
+				// No valid query string given either in the URL or in confgSettings, so fail gracefully
 				$("#dialogError div.errorMessage").html(msite.localization.msiteConnect["page-not-found"]);
 				$("#show-error-message").click();
 			} else {
+				// Initialize the cross domain communicator
 				crossDomainInitializer.originUrl = window.location.protocol + "//" + document.domain;
 				crossDomainInitializer.eventDispatcher.addEventListener(DomainStatusEvent.DOMAIN_READY, settings.crossDomainReadyHandler, true);
 				crossDomainInitializer.eventDispatcher.addEventListener(DomainStatusEvent.DOMAIN_ERROR, settings.crossDomainErrorHandler, true);
@@ -63,14 +81,6 @@ var userId;
 				successHandler: function() {},
 				errorHandler: function() {
 					exitApp();
-					/*
-					if (configSettings.boolEnableSSO) {
-						var strUrl = configSettings.strSSOUrl + "?redirect_url=" + configSettings.strRedirectUrl;
-						$(location).attr("href", strUrl);
-					} else {
-						$(location).attr("href", settings.redirectUrl);
-					}
-					*/
 				}
 			}
 			if (options) {

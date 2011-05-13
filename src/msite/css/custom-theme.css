@@ -6,59 +6,16 @@
 	padding-bottom: 2px;
 }
 .ui-btn-up-c {
-	border: 0px solid 		#70684F;
-	background: 			#8F897E;
 	font-weight: bold;
-	color: 					#FFF;
 	cursor: pointer;
-	text-shadow: 0 -1px 0 rgba(0,0,0,.8);
 	text-decoration: none;
-	background-image: -moz-linear-gradient(top, 
-							#ADA79A, 
-							#8F897E);
-	background-image: -webkit-gradient(linear,left top,left bottom,
-		color-stop(0, 		#ADA79A),
-		color-stop(1, 		#8F897E));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#ADA79A', EndColorStr='#8F897E')";
 }
-.ui-btn-up-c a.ui-link-inherit {
-	color: 					#FFF;
-}
-
 .ui-btn-hover-c {
-    border: 0px solid 		#bbb;
-	background: 			#dadada;
 	font-weight: bold;
-	color: 					#FFF;
 	text-decoration: none;
-	text-shadow: 0 -1px 0 rgba(0,0,0,.8);
-	background-image: -moz-linear-gradient(top, 
-							#ADA79A, 
-							#8F897E);
-	background-image: -webkit-gradient(linear,left top,left bottom,
-		color-stop(0, 		#ADA79A),
-		color-stop(1, 		#8F897E));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#ADA79A', EndColorStr='#8F897E')";
-}
-.ui-btn-hover-c a.ui-link-inherit {
-	color: 					#2F3E46;
 }
 .ui-btn-down-c {
-/*	border: 1px solid 		#808080;*/
-	background: 			#fdfdfd;
 	font-weight: bold;
-	color: 					#FFF;
-	text-shadow: 0 -1px 0 rgba(0,0,0,.8);
-	background-image: -moz-linear-gradient(top, 
-							#ADA79A, 
-							#8F897E);
-	background-image: -webkit-gradient(linear,left top,left bottom,
-		color-stop(0, 		#ADA79A),
-		color-stop(1, 		#8F897E));
-  	-msfilter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#ADA79A', EndColorStr='#8F897E')";
-}
-.ui-btn-down-c a.ui-link-inherit {
-	color: 					#2F3E46;
 }
 .ui-btn-up-c,
 .ui-btn-hover-c,
@@ -67,20 +24,10 @@
 }
 
 .ui-bar-b {
-	background: #3683B4;
-	background-image: -moz-linear-gradient(top, 
-							#316DA1, 
-							#294F88);
-	background-image: -webkit-gradient(linear,left top,left bottom,
-		color-stop(0, 		#316DA1),
-		color-stop(1, 		#294F88));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#316DA1', EndColorStr='#294F88')";
 	-webkit-border-radius: 0px;
 	-moz-border-radius: 0px;
 	border-radius: 0px;
-	border-bottom: solid 1px #1D375E;
 	line-height: 10px;
-	color: #FFF;
 }
 .ui-bar-b,
 .ui-bar-b input,
@@ -89,11 +36,7 @@
 .ui-bar-b button {
 	font-family: Helvetica, Arial, sans-serif;
 }
-.ui-bar-b .ui-link-inherit {
-	color: 					#fff;
-}
 .ui-bar-b .ui-link {
-	color: 					#7cc4e7;
 	font-weight: bold;
 }
 
@@ -159,89 +102,26 @@
 }
 
 .ui-btn-up-d {
-	border: 1px solid 		#294F88;
 	font-weight: bold;
-	color: 					#FFF;
 	text-decoration: none;
-	text-shadow: 0 -1px 0 #000;
-	background: #3683B4;
-	background-image: -moz-linear-gradient(top, 
-							#3683B4, 
-							#316DA1);
-	background-image: -webkit-gradient(linear,left top,left bottom,
-		color-stop(0, 		#3683B4),
-		color-stop(1, 		#316DA1));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#3683B4', EndColorStr='#316DA1')";
-}
-.ui-btn-up-d a.ui-link-inherit {
-	color: 					#333;
 }
 .ui-btn-hover-d {
-	border: 1px solid 		#294F88;
 	font-weight: bold;
-	color: 					#FFF;
 	text-decoration: none;
-	text-shadow: 0 -1px 0 #000;
-	background: #3683B4;
-	background-image: -moz-linear-gradient(top, 
-							#3683B4, 
-							#316DA1);
-	background-image: -webkit-gradient(linear,left top,left bottom,
-		color-stop(0, 		#3683B4),
-		color-stop(1, 		#316DA1));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#3683B4', EndColorStr='#316DA1')";
-}
-.ui-btn-hover-d a.ui-link-inherit {
-	color: 					#222;
 }
 .ui-btn-down-d {
-	border: 1px solid 		#294F88;
 	font-weight: bold;
-	color: 					#FFF;
 	text-decoration: none;
-	text-shadow: 0 -1px 0 #000;
-	background: #3683B4;
-	background-image: -moz-linear-gradient(top, 
-							#3683B4, 
-							#316DA1);
-	background-image: -webkit-gradient(linear,left top,left bottom,
-		color-stop(0, 		#3683B4),
-		color-stop(1, 		#316DA1));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#3683B4', EndColorStr='#316DA1')";
 }
 .ui-btn-down-d a.ui-link-inherit {
-	border: 1px solid 		#808080;
-	background: 			#ced0d2;
 	font-weight: bold;
-	color: 					#111;
 	text-shadow: none;
-	background-image: -moz-linear-gradient(top, 
-							#cccccc, 
-							#eeeeee);
-	background-image: -webkit-gradient(linear,left top,left bottom,
-		color-stop(0, 		#cccccc),
-		color-stop(1, 		#eeeeee));
-  	-msfilter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#cccccc', EndColorStr='#eeeeee')";
 }
 
 .ui-btn-up-e {
-	border: 1px solid 		#70684F;
-	background: 			#8F897E;
 	font-weight: bold;
-	color: 					#FFF;
 	cursor: pointer;
-	text-shadow: 0 -1px 0 rgba(0,0,0,.8);
 	text-decoration: none;
-	background-image: -moz-linear-gradient(top, 
-							#ADA79A, 
-							#8F897E);
-	background-image: -webkit-gradient(linear,left top,left bottom,
-		color-stop(0, 		#ADA79A),
-		color-stop(1, 		#8F897E));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#ADA79A', EndColorStr='#8F897E')";
-}
-.ui-btn-up-e a.ui-link-inherit {
-	color: 					#FFF;
 }
 
 .ui-btn-up-e .ui-btn-inner,
@@ -253,43 +133,14 @@
 }
 
 .ui-btn-hover-e {
-	border: 1px solid 		#70684F;
-	background: 			#8F897E;
 	font-weight: bold;
-	color: 					#FFF;
 	cursor: pointer;
-	text-shadow: 0 -1px 0 rgba(0,0,0,.8);
 	text-decoration: none;
-	background-image: -moz-linear-gradient(top, 
-							#ADA79A, 
-							#8F897E);
-	background-image: -webkit-gradient(linear,left top,left bottom,
-		color-stop(0, 		#ADA79A),
-		color-stop(1, 		#8F897E));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#ADA79A', EndColorStr='#8F897E')";
-}
-
-.ui-btn-hover-e a.ui-link-inherit {
-	color: 					#333;
 }
 .ui-btn-down-e {
-	border: 1px solid 		#70684F;
-	background: 			#8F897E;
 	font-weight: bold;
-	color: 					#FFF;
 	cursor: pointer;
-	text-shadow: 0 -1px 0 rgba(0,0,0,.8);
 	text-decoration: none;
-	background-image: -moz-linear-gradient(top, 
-							#ADA79A, 
-							#8F897E);
-	background-image: -webkit-gradient(linear,left top,left bottom,
-		color-stop(0, 		#ADA79A),
-		color-stop(1, 		#8F897E));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#ADA79A', EndColorStr='#8F897E')";
-}
-.ui-btn-down-e a.ui-link-inherit {
-	color: 					#333;
 }
 
 .mobi-listview .ui-btn-up-c {
@@ -312,10 +163,6 @@
   font-size: .8em;
 }
 
-#pageCourseProfile {
-  background: url(../images/background_content.png);
-}
-
 .detail-header .my-profile-item-icon {
   margin: 6px;
 }
@@ -328,17 +175,6 @@
 	opacity: 1;
 }
 .ui-body-a {
-	border: 1px solid 		#2A2A2A;
-	background: 			#444444;
-	color: 					#fff;
-	 text-shadow: 0 1px 0 	#000;
 	font-weight: normal;
-	background-image: -moz-linear-gradient(top, 
-							#999999, 
-							#444444);
-	background-image: -webkit-gradient(linear,left top,left bottom,
-		color-stop(0, 		#999999),
-		color-stop(1, 		#444444));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#999999', EndColorStr='#444444)')";
 }
 

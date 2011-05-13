@@ -77,6 +77,7 @@
 				var strLinkClass = "";
 				var strCourseId = objItem.links[1].href.split("/courses/")[1];
 				var strCourseNumber = "";
+				var strYear = "";
 				
 				// Get the correct course information
 				$().mobyCourseManager({
@@ -94,6 +95,14 @@
 				if (parseInt(dateItem.toString("HH")) > 12) {
 					strSuffix = " PM";
 				}
+				
+				// Maybe a different year?
+				var intItemYear = parseInt(dateItem.toString("yyyy"), 10);
+				var intThisYear = parseInt(Date.today().toString("yyyy"), 10);
+				if (intItemYear != intThisYear) {
+					strYear = intItemYear + " "
+				}
+				
 				var strTime = dateItem.toString("h:mm");
 				if (strTime === "0:00") {
 					strTime = "12:00";
@@ -101,8 +110,10 @@
 				if (parseDateGroup(dateItem) === "Today") {
 					strDate = "Today " + strTime + strSuffix;
 				} else {
-					strDate = strTime + strSuffix;
+					strDate = friendlyDate(dateItem) + " "+ strYear + strTime + strSuffix;
 				}
+				
+				
 				// Get the correct icon type
 				if ((objItem.type === "HTML") || (objItem.type === "MANAGED_OD") || (objItem.type === "MANAGED_HTML")) {
 					strIconClass = "assignment";
@@ -219,25 +230,25 @@
 				}
 				if (str2DayHtml != "") {
 					if (settings.strLastDivider != "In 2 Days") {
-						strHtml += '<li data-role="list-divider">2 Days</li>\n';
+						strHtml += '<li data-role="list-divider">In 2 Days</li>\n';
 					}
 					strHtml += str2DayHtml;
 				}
 				if (str3DayHtml != "") {
 					if (settings.strLastDivider != "In 3 Days") {
-						strHtml += '<li data-role="list-divider">3 Days</li>\n';
+						strHtml += '<li data-role="list-divider">In 3 Days</li>\n';
 					}
 					strHtml += str3DayHtml;
 				}
 				if (str4DayHtml != "") {
 					if (settings.strLastDivider != "In 4 Days") {
-						strHtml += '<li data-role="list-divider">4 Days</li>\n';
+						strHtml += '<li data-role="list-divider">In 4 Days</li>\n';
 					}
 					strHtml += str4DayHtml;
 				}
 				if (str5DayHtml != "") {
 					if (settings.strLastDivider != "In 5 Days") {
-						strHtml += '<li data-role="list-divider">5 Days</li>\n';
+						strHtml += '<li data-role="list-divider">In 5 Days</li>\n';
 					}
 					strHtml += str5DayHtml;
 				}

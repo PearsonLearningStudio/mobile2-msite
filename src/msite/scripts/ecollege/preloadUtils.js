@@ -55,11 +55,11 @@ function getQueryStringValue(p_paramName)
 */
 var applyBrandingToPage = function(p_clientString)
 {
-	var headElement = document.getElementsByTagName("head")[0];         
+	var headElement = document.getElementsByTagName("head")[0];
 	var cssNode = document.createElement('link');
 	cssNode.type = 'text/css';
 	cssNode.rel = 'stylesheet';
-	cssNode.href = 'styles/epcustom/' + p_clientString + '/style.css';
+	cssNode.href = 'css/epcustom/' + p_clientString + '/style.css';
 	cssNode.media = 'screen';
 	headElement.appendChild(cssNode);
 };
