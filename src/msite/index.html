@@ -26,6 +26,7 @@
 		<script type="text/javascript" src="scripts/jquery/jquery.mobyDiscussionManager.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.mobyAppInit.js?t=2"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.mobyUpcomingEventsManager.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery.mobyUserTrackingManager.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/AjaxManager.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/VariableValidator.js"></script>
 		<script type="text/javascript" src="scripts/ecollege/AjaxRequestHeader.js"></script>
@@ -42,17 +43,19 @@
 		<script type="text/javascript" src="scripts/i8ln/en-us/strings.js"></script>
 		<script>
 
-
 $(document).ready(function() {
 	// Initialize cross site connector and session manager,
 	// and only once that is done should we do anything else.
 	$().mobyConnect("init", {
 		crossDomainReadyHandler: function() {
+			
 			// Check for either an existing login cookie or
 			// an authorization grant from email or SSO.
 			$().mobyConnect("checkAuth", {
 				successHandler: function() {
 					
+					// First make sure that we're showing the home page
+					$("#return-home").click();
 					
 					// Make sure that the service thinks we're logged in as who we think we are
 					var checkUserName = function(boolForceRefresh) {
@@ -97,6 +100,7 @@ $(document).ready(function() {
 											dataStorage.add("username", strCurrentUserName);
 										}
 										$().mobyAppInit();
+										
 									} else {
 										$().mobyAppInit();
 									}
@@ -108,14 +112,14 @@ $(document).ready(function() {
 						});
 					}
 					
-					checkUserName(true);
+					checkUserName(false);
 
 
 				}
 			})
 		},
 		crossDomainErrorHandler: function() {
-			$().mobyAppInit("error");
+			$().mobyAppInit("An application error occurred.  Please restart the application and try again.");
 		}
 	});
 	
@@ -124,7 +128,7 @@ $(document).ready(function() {
 		
 	</head>
 	<body class="ui-loading">
-		
+		<a href="#pageHome" id="return-home" class="mobi-hidden">Home</a>
 		<div data-role="page" id="pageHome" class="container-page">
 
 			<div class="layout-header">
@@ -237,6 +241,7 @@ $(document).ready(function() {
 
 		<iframe id="crossDomainCommunicationFrame" src="" style="display:none"></iframe>
 		<div style="position: absolute; top: -9999px; left: -9999px;" id="test-container"></div>
+
 	</body>
 
 </html>

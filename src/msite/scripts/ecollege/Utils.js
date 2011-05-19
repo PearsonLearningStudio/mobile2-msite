@@ -504,7 +504,10 @@ var friendlyDate = function(myDate) {
 }
 
 var exitApp = function() {
+	// We should stop any tracking that might be active.
+	$().mobyUserTrackingManager("stop");
 	
+	// Is the logout redirect feature enabled?
 	if (configSettings.boolEnableLogoutRedirect) {
 		$(location).attr("href", configSettings.strLogoutRedirectUrl);
 	} else {
@@ -512,6 +515,8 @@ var exitApp = function() {
 		
 		// Get the query string value.
 		cs = getQueryStringValue("cs");
+		
+		// Is SSO enabled?
 		if (configSettings.boolEnableSSO) {
 			if (cs != "") {
 				strQueryString = "&query_string=" + cs;

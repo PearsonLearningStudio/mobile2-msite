@@ -360,6 +360,7 @@ var arrGlobalThreads = [];
 										tempHtml += '<span class="mobi-title">'+uTopics[j].topic.title+'</span>';
 										tempHtml += '<span class="mobi-response-count">'+strTotalResponsesText+'</span>';
 										tempHtml += '<span class="mobi-hidden mobi-course-number">'+uTopics[j].topic.containerInfo.courseID+'</span>';
+										tempHtml += '<span class="mobi-hidden mobi-contentitemid">' +uTopics[j].topic.containerInfo.contentItemID+ '</span>';
 										// Build the "your responses" string
 										
 										if (uTopics[j].childResponseCounts.personalResponseCount === 1) {

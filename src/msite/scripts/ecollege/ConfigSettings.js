@@ -22,5 +22,5 @@ configSettings.strSSOUrl = "http://ecollegessodemo.cloudfoundry.com/"
 
 // Log out redirect
 configSettings.boolEnableLogoutRedirect = false;
-configSettings.strLogoutRedirectUrl = "http://www.google.com";
+configSettings.strLogoutRedirectUrl = "http://m2.ecollege.com/login.html";
 

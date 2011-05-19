@@ -94,12 +94,14 @@
 						strHtml += GetSummary(item);
 						strHtml += "</span>";
 					} else if (type === "thread-post") {
+						var strRefId = item.id.split("threadeddiscussions/")[1].split("/")[0];
 						strHtml += '<li class="' + type +'"><a class="listitem-activity thread-post_' + item.object.courseId + '_' + item.object.referenceId + '" href="/discussionthreaddetail.html">';
 						strHtml += '<span class="mobi-title">';
 						strHtml += "Re: " + item.object.title;
 						strHtml += "</span><span class='mobi-summary'>";
 						strHtml += GetSummary(item);
 						strHtml += "</span>";
+						strHtml += '<span class="mobi-refid mobi-hidden">' +strRefId+ '</span>';
 					}
 					
 					// Get course title 

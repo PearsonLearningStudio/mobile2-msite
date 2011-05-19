@@ -17,6 +17,7 @@ var objGlobalCourse = {};
 var arrGlobalActivity = [];
 var objGlobalResources = {};
 var objGlobalDetail = {};
+var strGlobalTracking = "";
 (function($) {
 	var methods = {
 		initIndex : function(options) {
@@ -32,8 +33,22 @@ var objGlobalDetail = {};
  * =====================================
  */
 
-
+			// Do a quick call to the logout redirect service to determine where users
+			// should be sent upon logout.
+			if (configSettings.boolEnableLogoutRedirect) {
+				$().mobiQueryApi({
+					strUrl: configSettings.apiproxy + '/applications/30bb1d4f-2677-45d1-be13-339174404402/settings/' + configSettings.clientstring,
+					successHandler: function(jsonResponse, intTransactionId){
+						configSettings.strLogoutRedirectUrl = jsonResponse[configSettings.clientstring][0].value;
+					},
+					errorHandler: function(){
+						// Fail silently; users will go to default setting in configSettings.
+						return;
+					}
+				})
+			}
 			
+
 			// Be sure the dropdown menu is hidden each time we change a page
 			$(".container-page").die("pagebeforeshow pagebeforehide").live("pagebeforeshow pagebeforehide", function() {
 				$.mobile.pageLoading();
@@ -93,30 +108,6 @@ var objGlobalDetail = {};
 					})
 				}
 			});
-			
-			/*
-			// Click listener for upcoming feed's "get all" button 
-			$(".view-whatsdue .container-backbutton a").unbind("click").click(function() {
-				$.mobile.pageLoading();
-				// Already have some items in list, we can skip getting those
-				var intSkipThese = $(".view-whatsdue .container-content .mobi-title").length -1;
-				
-				// Also need to know what was the last divider label 
-				strLastDividerText = $(".view-whatsdue .container-content .ui-li-divider:last").text();
-
-				$().mobyUpcomingEventsManager({
-					boolReturnFirstSet: false,
-					strLastDivider: strLastDividerText,
-					callbackSuccess: function(objReturn){
-						$("#pageHome .view-whatsdue .container-content ul").append(objReturn.strHtml);
-						$("#pageHome .view-whatsdue .container-content .mobi-listview").listview("refresh");
-						$.mobile.pageLoading(true);
-						upcomingItemTapHandler();
-					}
-				})
-				$(".view-whatsdue .container-backbutton").hide();
-			})
-			*/
 
 			// Initialize click listener for Activity button
 			$(".btn-activity").die("click").live('click', function() {
@@ -279,6 +270,11 @@ var objGlobalDetail = {};
 									strNewId: activityArray[1] + '-' + activityArray[2],
 									strOldId: -1
 								}
+								// Start tracking
+								$().mobyUserTrackingManager("start", {
+									courseId: activityArray[1],
+									itemId: $(this).find(".mobi-refid").text()
+								})			
 								arrGlobalThreads.push(objInfo);
 							} 
 						});
@@ -478,11 +474,14 @@ var objGlobalDetail = {};
  */
 			
 			// When we load this page, we must fill in the activity view.
-			activityButtonClickHandler(true);
+			activityButtonClickHandler();
 			handleInfiniteScroll();
 			
 			
 			$("#pageHome").die("pageshow").live("pageshow", function() {
+				
+				// It's possible there may be a user tracking in place.  If so, we need to stop it.
+				$().mobyUserTrackingManager("stop");
 				// What is currently visible?
 
 				if ($("#pageHome .btn-activity").hasClass("ui-btn-active")) {
@@ -528,7 +527,7 @@ var objGlobalDetail = {};
 				$(".button-menu").unbind("click").bind("click", function() {
 					showMenu(this);
 				})
-				
+				$().mobyUserTrackingManager("stop");
 				// Highlight the correct tab
 				$(".container-navbar li a").removeClass("ui-btn-active");
 				$(".container-navbar #discussions").addClass("ui-btn-active");
@@ -588,6 +587,11 @@ var objGlobalDetail = {};
 									// The user has tapped a topic to drill down.
 									// Store the topic information in the global topics array.
 									var strCurrentTopic = $(this).attr("id").split("_")[1];
+									$().mobyUserTrackingManager("start", {
+										courseId: $(this).find(".mobi-course-number").text(),
+										itemId: $(this).find(".mobi-contentitemid").text()
+									});
+									
 									arrGlobalTopics.push(strCurrentTopic);
 								} );
 								$("#pageDiscuss .listitem-viewall").unbind("click.viewall").bind('click.viewall', function() {
@@ -627,6 +631,8 @@ var objGlobalDetail = {};
 					showMenu(this);
 				})
 				
+				$().mobyUserTrackingManager("stop");
+				
 				// Reinitialize the navigation arrays.
 				// This starts us over from scratch
 				arrGlobalTopics = [];
@@ -650,6 +656,10 @@ var objGlobalDetail = {};
 							// Store the topic information in the global topics array.
 							var strCurrentTopic = $(this).attr("id").split("_")[1];
 							arrGlobalTopics.push(strCurrentTopic);
+							$().mobyUserTrackingManager("start", {
+								courseId: $(this).find(".mobi-course-number").text(),
+								itemId: $(this).find(".mobi-contentitemid").text()
+							})		
 						} );
 					}
 				})
@@ -1028,6 +1038,8 @@ var objGlobalDetail = {};
 						var intUnreadResponses = jsonResponse.userTopics[0].childResponseCounts.unreadResponseCount;
 						var strMessage = jsonResponse.userTopics[0].topic.description;
 						userTopicId =  jsonResponse.userTopics[0].topic.id;
+							
+						
 						$thisView.find(".mobi-title").html(strTitle);
 						if (strAuthor != undefined) {
 							if (strAuthor != "") {
@@ -1461,6 +1473,9 @@ var objGlobalDetail = {};
 					var strDate = objTopic.topic.postedDate;
 					// tempHtml += '<span class="mobi-date">'+friendlyDate(strDate)+'</span>';
 					//tempHtml += '<span class="mobi-icon-arrow-r">&gt;</span>';
+					
+					tempHtml += '<span class="mobi-hidden mobi-course-number">'+objTopic.topic.containerInfo.courseID+'</span>';
+					tempHtml += '<span class="mobi-hidden mobi-contentitemid">' +objTopic.topic.containerInfo.contentItemID+ '</span>';
 					tempHtml += '</a></li>\n';
 					return tempHtml;
 
@@ -1477,6 +1492,12 @@ var objGlobalDetail = {};
 								strHtml += "</ul>"
 								$contDiscussion.html(strHtml);
 								$contDiscussion.find(".mobi-listview").listview();
+								$("#pageThreadTopics a.listitem-topic").click(function() {
+									$().mobyUserTrackingManager("start", {
+										courseId: $(this).find(".mobi-course-number").text(),
+										itemId: $(this).find(".mobi-contentitemid").text()
+									})
+								})
 								$.mobile.pageLoading(true);
 								$("#pageThreadTopics .container-topicinfo").css("visibility", "visible");
 								$("#pageThreadTopics .container-activity-detail").css("visibility", "visible");
@@ -1555,6 +1576,7 @@ var objGlobalDetail = {};
 				$("#pageCourseDetail .container-topicinfo").css("visibility", "hidden");
 				$("#pageCourseDetail .announcement-subject").css("visibility", "hidden");
 				$("#pageCourseDetail .announcement-message").css("visibility", "hidden");
+				$("#pageCourseDetail .view-course-sections").css("visibility", "hidden");
 				
 			});
 			
@@ -1616,6 +1638,7 @@ var objGlobalDetail = {};
 						}
 						$("#pageCourseDetail .announcement-subject").css("visibility", "visible");
 						$("#pageCourseDetail .announcement-message").css("visibility", "visible");
+						$("#pageCourseDetail .view-course-sections").css("visibility", "visible");
 						$.mobile.pageLoading(true);
 					},
 					errorHandler: function(){
@@ -2107,6 +2130,10 @@ var objGlobalDetail = {};
 			$("#pageProfile").live("pageshow", function() {
 				var user, $contInfo = $(this).find('.container-topicinfo');
 				$.mobile.pageLoading();
+				// It's possible someone may have left a thread or response area
+				// via the Menu button.  If so, there's an active tracking that
+				// we need to stop
+				$().mobyUserTrackingManager("stop");
 				$(".button-menu").unbind("click").bind("click", function() {
 					showMenu(this);
 				})

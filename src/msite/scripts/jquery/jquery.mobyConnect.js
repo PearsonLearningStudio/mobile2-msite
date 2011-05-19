@@ -99,6 +99,7 @@ var globalUserId = "";
 				settings.errorHandler();
 			}
 			
+			
 			// If there's a session cookie, email token, or SSO token, we can proceed.
 			if (strEmailToken.length > 5) {
 				// Is it a valid email token?
