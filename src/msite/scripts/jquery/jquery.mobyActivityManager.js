@@ -41,8 +41,9 @@
 					dateYesterday = Date.today().add({days: -2}),
 					intEnd = settings.intEndIndex,
 					boolItems = false,
+					strWhatHappened = "continued your discussion",
 					//short cut
-					objFeedItems = objFeed.activityStream.items, item, time, grade, type,
+					objFeedItems = objFeed.activityStream.items, item, time, grade, type, name,
 					strEndHtml = '<li data-role="list-divider" class="activity-scroll-indicator">Loading more...</li>\n';
 					
 					
@@ -56,6 +57,7 @@
 					//short cut for objFeedItems[i]
 					item = objFeedItems[i];
 					type = item.object.objectType;
+					name = item.actor.title;
 					if (type === "grade") {
 						strHtml += '<li class="' + type +'"><a class="listitem-activity grade_' + item.object.courseId + '_' + item.object.referenceId + '" href="activitydetail.html">';
 						strHtml += '<span class="mobi-title">';
@@ -80,12 +82,20 @@
 						strHtml += GetSummary(item);
 						strHtml += "</span>";
 					} else if (type === "thread-topic") {
+						strWhatHappened = " posted a topic";
 						strHtml += '<li class="' + type +'"><a class="listitem-activity thread-topic_' + item.object.courseId + '_'  + item.object.referenceId + '" href="/discussiontopicdetail.html">';
+
+
+						strHtml += '<span class="mobi-user"><span>' + name + '</span> ' + strWhatHappened + '</span><br>';
+						strHtml += '<span class="mobi-topicline">' + item.object.title + '</span><br>';
+						
+/*
 						strHtml += '<span class="mobi-title">';
 						strHtml += "Topic: " + item.object.title;
 						strHtml += "</span><span class='mobi-summary'>";
 						strHtml += GetSummary(item);
 						strHtml += "</span>";
+*/
 					} else if (type === "exam-submission") {
 						strHtml += '<li class="' + type +'"><a class="listitem-activity exam-submission_' + item.object.courseId + '_'  + item.object.referenceId + '" href="/activitydetail.html">';
 						strHtml += '<span class="mobi-title">';
@@ -95,12 +105,20 @@
 						strHtml += "</span>";
 					} else if (type === "thread-post") {
 						var strRefId = item.id.split("threadeddiscussions/")[1].split("/")[0];
+						if (item.target.objectType === "thread-topic") {
+							strWhatHappened = "started a discussion"
+						}
 						strHtml += '<li class="' + type +'"><a class="listitem-activity thread-post_' + item.object.courseId + '_' + item.object.referenceId + '" href="/discussionthreaddetail.html">';
+						strHtml += '<span class="mobi-user"><span>' + name + '</span> ' + strWhatHappened + '</span>';
+						strHtml += '<span class="mobi-topicline">' + item.object.title + '<span> in </span>' + item.target.title + '</span>';
+						
+						/*
 						strHtml += '<span class="mobi-title">';
 						strHtml += "Re: " + item.object.title;
 						strHtml += "</span><span class='mobi-summary'>";
 						strHtml += GetSummary(item);
 						strHtml += "</span>";
+						*/
 						strHtml += '<span class="mobi-refid mobi-hidden">' +strRefId+ '</span>';
 					}
 					
@@ -113,12 +131,15 @@
 							strTitle = arrCourses[j].title;
 						}
 					}
-					strHtml += '<span class="mobi-course-title">' +strTitle+ '</span>';
+					strHtml += '<span class="mobi-course-title">' +strTitle+ ' &bull; ' + friendlyDate(item.postedTime) +'</span>';
 					
+					/*
 					// "Friendly dates": Yesterday, Today, nice formatted dates.
 					strHtml += '<span class="mobi-date">';
 					strHtml += time = friendlyDate(item.postedTime);
 					strHtml += '</span>';
+					*/
+					time = friendlyDate(item.postedTime);
 					strHtml += "</a></li>\n";
 					objGlobalResources[item.object.referenceId] = item;
 					objGlobalResources[item.object.referenceId]['courseTitle'] = strTitle;

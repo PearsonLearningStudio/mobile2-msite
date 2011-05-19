@@ -123,6 +123,10 @@ var strGlobalTracking = "";
 			$('.btn-refresh').live('click', function() { 
 				// Which one do we need to refresh? Activities or Upcoming?
 				if ($(".activity-toggle .btn-activity").hasClass("ui-btn-active")) {
+					// Update pagination variables so that we start over
+					configSettings.intCurrentNumberOfActivities = configSettings.intNumberOfActivities;
+					configSettings.boolScrollUpdate = true;
+					
 					getActivities( { refresh: true } );
 				} else {
 					$.mobile.pageLoading();
@@ -233,7 +237,7 @@ var strGlobalTracking = "";
 							activityArray = [], userId, response, 
 							respObj, author, counts;
 						
-						strHtml += '<ul data-role="listview" class="mobi-listview">';
+						strHtml += '<ul data-role="listview" class="mobi-listview listview-activity">';
 						strHtml += '<li data-role="list-divider">All Activity</li>';
 						strHtml += strFeedHtml;
 						
@@ -482,8 +486,8 @@ var strGlobalTracking = "";
 				
 				// It's possible there may be a user tracking in place.  If so, we need to stop it.
 				$().mobyUserTrackingManager("stop");
+				
 				// What is currently visible?
-
 				if ($("#pageHome .btn-activity").hasClass("ui-btn-active")) {
 					activityButtonClickHandler(false);
 					$(".view-whatsdue").hide();

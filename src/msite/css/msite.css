@@ -440,10 +440,60 @@ div.layout-header .menu-active {
 	background-position: 10px 16px;
 }
 
+.view-activity .listview-activity li.responses,
+.view-activity .listview-activity li.no-responses,
+.view-activity .listview-activity li.hot-topic,
+.view-activity .listview-activity li.course,
+.view-activity .listview-activity li.grade,
+.view-activity .listview-activity li.thread-post,
+.view-activity .listview-activity li.thread-topic,
+.view-activity .listview-activity li.dropbox-submission,
+.view-activity .listview-activity li.exam-submission,
+.view-activity .listview-activity li.person,
+.view-activity .listview-activity li.assignment {
+	background-position: 7px 6px;
+}
+.view-activity .listview-activity li .listitem-activity {
+	padding:0px;
+	padding-left: 10px;
+	padding-top: 2px;
+	padding-bottom: 3px;
+}
+
+.view-activity .mobi-listview .mobi-user,
+.view-activity .mobi-listview .mobi-topicline {
+	font-size: 80%;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	margin-right: 55px;
+	display: block;
+	margin-bottom: 3px;
+}
+
+.mobi-topicline span {
+	color: #333;
+}
+
+.mobi-user span {
+	font-weight: bold;
+}
+
 .activity-info-header .mobi-date {
   font-size: .8em;
   font-style: italic;
 }
+
+.listview-activity .thread-post a span,
+.listview-activity .thread-topic a span {
+	display: inline;
+	color: #333;
+}
+.listview-activity .thread-post a .mobi-course-title,
+.listview-activity .thread-topic a .mobi-course-title {
+	position: relative;
+	top: -3px;
+}
+
 /* End: List View overrides for activity view */
 
 /* Begin: List View overrides for Upcoming view */

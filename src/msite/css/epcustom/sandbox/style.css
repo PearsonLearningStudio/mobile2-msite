@@ -427,7 +427,9 @@ Begin: List View
 }
 
 .mobi-listview li .mobi-title,
-.activity-info-header .mobi-title {
+.activity-info-header .mobi-title,
+.mobi-listview li a .mobi-user span,
+.mobi-listview li a .mobi-topicline {
 	color:  #306CA0;
 }
 .mobi-listview li .mobi-author,
