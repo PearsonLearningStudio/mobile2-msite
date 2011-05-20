@@ -183,6 +183,7 @@ var arrGlobalThreads = [];
 				tempHtml += '<span class="mobi-title">'+uResponses[i].response.title+'</span>';
 				tempHtml += '<span class="mobi-author">' +uResponses[i].response.author.firstName + " " + uResponses[i].response.author.lastName+ '</span>';
 				tempHtml += '<span class="mobi-total-responses">' + strTotalResponsesText + '</span>';
+				tempHtml += '<span class="mobi-24hr-responses mobi-hidden">' +uResponses[i].childResponseCounts.last24HourResponseCount+ '</span>';
 				tempHtml += '<span class="mobi-summary">' +stripTags(uResponses[i].response.description)+ '</span>';
 				tempHtml += '<span class="mobi-description" style="display: block">' + uResponses[i].response.description + '</span>';
 				

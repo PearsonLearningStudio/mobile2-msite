@@ -348,6 +348,10 @@ div.layout-header .menu-active {
 	overflow: hidden;
 	margin-bottom: 0.1em;
 }
+.mobi-listview .mobi-title,
+.mobi-listview .mobi-summary {
+	font-size: 80%;
+}
 .mobi-listview .listitem-viewall .mobi-title {
 	position: relative;
 	top: 0px;
@@ -453,7 +457,27 @@ div.layout-header .menu-active {
 .view-activity .listview-activity li.assignment {
 	background-position: 7px 6px;
 }
+div.view-whatsdue ul.listview-activity li.responses,
+div.view-whatsdue ul.listview-activity li.no-responses,
+div.view-whatsdue ul.listview-activity li.hot-topic,
+div.view-whatsdue ul.listview-activity li.course,
+div.view-whatsdue ul.listview-activity li.grade,
+div.view-whatsdue ul.listview-activity li.discussion,
+div.view-whatsdue ul.listview-activity li.thread-post,
+div.view-whatsdue ul.listview-activity li.thread-topic,
+div.view-whatsdue ul.listview-activity li.dropbox-submission,
+div.view-whatsdue ul.listview-activity li.exam-submission,
+div.view-whatsdue ul.listview-activity li.person,
+div.view-whatsdue ul.listview-activity li.assignment {
+	background-position: 7px 6px;
+}
 .view-activity .listview-activity li .listitem-activity {
+	padding:0px;
+	padding-left: 10px;
+	padding-top: 2px;
+	padding-bottom: 3px;
+}
+.view-whatsdue .listview-activity li .listitem-activity {
 	padding:0px;
 	padding-left: 10px;
 	padding-top: 2px;
@@ -773,6 +797,10 @@ textarea.textarea-response-title {
 .container-discussion-detail .container-threads {
 	font-size: 80%;
 }
+.container-threads .mobi-title,
+.container-threads .mobi-listview .listitem-response .mobi-summary {
+	font-size: 100%;
+}
 .container-discussion-detail .mobi-summary {
 	text-overflow: ellipsis;
 	overflow: hidden;
@@ -837,7 +865,7 @@ textarea.textarea-response-title {
 .activity-info-header .mobi-summary {
 	text-overflow: ellipsis;
 	overflow: hidden;
-	font-size: 95%;
+	font-size: 80%;
 	color: #333;
 }
 /* End: Activity list view */
@@ -934,7 +962,6 @@ textarea.textarea-response-title {
 
 .container-topicinfo .mobi-activity-type {
 	font-size: 20px;
-	color: #2e3a81;
 	top: -6px;
 }
 

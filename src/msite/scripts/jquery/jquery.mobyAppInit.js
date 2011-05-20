@@ -99,7 +99,7 @@ var strGlobalTracking = "";
 					$().mobyUpcomingEventsManager({
 						boolForceRefresh: false,
 						callbackSuccess: function(objReturn){
-							var listView = '<ul class="mobi-listview" data-role="listview">\n' + objReturn.strFeedHtml + "</ul>\n";
+							var listView = '<ul class="mobi-listview listview-activity" data-role="listview">\n' + objReturn.strFeedHtml + "</ul>\n";
 							$("#pageHome .view-whatsdue .container-content").html(listView);
 							$("#pageHome .view-whatsdue .container-content .mobi-listview").listview();
 							$.mobile.pageLoading(true);
@@ -139,7 +139,7 @@ var strGlobalTracking = "";
 					$().mobyUpcomingEventsManager({
 						boolForceRefresh: true,
 						callbackSuccess: function(objReturn){
-							var listView = '<ul class="mobi-listview" data-role="listview">\n' + objReturn.strFeedHtml + "</ul>\n";
+							var listView = '<ul class="mobi-listview listview-activity" data-role="listview">\n' + objReturn.strFeedHtml + "</ul>\n";
 							$("#pageHome .view-whatsdue .container-content").html(listView);
 							$("#pageHome .view-whatsdue .container-content .mobi-listview").listview();
 							$.mobile.pageLoading(true);
@@ -193,6 +193,7 @@ var strGlobalTracking = "";
 					strTotalResponseString: $this.find(".mobi-total-responses").text(),
 					strUnreadResponseString: $this.find(".mobi-unread-responses").text(),
 					strDescription: $this.find(".mobi-description").data("description"),
+					str24HourResponseCount: $this.find(".mobi-24hr-responses").text(),
 					strDate: $this.find(".mobi-date").text()
 				}
 				// alert(JSON.stringify(objInfo))
@@ -631,7 +632,7 @@ var strGlobalTracking = "";
 				// We are showing the Discussion tab.
 				// First, show the loading spinner
 				$.mobile.pageLoading();
-				$("pageDiscussionFullview .button-menu").unbind("click").bind("click", function() {
+				$("#pageDiscussionFullview .button-menu").unbind("click").bind("click", function() {
 					showMenu(this);
 				})
 				
@@ -1181,6 +1182,7 @@ var strGlobalTracking = "";
 					callbackSuccess: function(objInfo) {
 						$.extend(objThread, objInfo);
 						numResponses = objThread.strTotalResponseString;
+						num24HourResponses = objThread.str24HourResponseCount;
 						
 						// What thread should we show?  This information should be contained in the
 						// arrGlobalThreads array.  If it isn't, we should go back.
@@ -1197,8 +1199,7 @@ var strGlobalTracking = "";
 						if( numResponses.match( /no responses/i ) ) {
 							iconClass = 'no-responses';
 						} else {
-							match = numResponses.match(/\d+/);
-							if( match >= 10){
+							if( num24HourResponses >= 10){
 								iconClass = 'hot-topic';
 							} else {
 								iconClass = 'responses';
@@ -1425,6 +1426,10 @@ var strGlobalTracking = "";
 				var strCourseId = arrGlobalThreads[intIndex].strNewId.split("-")[0];
 				var strThreadId = arrGlobalThreads[intIndex].strNewId.split("-")[1];
 				var strServiceUrl = configSettings.apiproxy + "/me/userTopics?courses=" + strCourseId;
+				
+				// It's possible we may have come here from a thread detail page, in which case we
+				// need to stop tracking
+				$().mobyUserTrackingManager("stop");
 				
 				// Get the course information
 				$().mobyCourseManager("getCourseInfo", {

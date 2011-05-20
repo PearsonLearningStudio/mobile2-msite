@@ -86,8 +86,8 @@
 						strHtml += '<li class="' + type +'"><a class="listitem-activity thread-topic_' + item.object.courseId + '_'  + item.object.referenceId + '" href="/discussiontopicdetail.html">';
 
 
-						strHtml += '<span class="mobi-user"><span>' + name + '</span> ' + strWhatHappened + '</span><br>';
-						strHtml += '<span class="mobi-topicline">' + item.object.title + '</span><br>';
+						strHtml += '<span class="mobi-user"><span>' + name + '</span> ' + strWhatHappened + '</span>';
+						strHtml += '<span class="mobi-topicline">' + item.object.title + '</span>';
 						
 /*
 						strHtml += '<span class="mobi-title">';
@@ -106,7 +106,7 @@
 					} else if (type === "thread-post") {
 						var strRefId = item.id.split("threadeddiscussions/")[1].split("/")[0];
 						if (item.target.objectType === "thread-topic") {
-							strWhatHappened = "started a discussion"
+							strWhatHappened = " posted"
 						}
 						strHtml += '<li class="' + type +'"><a class="listitem-activity thread-post_' + item.object.courseId + '_' + item.object.referenceId + '" href="/discussionthreaddetail.html">';
 						strHtml += '<span class="mobi-user"><span>' + name + '</span> ' + strWhatHappened + '</span>';
@@ -194,6 +194,7 @@
 					boolForceRefresh: settings.boolForceRefresh,
 					//strQueryUrl: configSettings.apiproxy + "/me/whatshappeningfeed",
 					strQueryUrl: configSettings.apiproxy + "/me/whatshappeningfeed" + "?types=thread-topic,thread-post,grade,dropbox-submission",
+					// strQueryUrl: configSettings.apiproxy + "/me/whatshappeningfeed" + "?types=thread-post",
 					//strQueryUrl: configSettings.apiproxy + "/me/whatshappeningfeed" + "?types=grade,dropbox-submission",
 					strQueryType: "get",
 					strQueryData: "",

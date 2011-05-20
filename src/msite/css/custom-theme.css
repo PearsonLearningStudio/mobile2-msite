@@ -2,7 +2,6 @@
 .container-page .detain-header .ui-btn-corner-all {
 	padding-left: 0px;
 	padding-right: 0px;
-	font-size: 92%;
 	padding-bottom: 2px;
 }
 .ui-btn-up-c {
@@ -129,7 +128,7 @@
 .ui-btn-down-e .ui-btn-inner {
   padding: 0px 6px;
   line-height: 24px;
-  font-size: .8em;
+  font-size: 15px;
 }
 
 .ui-btn-hover-e {

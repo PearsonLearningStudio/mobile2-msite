@@ -1,6 +1,41 @@
 /*
 style.css: Style rules and overrides that produce branding in the msite UI.
 These rules work in concert with msite.css and custom-theme.css and control brandable features like color, iconography, etc.
+
+Color Palette
+
+Primary Color #990033 Variations:
+#cc0044 & #660022
+#ff0055 & #990033
+#990033 & #330011
+
+Secondary Color #ffb310 Variations:
+#ffb310 & #cc8f0c
+#ffc342 & #cc9c35
+#cc8f0c & #996b09
+
+Tertiary Color: #afa593 Variation:
+#d9cdb6
+
+Resulting find-and-replace rules:
+f0ecdf find and replace with d9cdb6
+306CA0 find and replace with 990033
+364395 find and replace with cc0044
+212B5E find and replace with 660022
+3683B4 find and replace with cc0044
+316DA1 find and replace with 660022
+72A7C9 find and replace with ff0055
+294F88 find and replace with 990033
+2F689D find and replace with cc0044
+1D375E find and replace with 660022
+295088 find and replace with 990033
+162A47 find and replace with 330011
+333884 find and replace with 990033
+347BAD find and replace with cc0044
+2e3a81 find and replace with cc0044
+2F3E46 find and replace with 330011
+7cc4e7 find and replace with ff0055
+2e3a81 find and replace with 990033
 */
 
 /* 
@@ -9,11 +44,11 @@ Begin: Login Page
 =================
 */
 #loginFormSection h1.signon_logo {
-	background: url(../../../images/logo_signon.png) left top no-repeat;
+	background: url(images/logo_signon.png) left top no-repeat;
 }
 
 #loginPage, #registerPage {
-	background: url(../../../images/background_signon.png) left top no-repeat;
+	background-color: #d9cdb6;
 }
 
 /* Nifty transparent box around login form fields */
@@ -37,7 +72,7 @@ Begin: Login Page
 
 #loginForm .authFields ul li label,
 #registerPage .authFields ul li label {
-	color: #354394;
+	color: #990033;
 	text-shadow: #FFFFFF 0 1px 0;
 }
 
@@ -63,15 +98,15 @@ Begin: Login Page
 /* Sign On Button */
 #loginFormContainer .ui-btn-up-c,
 #registerPage .ui-btn-up-c {
-	background: #364395;
+	background: #cc0044;
 	color: #FFFFFF;
 	text-shadow: 0 -1px 0px #000;
 	text-decoration: none;
-	background-image: -moz-linear-gradient(top, #364395, #212B5E);
+	background-image: -moz-linear-gradient(top, #cc0044, #660022);
 	background-image: -webkit-gradient(linear,left top,left bottom,
-		color-stop(0, #364395),
-		color-stop(1, #212B5E));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#364395', EndColorStr='#212B5E')";
+		color-stop(0, #cc0044),
+		color-stop(1, #660022));
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#cc0044', EndColorStr='#660022')";
 }
 
 #loginFormContainer a.ui-link-inherit,
@@ -125,22 +160,22 @@ Begin: App Header
 ==================
 */
 div.layout-header {
-	background: #364395;
-	background-image: -moz-linear-gradient(top, #364395, #212B5E);
+	background: #ffb310;
+	background-image: -moz-linear-gradient(top, #ffb310, #cc8f0c);
 	background-image: -webkit-gradient(linear,left top,left bottom,
-					   color-stop(0, #364395),
-					   color-stop(1, #212B5E));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#364395', EndColorStr='#212B5E')";
+					   color-stop(0, #ffb310),
+					   color-stop(1, #cc8f0c));
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#ffb310', EndColorStr='#cc8f0c')";
 	-webkit-box-shadow: inset rgba(255,255,255,.3) 0 1px 0, inset rgba(0,0,0,.3) 0 -1px 0;
 	-moz-box-shadow: inset rgba(255,255,255,.3) 0 1px 0, inset rgba(0,0,0,.3) 0 -1px 0;
 	box-shadow: inset rgba(255,255,255,.3) 0 1px 0, inset rgba(0,0,0,.3) 0 -1px 0;
 }
 
 div.layout-header .branding-header-logo {
-	background: url(../../../images/logo_header.png) left center no-repeat;
+	background: url(images/logo_header.png) left center no-repeat;
 	height: 40px;
 	line-height: 40px;
-	width: 180px;
+	width: 231px;
 	text-indent: -9999px;
 	margin: 0 0 0 6px;
 }
@@ -148,14 +183,14 @@ div.layout-header .branding-header-logo {
 div.layout-header .button-menu {
 	color: #FFF;
 	text-shadow: rgba(0,0,0,.8) 0 -1px 0;
-	border-left: solid 1px #212B5E;
+	border-left: solid 1px #cc8f0c;
 	-webkit-box-shadow: rgba(255,255,255,.1) -1px 0 0, inset rgba(255,255,255,.1) 1px 0 0;
 	-moz-box-shadow: rgba(255,255,255,.1) -1px 0 0, inset rgba(255,255,255,.1) 1px 0 0;
 	box-shadow: rgba(255,255,255,.1) -1px 0 0, inset rgba(255,255,255,.1) 1px 0 0;
 }
 
 div.layout-header .menu-active {
-	color: #212B5E;
+	color: #cc8f0c;
 	text-shadow: none;
 	-webkit-box-shadow: rgba(0,0,0,.3) -1px 0 2px;
 	-moz-box-shadow: rgba(0,0,0,.3) -1px 0 2px;
@@ -217,16 +252,16 @@ Begin: Navigation bar
 =====================
 */
 .container-navbar {
-	background-color: #f0ecdf;
+	background-color: #d9cdb6;
 }
 
 .container-navbar ul li .ui-btn-active {
-	background: #3683B4;
-	background-image: -moz-linear-gradient(top, #3683B4, #316DA1);
+	background: #cc0044;
+	background-image: -moz-linear-gradient(top, #cc0044, #660022);
 	background-image: -webkit-gradient(linear,left top,left bottom,
-					   color-stop(0, #3683B4),
-					   color-stop(1, #316DA1));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#3683B4', EndColorStr='#316DA1')";
+					   color-stop(0, #cc0044),
+					   color-stop(1, #660022));
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#cc0044', EndColorStr='#660022')";
 }
 
 .container-navbar ul li #home .ui-icon {
@@ -290,16 +325,16 @@ Begin: Subnav bar
 ===================
 */
 .subnav {
-	background: #3683B4;
-	background-image: -moz-linear-gradient(top, #316DA1, #294F88);
+	background: #cc0044;
+	background-image: -moz-linear-gradient(top, #660022, #990033);
 	background-image: -webkit-gradient(linear,left top,left bottom,
-					  color-stop(0, #316DA1),
-					  color-stop(1, #294F88));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#316DA1', EndColorStr='#294F88')";
+					  color-stop(0, #660022),
+					  color-stop(1, #990033));
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#660022', EndColorStr='#990033')";
 	-webkit-border-radius: 0px;
 	-moz-border-radius: 0px;
 	border-radius: 0px;
-	border-bottom: solid 1px #1D375E;
+	border-bottom: solid 1px #660022;
 }
 .subnav .btn-refresh .ui-icon {
 	background: url(../../../images/icon_refresh.png) 0px 0 no-repeat;
@@ -312,29 +347,29 @@ Begin: Subnav bar
 	text-shadow: rgba(0,0,0,.8) 0 -1px 0;
 }
 .subnav a {
-	background: #72A7C9;
-	background-image: -moz-linear-gradient(top, #72A7C9, #295088);
+	background: #ff0055;
+	background-image: -moz-linear-gradient(top, #ff0055, #990033);
 	background-image: -webkit-gradient(linear,left top,left bottom,
-					  color-stop(0, #72A7C9),
-					  color-stop(1, #295088));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#72A7C9', EndColorStr='#295088')";
+					  color-stop(0, #ff0055),
+					  color-stop(1, #990033));
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#ff0055', EndColorStr='#990033')";
 }
 
 .subnav a.ui-btn-active,
 .subnav a {
-	border: solid 1px #162A47;
+	border: solid 1px #330011;
 	-webkit-box-shadow: rgba(255,255,255,.2) 0 1px 0;
 	-moz-box-shadow: rgba(255,255,255,.2) 0 1px 0;
 	box-shadow: rgba(255,255,255,.2) 0 1px 0;
 }
 
 .subnav a.ui-btn-active .ui-btn-inner {
-	background: #2F689D;
-	background-image: -moz-linear-gradient(top, #2F689D, #1D375E);
+	background: #cc0044;
+	background-image: -moz-linear-gradient(top, #cc0044, #660022);
 	background-image: -webkit-gradient(linear,left top,left bottom,
-				color-stop(0, #2F689D),
-				color-stop(1, #1D375E));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#2F689D', EndColorStr='#1D375E')"; 
+				color-stop(0, #cc0044),
+				color-stop(1, #660022));
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#cc0044', EndColorStr='#660022')"; 
 }
 
 .subnav a.ui-btn-active .ui-btn-inner .ui-btn-text,
@@ -376,7 +411,7 @@ Begin: List View
 }
 
 .mobi-listview li .ui-li-count {
-	background: #333884;
+	background: #990033;
 	border: none;
 	-webkit-border-radius: 10px;
 	-moz-border-radius: 10px;
@@ -402,7 +437,7 @@ Begin: List View
 
 .view-discussion .mobi-icon-response-count {
 	color: #fff;
-	background-color: #333884;
+	background-color: #990033;
 }
 .view-discussion .mobi-icon-arrow-r {
 	color: #666;
@@ -427,7 +462,7 @@ Begin: List View
 .activity-info-header .mobi-title,
 .mobi-listview li a .mobi-user span,
 .mobi-listview li a .mobi-topicline {
-	color:  #306CA0;
+	color:  #990033;
 }
 .mobi-listview li .mobi-author,
 .mobi-listview li .mobi-total-responses {
@@ -458,7 +493,7 @@ All detail views: topic, activity, upcoming, course, etc.
 	/*
 	background: url(../../../images/background_content.png);
 	*/
-	background-color: #f0ecdf;
+	background-color: #d9cdb6;
 }
 
 .my-profile-item-icon {
@@ -473,7 +508,7 @@ All detail views: topic, activity, upcoming, course, etc.
 
 .container-discussion-detail .mobi-unread-responses {
 	color: #fff;
-	background-color: #333884;
+	background-color: #990033;
 }
 
 .activity-detail-links .ui-link {
@@ -550,11 +585,11 @@ All detail views: topic, activity, upcoming, course, etc.
 }
 
 .container-activity-detail .mobi-activity-title {
-	color: #347BAD;
+	color: #cc0044;
 }
 
 .container-topicinfo .mobi-student-name {
-	color: #2e3a81;
+	color: #cc0044;
 }
 
 div div.container-activity-detail {
@@ -566,14 +601,14 @@ div div.container-activity-detail {
 }
 
 .container-personinfo .mobi-student-name {
-	color: #2e3a81;
+	color: #cc0044;
 }
 
 #pagePerson .mobi-student-class {
 	color: #333333;
 }
 .container-topicinfo .mobi-activity-type {
-	color: #2e3a81;
+	color: #990033;
 }
 /* 
 =================
@@ -613,7 +648,7 @@ Begin: Custom jQuery Mobile Theme Elements
 	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#ADA79A', EndColorStr='#8F897E')";
 }
 .ui-btn-hover-c a.ui-link-inherit {
-	color: #2F3E46;
+	color: #330011;
 }
 .ui-btn-down-c {
 	background: #fdfdfd;
@@ -626,64 +661,64 @@ Begin: Custom jQuery Mobile Theme Elements
   	-msfilter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#ADA79A', EndColorStr='#8F897E')";
 }
 .ui-btn-down-c a.ui-link-inherit {
-	color: #2F3E46;
+	color: #330011;
 }
 
 .ui-bar-b {
-	background: #3683B4;
-	background-image: -moz-linear-gradient(top, #316DA1, #294F88);
+	background: #cc0044;
+	background-image: -moz-linear-gradient(top, #660022, #990033);
 	background-image: -webkit-gradient(linear,left top,left bottom,
-		color-stop(0, #316DA1),
-		color-stop(1, #294F88));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#316DA1', EndColorStr='#294F88')";
-	border-bottom: solid 1px #1D375E;
+		color-stop(0, #660022),
+		color-stop(1, #990033));
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#660022', EndColorStr='#990033')";
+	border-bottom: solid 1px #660022;
 	color: #FFF;
 }
 .ui-bar-b .ui-link-inherit {
 	color: #fff;
 }
 .ui-bar-b .ui-link {
-	color: #7cc4e7;
+	color: #ff0055;
 }
 
 .ui-btn-up-d {
-	border: 1px solid #294F88;
+	border: 1px solid #990033;
 	color: #FFF;
 	text-shadow: 0 -1px 0 #000;
-	background: #3683B4;
-	background-image: -moz-linear-gradient(top, #3683B4, #316DA1);
+	background: #cc0044;
+	background-image: -moz-linear-gradient(top, #cc0044, #660022);
 	background-image: -webkit-gradient(linear,left top,left bottom,
-		color-stop(0, #3683B4),
-		color-stop(1, #316DA1));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#3683B4', EndColorStr='#316DA1')";
+		color-stop(0, #cc0044),
+		color-stop(1, #660022));
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#cc0044', EndColorStr='#660022')";
 }
 .ui-btn-up-d a.ui-link-inherit {
 	color: #333;
 }
 .ui-btn-hover-d {
-	border: 1px solid #294F88;
+	border: 1px solid #990033;
 	color: #FFF;
 	text-shadow: 0 -1px 0 #000;
-	background: #3683B4;
-	background-image: -moz-linear-gradient(top, #3683B4, #316DA1);
+	background: #cc0044;
+	background-image: -moz-linear-gradient(top, #cc0044, #660022);
 	background-image: -webkit-gradient(linear,left top,left bottom,
-		color-stop(0, #3683B4),
-		color-stop(1, #316DA1));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#3683B4', EndColorStr='#316DA1')";
+		color-stop(0, #cc0044),
+		color-stop(1, #660022));
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#cc0044', EndColorStr='#660022')";
 }
 .ui-btn-hover-d a.ui-link-inherit {
 	color: #222;
 }
 .ui-btn-down-d {
-	border: 1px solid #294F88;
+	border: 1px solid #990033;
 	color: #FFF;
 	text-shadow: 0 -1px 0 #000;
-	background: #3683B4;
-	background-image: -moz-linear-gradient(top, #3683B4, #316DA1);
+	background: #cc0044;
+	background-image: -moz-linear-gradient(top, #cc0044, #660022);
 	background-image: -webkit-gradient(linear,left top,left bottom,
-		color-stop(0, #3683B4),
-		color-stop(1, #316DA1));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#3683B4', EndColorStr='#316DA1')";
+		color-stop(0, #cc0044),
+		color-stop(1, #660022));
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#cc0044', EndColorStr='#660022')";
 }
 .ui-btn-down-d a.ui-link-inherit {
 	border: 1px solid #808080;
